@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
     The Animation class manages a series of images (frames) and
-    the amount of time to display each frame.
+    the amount of time to display each frame. Hi
 */
 public class Animation {
 
