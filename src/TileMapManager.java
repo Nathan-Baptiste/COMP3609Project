@@ -145,7 +145,7 @@ public class TileMapManager {
         tiles = new ArrayList<Image>();
         char ch = 'A';
         while (true) {
-            String filename = "src/images/tile_" + ch + ".png";
+            String filename = "src/images/Tiles/tile_" + ch + ".png";
 	    file = new File(filename);
             if (!file.exists()) {
 		System.out.println("Image file could not be opened: " + filename);
@@ -153,8 +153,11 @@ public class TileMapManager {
             }
 	    else
 		System.out.println("Image file opened: " + filename);
-		Image tileImage = new ImageIcon(filename).getImage();
-           	tiles.add(tileImage);
+            ImageIcon icon = new ImageIcon(filename);
+            Image img = icon.getImage();
+
+            Image scaledImg = img.getScaledInstance(64, 64, Image.SCALE_SMOOTH);
+            tiles.add(scaledImg);
             ch++;
         }
     }

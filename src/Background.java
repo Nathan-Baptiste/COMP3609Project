@@ -15,6 +15,8 @@ public class Background {
 	private int backgroundX2;
 	private int bgDX;			// size of the background move (in pixels)
 
+	private int totalOffset;
+
 
 	public Background(JPanel panel, String imageFile, int bgDX) {
 
@@ -24,6 +26,8 @@ public class Background {
 		System.out.println ("bgImageWidth = " + bgImageWidth);
 
 		dimension = panel.getSize();
+
+		totalOffset = 0;
 
 		if (bgImageWidth < dimension.width)
       			System.out.println("Background width < panel width");
@@ -37,7 +41,7 @@ public class Background {
 
 		if (bgX == 0) {
 			backgroundX = 0;
-			backgroundX2 = bgImageWidth;			
+			backgroundX2 = bgImageWidth;
 		}
 
 		bgX = bgX - bgDX;
@@ -46,7 +50,7 @@ public class Background {
 		backgroundX2 = backgroundX2 - bgDX;
 
 		if ((bgX + bgImageWidth) % bgImageWidth == 0) {
-			System.out.println ("Background change: bgX = " + bgX); 
+			System.out.println ("Background change: bgX = " + bgX);
 			backgroundX = 0;
 			backgroundX2 = bgImageWidth;
 		}
@@ -55,24 +59,24 @@ public class Background {
 
 
   	public void moveLeft() {
-	
+
 		if (bgX == 0) {
 			backgroundX = bgImageWidth * -1;
-			backgroundX2 = 0;			
+			backgroundX2 = 0;
 		}
 
 		bgX = bgX + bgDX;
-				
-		backgroundX = backgroundX + bgDX;	
+
+		backgroundX = backgroundX + bgDX;
 		backgroundX2 = backgroundX2 + bgDX;
 
 		if ((bgX + bgImageWidth) % bgImageWidth == 0) {
-			//System.out.println ("Background change: bgX = " + bgX); 
+			//System.out.println ("Background change: bgX = " + bgX);
 			backgroundX = bgImageWidth * -1;
 			backgroundX2 = 0;
-		}			
+		}
    	}
- 
+
 
   	public void draw (Graphics2D g2) {
 		g2.drawImage(bgImage, backgroundX, 0, null);

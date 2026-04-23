@@ -270,7 +270,7 @@ public class Player {
       goingDown = false;
 
       startY = y;
-      initialVelocity = 70;
+      initialVelocity = 60;
    }
 
 

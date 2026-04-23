@@ -58,7 +58,7 @@ public class GamePanel extends JPanel
 				if (!isPaused)
 					gameUpdate();
 				gameRender();
-				Thread.sleep (50);	
+				Thread.sleep (50);
 			}
 		}
 		catch(InterruptedException e) {}
@@ -90,7 +90,7 @@ public class GamePanel extends JPanel
 		imageEffect.draw(imageContext);			// draw the image effect
 
 		Graphics2D g2 = (Graphics2D) getGraphics();	// get the graphics context for the panel
-		g2.drawImage(image, 0, 0, 600, 500, null);	// draw the image on the graphics context
+		g2.drawImage(image, 0, 0, 800, 600, null);	// draw the image on the graphics context
 
 		imageContext.dispose();
 	}

@@ -16,16 +16,12 @@ import javax.swing.JPanel;
 
 public class BackgroundManager {
 
-	private String bgImages[] = {"src/images/layer_08.png",
-			       	     "src/images/layer_07.png",
-				     "src/images/layer_06.png",
-				     "src/images/layer_05.png",
-				     "src/images/layer_04.png",
-				     "src/images/layer_03.png",
-				     "src/images/layer_02.png",
-			       	     "src/images/layer_01.png"};
+	private String bgImages[] = {"src/images/Level1/Background/Sky.png",
+			       	     "src/images/Level1/Background/Bg2Grass.png",
+				     "src/images/Level1/Background/Bg1Grass.png",
+				     "src/images/Level1/Background/Bg0Grass.png"};
 
-  	private int moveAmount[] = {1, 2, 3, 4, 4, 4, 5, 10};  
+  	private int moveAmount[] = {1, 2, 5, 10};
 						// pixel amounts to move each background left or right
      						// a move amount of 0 makes a background stationary
 
