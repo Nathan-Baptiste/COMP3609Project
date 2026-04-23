@@ -35,9 +35,13 @@ public class GameWindow extends JFrame
 	private JPanel mainPanel;
 	private GamePanel gamePanel;
 
+	private boolean aHeld = false;
+	private boolean dHeld = false;
+	private boolean rHeld = false;
+
 	private boolean leftHeld  = false;
 	private boolean rightHeld = false;
-	private boolean spaceHeld = false;
+	private boolean num1Held = false;
 
 	@SuppressWarnings({"unchecked"})
 	public GameWindow() {
@@ -208,27 +212,29 @@ public class GameWindow extends JFrame
 		String keyText = e.getKeyText(keyCode);
 		keyTF.setText(keyText + " pressed.");
 
-		if (keyCode == KeyEvent.VK_RIGHT)
-			rightHeld = true;
+		// Player 1 (WASD)
+		if (keyCode == KeyEvent.VK_A) aHeld = true;
+		if (keyCode == KeyEvent.VK_D) dHeld = true;
+		if (keyCode == KeyEvent.VK_R) rHeld = true;
 
-		if (keyCode == KeyEvent.VK_LEFT)
-			leftHeld = true;
-
-		if (keyCode == KeyEvent.VK_SPACE)
-			spaceHeld = true;
+		// Player 2 (Arrows)
+		if (keyCode == KeyEvent.VK_LEFT) leftHeld = true;
+		if (keyCode == KeyEvent.VK_RIGHT) rightHeld = true;
+		if (keyCode == KeyEvent.VK_NUMPAD1) num1Held = true;
 	}
 
 	public void keyReleased(KeyEvent e) {
 		int keyCode = e.getKeyCode();
 
-		if (keyCode == KeyEvent.VK_RIGHT)
-			rightHeld = false;
+		// Player 1
+		if (keyCode == KeyEvent.VK_A) aHeld = false;
+		if (keyCode == KeyEvent.VK_D) dHeld = false;
+		if (keyCode == KeyEvent.VK_R) rHeld = false;
 
-		if (keyCode == KeyEvent.VK_LEFT)
-			leftHeld = false;
-
-		if (keyCode == KeyEvent.VK_SPACE)
-			spaceHeld = false;
+		// Player 2
+		if (keyCode == KeyEvent.VK_LEFT) leftHeld = false;
+		if (keyCode == KeyEvent.VK_RIGHT) rightHeld = false;
+		if (keyCode == KeyEvent.VK_NUMPAD1) num1Held = false;
 	}
 
 	public void keyTyped(KeyEvent e) {
@@ -265,21 +271,16 @@ public class GameWindow extends JFrame
 	}
 
 	public void movement() {
-		boolean moving = false;
 
-		if (leftHeld)  {
-			gamePanel.moveLeft();
-			moving = true;
-		}
+		// Player 1 (camera moves)
+		if (aHeld) gamePanel.moveLeftP1();
+		if (dHeld) gamePanel.moveRightP1();
+		if (rHeld) gamePanel.jumpP1();
 
-		if (rightHeld) {
-			gamePanel.moveRight();
-			moving = true;
-		}
-
-		if (spaceHeld) {
-			gamePanel.jump();
-		}
+		// Player 2 (no camera movement)
+		if (leftHeld) gamePanel.moveLeftP2();
+		if (rightHeld) gamePanel.moveRightP2();
+		if (num1Held) gamePanel.jumpP2();
 	}
 
 }

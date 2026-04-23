@@ -175,20 +175,16 @@ public class GamePanel extends JPanel
 		//soundManager.stopClip ("background");
 	}
 
-	
-	public void moveLeft() {
-		tileMap.moveLeft();
-	}
 
+	// Player 1
+	public void moveLeftP1() { tileMap.moveLeftP1(); }
+	public void moveRightP1() { tileMap.moveRightP1(); }
+	public void jumpP1() { tileMap.jumpP1(); }
 
-	public void moveRight() {
-		tileMap.moveRight();
-	}
-
-
-	public void jump() {
-		tileMap.jump();
-	}
+	// Player 2
+	public void moveLeftP2() { tileMap.moveLeftP2(); }
+	public void moveRightP2() { tileMap.moveRightP2(); }
+	public void jumpP2() { tileMap.jumpP2(); }
 
 	
 	public void showAnimation() {

@@ -21,7 +21,7 @@ public class Player {
    Graphics2D g2;
    private Dimension dimension;
 
-   private Image playerImage, playerLeftImage, playerRightImage;
+   protected Image playerImage, playerLeftImage, playerRightImage;
 
    private boolean jumping;
    private int timeElapsed;
@@ -245,7 +245,7 @@ public class Player {
    }
 
 
-   private void fall() {
+   protected void fall() {
 
       jumping = false;
       inAir = true;

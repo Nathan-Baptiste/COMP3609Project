@@ -23,7 +23,8 @@ public class TileMap {
     private int offsetY;
 
     private LinkedList sprites;
-    private Player player;
+    private Player1 player1;
+    private Player2 player2;
 
     BackgroundManager bgManager;
 
@@ -57,10 +58,11 @@ public class TileMap {
 	bgManager = new BackgroundManager (panel, 12);
 
         tiles = new Image[mapWidth][mapHeight];
-	player = new Player (panel, this, bgManager);
+        player1 = new Player1(panel, this, bgManager);
+        player2 = new Player2(panel, this, bgManager);
         sprites = new LinkedList();
 
-	Image playerImage = player.getImage();
+	Image playerImage = player1.getImage();
 	int playerHeight = playerImage.getHeight(null);
 
 	int x, y;
@@ -69,8 +71,11 @@ public class TileMap {
 	//x = 192;					// position player in 'random' location
 	y = dimension.height - (TILE_SIZE + playerHeight);
 
-        player.setX(x);
-        player.setY(y);
+        player1.setX(x);
+        player1.setY(y);
+
+        player2.setX(x + 20); // offset Player2
+        player2.setY(y);
 
 	System.out.println("Player coordinates: " + x + "," + y);
 
@@ -176,7 +181,8 @@ public class TileMap {
         // based on player's position
 
         int offsetX = screenWidth / 2 -
-            Math.round(player.getX()) - TILE_SIZE;
+                Math.round(player1.getX()) - TILE_SIZE;
+
         offsetX = Math.min(offsetX, 0);
         offsetX = Math.max(offsetX, screenWidth - mapWidthPixels);
 
@@ -212,10 +218,17 @@ public class TileMap {
 
         // draw player
 
-        g2.drawImage(player.getImage(),
-            Math.round(player.getX()) + offsetX,
-            Math.round(player.getY()), //+ offsetY,
-            null);
+        // Player 1
+        g2.drawImage(player1.getImage(),
+                Math.round(player1.getX()) + offsetX,
+                Math.round(player1.getY()),
+                null);
+
+        // Player 2
+            g2.drawImage(player2.getImage(),
+                    Math.round(player2.getX()) + offsetX,
+                    Math.round(player2.getY()),
+                    null);
 
 /*
         // draw sprites
@@ -238,47 +251,70 @@ public class TileMap {
     }
 
 
-    public void moveLeft() {
-	int x, y;
-	x = player.getX();
-	y = player.getY();
+    //Player 1
+    public void moveLeftP1() {
+        int x = player1.getX();
+        int y = player1.getY();
 
-	String mess = "Going left. x = " + x + " y = " + y;
-	System.out.println(mess);
+        System.out.println("P1 Left: x=" + x + " y=" + y);
 
-	player.move(1);
-
+        player1.move(1);
     }
 
 
-    public void moveRight() {
-	int x, y;
-	x = player.getX();
-	y = player.getY();
+    public void moveRightP1() {
+        int x = player1.getX();
+        int y = player1.getY();
 
-	String mess = "Going right. x = " + x + " y = " + y;
-	System.out.println(mess);
+        System.out.println("P1 Right: x=" + x + " y=" + y);
 
-	player.move(2);
+        player1.move(2);
+    }
 
+    //Player 2
+    public void moveLeftP2() {
+        int x = player2.getX();
+        int y = player2.getY();
+
+        System.out.println("P2 Left: x=" + x + " y=" + y);
+
+        player2.move(1);
+    }
+
+    public void moveRightP2() {
+        int x = player2.getX();
+        int y = player2.getY();
+
+        System.out.println("P2 Right: x=" + x + " y=" + y);
+
+        player2.move(2);
     }
 
 
-    public void jump() {
-	int x, y;
-	x = player.getX();
-	y = player.getY();
+    // Player 1
+    public void jumpP1() {
+        int x = player1.getX();
+        int y = player1.getY();
 
-	String mess = "Jumping. x = " + x + " y = " + y;
-	System.out.println(mess);
+        System.out.println("P1 Jump: x=" + x + " y=" + y);
 
-	player.move(3);
+        player1.move(3);
+    }
 
+    // Player 2
+    public void jumpP2() {
+        int x = player2.getX();
+        int y = player2.getY();
+
+        System.out.println("P2 Jump: x=" + x + " y=" + y);
+
+        player2.move(3);
     }
 
 
     public void update() {
-	player.update();
+        player1.update();
+        player2.update();
     }
 
 }
