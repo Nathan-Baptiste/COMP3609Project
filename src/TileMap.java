@@ -17,6 +17,9 @@ public class TileMap {
     private static final int TILE_SIZE = 64;
     private static final int TILE_SIZE_BITS = 6;
 
+    private int p2OffScreenTime = 0;
+    private static final int RESPAWN_TIME = 100; // ~5 seconds (since 50ms per frame)
+
     private Image[][] tiles;
     private int screenWidth, screenHeight;
     private int mapWidth, mapHeight;
@@ -250,6 +253,13 @@ public class TileMap {
 
     }
 
+    public boolean isPlayer2OnScreen(int offsetX) {
+
+        int screenX = player2.getX() + offsetX;
+
+        return (screenX >= 0 && screenX <= screenWidth);
+    }
+
 
     //Player 1
     public void moveLeftP1() {
@@ -315,6 +325,38 @@ public class TileMap {
     public void update() {
         player1.update();
         player2.update();
+
+        int mapWidthPixels = tilesToPixels(mapWidth);
+
+        int offsetX = screenWidth / 2 -
+                Math.round(player1.getX()) - TILE_SIZE;
+
+        offsetX = Math.min(offsetX, 0);
+        offsetX = Math.max(offsetX, screenWidth - mapWidthPixels);
+
+        // check if player2 is visible
+        if (!isPlayer2OnScreen(offsetX)) {
+            p2OffScreenTime++;
+
+            if (p2OffScreenTime >= RESPAWN_TIME) {
+                respawnPlayer2();
+                p2OffScreenTime = 0;
+            }
+        } else {
+            p2OffScreenTime = 0;
+        }
+    }
+
+    private void respawnPlayer2() {
+
+        int offset = 20; // distance from Player1
+
+        int newX = player1.getX() + offset;
+        int newY = player1.getY();
+
+        player2.respawn(newX, newY);
+
+        System.out.println("Player2 respawned next to Player1");
     }
 
 }

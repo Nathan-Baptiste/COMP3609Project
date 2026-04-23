@@ -363,4 +363,10 @@ public class Player {
       return playerImage;
    }
 
+	public void respawn(int x, int y) {
+		setX(x);
+		setY(y);
+		fall();
+	}
+
 }
