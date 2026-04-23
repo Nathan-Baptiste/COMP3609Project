@@ -35,11 +35,15 @@ public class GameWindow extends JFrame
 	private JPanel mainPanel;
 	private GamePanel gamePanel;
 
+	private boolean leftHeld  = false;
+	private boolean rightHeld = false;
+	private boolean spaceHeld = false;
+
 	@SuppressWarnings({"unchecked"})
 	public GameWindow() {
  
 		setTitle ("Tiled Bat and Ball Game: Ordinary Windowed Mode");
-		setSize (700, 675);
+		setSize (1000, 800);
 
 		// create user interface objects
 
@@ -92,7 +96,7 @@ public class GameWindow extends JFrame
 
 		// create the gamePanel for game entities
 
-		gamePanel = new GamePanel();
+		gamePanel = new GamePanel(this);
         	gamePanel.setPreferredSize(new Dimension(800, 600));
 
 		// create infoPanel
@@ -204,21 +208,27 @@ public class GameWindow extends JFrame
 		String keyText = e.getKeyText(keyCode);
 		keyTF.setText(keyText + " pressed.");
 
-		if (keyCode == KeyEvent.VK_LEFT) {
-			gamePanel.moveLeft();
-		}
-		else
-		if (keyCode == KeyEvent.VK_RIGHT) {
-			gamePanel.moveRight();
-		}
-		else
-		if (keyCode == KeyEvent.VK_SPACE) {
-			gamePanel.jump();
-		}
+		if (keyCode == KeyEvent.VK_RIGHT)
+			rightHeld = true;
+
+		if (keyCode == KeyEvent.VK_LEFT)
+			leftHeld = true;
+
+		if (keyCode == KeyEvent.VK_SPACE)
+			spaceHeld = true;
 	}
 
 	public void keyReleased(KeyEvent e) {
+		int keyCode = e.getKeyCode();
 
+		if (keyCode == KeyEvent.VK_RIGHT)
+			rightHeld = false;
+
+		if (keyCode == KeyEvent.VK_LEFT)
+			leftHeld = false;
+
+		if (keyCode == KeyEvent.VK_SPACE)
+			spaceHeld = false;
 	}
 
 	public void keyTyped(KeyEvent e) {
@@ -252,6 +262,24 @@ public class GameWindow extends JFrame
 
 	public void mouseReleased(MouseEvent e) {
 	
+	}
+
+	public void movement() {
+		boolean moving = false;
+
+		if (leftHeld)  {
+			gamePanel.moveLeft();
+			moving = true;
+		}
+
+		if (rightHeld) {
+			gamePanel.moveRight();
+			moving = true;
+		}
+
+		if (spaceHeld) {
+			gamePanel.jump();
+		}
 	}
 
 }

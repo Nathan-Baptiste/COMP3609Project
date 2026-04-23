@@ -10,6 +10,8 @@ import java.awt.Graphics2D;
 public class GamePanel extends JPanel
 		       implements Runnable {
 
+	private GameWindow window;
+
 	private SoundManager soundManager;
 
 	private boolean isRunning;
@@ -29,7 +31,8 @@ public class GamePanel extends JPanel
 	TileMapManager tileManager;
 	TileMap	tileMap;
 
-	public GamePanel () {
+	public GamePanel (GameWindow window) {
+		this.window = window;
 
 		isRunning = false;
 		isPaused = false;
@@ -38,7 +41,7 @@ public class GamePanel extends JPanel
 
 		soundManager = SoundManager.getInstance();
 
-		image = new BufferedImage (600, 500, BufferedImage.TYPE_INT_RGB);
+		image = new BufferedImage (800, 600, BufferedImage.TYPE_INT_RGB);
 	}
 
 
@@ -65,6 +68,7 @@ public class GamePanel extends JPanel
 	public void gameUpdate() {
 
 		tileMap.update();
+		window.movement();
 
 		if (!isPaused && isAnimShown)
 			animation.update();

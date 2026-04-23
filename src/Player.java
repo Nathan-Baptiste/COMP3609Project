@@ -6,7 +6,7 @@ import java.awt.Point;
 
 public class Player {			
 
-   private static final int DX = 8;	// amount of X pixels to move in one keystroke
+   private static final int DX = 12;	// amount of X pixels to move in one keystroke
    private static final int DY = 32;	// amount of Y pixels to move in one keystroke
 
    private static final int TILE_SIZE = 64;
@@ -190,7 +190,7 @@ public class Player {
 	  tilePos = collidesWithTile(newX+playerWidth, y);			
       }
       else				// jump
-      if (direction == 3 && !jumping) {	
+      if (direction == 3 && !jumping && !inAir) {
           jump();
 	  return;
       }
@@ -218,14 +218,10 @@ public class Player {
 	      bgManager.moveRight();
    	  }
 
-          if (isInAir()) {
-	      System.out.println("In the air. Starting to fall.");
-	      if (direction == 1) {				// make adjustment for falling on left side of tile
-      	          int playerWidth = playerImage.getWidth(null);
-		  x = x - playerWidth + DX;
-	      }
-	      fall();
-          }
+	  if (isInAir()) {
+		  System.out.println("In the air. Starting to fall.");
+		  fall();
+	  }
       }
    }
 
@@ -265,7 +261,7 @@ public class Player {
 
    public void jump () {  
 
-      if (!panel.isVisible ()) return;
+      if (!panel.isVisible () || jumping || inAir) return;
 
       jumping = true;
       timeElapsed = 0;
