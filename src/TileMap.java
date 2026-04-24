@@ -225,10 +225,21 @@ public class TileMap {
         int w2 = (int)(img2.getWidth(null) * SCALE);
         int h2 = (int)(img2.getHeight(null) * SCALE);
 
-        int p2X = Math.round(player2.getX()) + offsetX;
+        int p2Offset = 0;
+        if (!player2.facingRight && player2.moving) //align moving left sprites
+            p2Offset = -15;
+        else if (!player2.facingRight) //align idle left sprites
+            p2Offset = -8;
+        else if (player2.moving) //align moving right sprites.
+            p2Offset = -35;
+        int p2X = Math.round(player2.getX()) + offsetX + p2Offset - 25;
         int p2Y = Math.round(player2.getY());
 
-        int drawY2 = p2Y + (img2.getHeight(null) - h2);
+        int drawY2;
+        if (player2.moving)
+            drawY2 = p2Y + 2 + (img2.getHeight(null) - h2);
+        else
+            drawY2 = p2Y + (img2.getHeight(null) - h2);
 
         if (player2.facingRight) {
             g2.drawImage(img2, p2X, drawY2, w2, h2, null);
@@ -254,7 +265,15 @@ public class TileMap {
         int w1 = (int)(img1.getWidth(null) * SCALE);
         int h1 = (int)(img1.getHeight(null) * SCALE);
 
-        int p1X = Math.round(player1.getX()) + offsetX;
+        int p1Offset = 0;
+        if (!player1.facingRight && player1.moving) //align moving left sprites
+            p1Offset = -80;
+        else if (!player1.facingRight) //align idle left sprites
+            p1Offset = -28;
+        else if (player1.moving) //align moving right sprites.
+            p1Offset = -10;
+        int p1X = Math.round(player1.getX()) + offsetX + p1Offset - 25;
+
         int p1Y = Math.round(player1.getY());
 
         int drawY = p1Y + (img1.getHeight(null) - h1);
@@ -275,8 +294,6 @@ public class TileMap {
                 p1Box.width,
                 p1Box.height
         );
-
-
 
 
         //Visible Countdown
