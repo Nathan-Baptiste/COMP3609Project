@@ -7,13 +7,17 @@ public class Player2 extends Player {
         super(panel, tileMap, backgroundManager);
 
         Image idleStrip = ImageManager.loadImage("src/images/Player2/Player2Idle.png");
-        idleAnim = new StripAnimation(idleStrip, 4, 0, 0, panel);
+        idleAnim = new StripAnimation(idleStrip, 4, 0, 0, panel, true);
 
         Image runStrip = ImageManager.loadImage("src/images/Player2/Player2Run.png");
-        runAnim = new StripAnimation(runStrip, 6, 0, 0, panel);
+        runAnim = new StripAnimation(runStrip, 6, 0, 0, panel, true);
+
+        Image jumpStrip = ImageManager.loadImage("src/images/Player2/Player2Jump.png");
+        jumpAnim = new StripAnimation(jumpStrip, 6, 0, 0, panel, false);
 
         idleAnim.start();
         runAnim.start();
+        jumpAnim.start();
     }
 
     @Override

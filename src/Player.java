@@ -1,5 +1,6 @@
 import java.awt.*;
 import javax.swing.JPanel;
+import javax.xml.transform.sax.SAXResult;
 
 public class Player {			
 
@@ -21,10 +22,11 @@ public class Player {
 
 	protected StripAnimation idleAnim;
 	protected StripAnimation runAnim;
+	protected StripAnimation jumpAnim;
 
 	protected boolean facingRight = true;
 
-   private boolean jumping;
+   protected boolean jumping;
    protected boolean moving;
    private int timeElapsed;
    private int startY;
@@ -32,7 +34,7 @@ public class Player {
    private boolean goingUp;
    private boolean goingDown;
 
-   private boolean inAir;
+   protected boolean inAir;
    private int initialVelocity;
    private int startAir;
 
@@ -44,10 +46,6 @@ public class Player {
 
       goingUp = goingDown = false;
       inAir = false;
-
-	   Image strip = ImageManager.loadImage("src/images/Player1/Player1Idle.png"); // change for P2 later
-	   idleAnim = new StripAnimation(strip, 6, 0, 0, panel);
-	   idleAnim.start();
 
    }
 
@@ -236,23 +234,24 @@ public class Player {
    }
 
 
-   public boolean isInAir() {
+	public boolean isInAir() {
 
-	   Point tilePos;
+		if (!jumping && !inAir) {
 
-	   if (!jumping && !inAir) {
+			int playerHeight = getDisplayHeight();
+			int playerWidth = getDisplayWidth();
 
-		  int playerHeight = getDisplayHeight();
-		  tilePos = collidesWithTile(x, y + playerHeight + 1); 	// check below player to see if there is a tile
+			Point tilePosLeft  = collidesWithTile(x, y + playerHeight + 1);
+			Point tilePosRight = collidesWithTile(x + playerWidth - 1, y + playerHeight + 1);
 
-		  if (tilePos == null)				   	// there is no tile below player, so player is in the air
-			return true;
-		  else							// there is a tile below player, so the player is on a tile
-			return false;
-		  }
+			if (tilePosLeft == null && tilePosRight == null)
+				return true;
+			else
+				return false;
+		}
 
-      return false;
-   }
+		return false;
+	}
 
 
    protected void fall() {
@@ -290,6 +289,7 @@ public class Player {
 
 	   idleAnim.update();
 	   runAnim.update();
+	   jumpAnim.update();
 
       timeElapsed++;
 
@@ -377,7 +377,7 @@ public class Player {
 
 	public Image getImage() {
 		if (inAir || jumping) {
-			return idleAnim.getImage(); // fallback for now
+			return jumpAnim.getImage(); // fallback for now
 		}
 		else if (moving) {
 			return runAnim.getImage();

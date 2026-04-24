@@ -188,15 +188,6 @@ public class TileMap {
         offsetX = Math.min(offsetX, 0);
         offsetX = Math.max(offsetX, screenWidth - mapWidthPixels);
 
-/*
-        // draw black background, if needed
-        if (background == null ||
-            screenHeight > background.getHeight(null))
-        {
-            g.setColor(Color.black);
-            g.fillRect(0, 0, screenWidth, screenHeight);
-        }
-*/
 	// draw the background first
 
 	bgManager.draw (g2);
@@ -226,7 +217,15 @@ public class TileMap {
         int h2 = (int)(img2.getHeight(null) * SCALE);
 
         int p2Offset = 0;
-        if (!player2.facingRight && player2.moving) //align moving left sprites
+        if ((player2.jumping || player2.inAir) && player2.moving && player2.facingRight) { //align jumping and moving right sprites
+            p2Offset = 10;
+        } else if ((player2.jumping || player2.inAir) && player2.moving && !player2.facingRight) { //align jumping and moving left sprites
+            p2Offset = 12;
+        } else if ((player2.jumping || player2.inAir) && player2.facingRight) { //align jumping right sprites
+            p2Offset = 10;
+        } else if ((player2.jumping || player2.inAir) && !player2.facingRight) { //align jumping left sprites
+            p2Offset = 15;
+        }else if (!player2.facingRight && player2.moving) //align moving left sprites
             p2Offset = -15;
         else if (!player2.facingRight) //align idle left sprites
             p2Offset = -8;
@@ -266,12 +265,21 @@ public class TileMap {
         int h1 = (int)(img1.getHeight(null) * SCALE);
 
         int p1Offset = 0;
-        if (!player1.facingRight && player1.moving) //align moving left sprites
+        if ((player1.jumping || player1.inAir) && player1.moving && player1.facingRight) { //align jumping and moving right sprites
+            p1Offset = 10;
+        } else if ((player1.jumping || player1.inAir) && player1.moving && !player1.facingRight) { //align jumping and moving left sprites
+            p1Offset = 0;
+        } else if ((player1.jumping || player1.inAir) && player1.facingRight) { //align jumping right sprites
+            p1Offset = 10;
+        } else if ((player1.jumping || player1.inAir) && !player1.facingRight) { //align jumping left sprites
+            p1Offset = 5;
+        } else if (!player1.facingRight && player1.moving) { //align moving left sprites
             p1Offset = -80;
-        else if (!player1.facingRight) //align idle left sprites
+        } else if (!player1.facingRight) { //align idle left sprites
             p1Offset = -28;
-        else if (player1.moving) //align moving right sprites.
+        } else if (player1.moving) { //align moving right sprites
             p1Offset = -10;
+        }
         int p1X = Math.round(player1.getX()) + offsetX + p1Offset - 25;
 
         int p1Y = Math.round(player1.getY());
@@ -319,24 +327,6 @@ public class TileMap {
             g2.setFont(new Font("Arial", Font.BOLD, 18));
             g2.drawString("" + seconds, drawX, p2ScreenY);
         }
-/*
-        // draw sprites
-        Iterator i = map.getSprites();
-        while (i.hasNext()) {
-            Sprite sprite = (Sprite)i.next();
-            int x = Math.round(sprite.getX()) + offsetX;
-            int y = Math.round(sprite.getY()) + offsetY;
-            g.drawImage(sprite.getImage(), x, y, null);
-
-            // wake up the creature when it's on screen
-            if (sprite instanceof Creature &&
-                x >= 0 && x < screenWidth)
-            {
-                ((Creature)sprite).wakeUp();
-            }
-        }
-*/
-
     }
 
     public boolean isPlayer2OnScreen(int offsetX) {

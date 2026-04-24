@@ -18,8 +18,8 @@ public class StripAnimation {
     private int dx;       // increment to move along x-axis
     private int dy;       // increment to move along y-axis
 
-    public StripAnimation(Image stripImage, int totalFrames, int xPos, int yPos, JPanel panel) {
-        animation = new Animation(true);
+    public StripAnimation(Image stripImage, int totalFrames, int xPos, int yPos, JPanel panel, boolean loop) {
+        animation = new Animation(loop);
 
         dx = 0;     // increment to move along x-axis
         dy = 0;     // increment to move along y-axis
