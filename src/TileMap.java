@@ -14,6 +14,7 @@ public class TileMap {
 
     private static final int TILE_SIZE = 64;
     private static final int TILE_SIZE_BITS = 6;
+    protected static final int SCALE = 1;
 
     private int p2OffScreenTime = 0;
     private static final int RESPAWN_TIME = 100; // ~5 seconds (since 50ms per frame)
@@ -70,7 +71,7 @@ public class TileMap {
 	x = (dimension.width / 2) + TILE_SIZE;		// position player in middle of screen
 
 	//x = 192;					// position player in 'random' location
-	y = dimension.height - (TILE_SIZE + playerHeight);
+    y = dimension.height - (TILE_SIZE + playerImage.getHeight(null) * SCALE);
 
         player1.setX(x);
         player1.setY(y);
@@ -219,17 +220,37 @@ public class TileMap {
 
         // draw player
 
-        // Player 1
-        g2.drawImage(player1.getImage(),
-                Math.round(player1.getX()) + offsetX,
-                Math.round(player1.getY()),
-                null);
+        //Player 1
+        Image img1 = player1.getImage();
 
-        // Player 2
-            g2.drawImage(player2.getImage(),
-                    Math.round(player2.getX()) + offsetX,
-                    Math.round(player2.getY()),
-                    null);
+        int w1 = img1.getWidth(null) * SCALE;
+        int h1 = img1.getHeight(null) * SCALE;
+
+        int p1X = Math.round(player1.getX()) + offsetX;
+        int p1Y = Math.round(player1.getY());
+
+        int drawY = p1Y;
+
+        if (player1.facingRight) {
+            g2.drawImage(img1, p1X, drawY, w1, h1, null);
+        } else {
+            g2.drawImage(img1, p1X + w1, drawY, -w1, h1, null);
+        }
+
+
+        //Player 2
+        Image img2 = player2.getImage();
+        int w2 = img2.getWidth(null) * SCALE;
+        int h2 = img2.getHeight(null) * SCALE;
+
+        int p2X = Math.round(player2.getX()) + offsetX;
+        int p2Y = Math.round(player2.getY());
+
+        if (player2.facingRight) {
+            g2.drawImage(img2, p2X, p2Y, w2, h2, null);
+        } else {
+            g2.drawImage(img2, p2X + w2, p2Y, -w2, h2, null);
+        }
 
         //Visible Countdown
         if (!isPlayer2OnScreen(offsetX)) {

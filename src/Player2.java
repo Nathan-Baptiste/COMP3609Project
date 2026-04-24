@@ -1,10 +1,14 @@
-import java.awt.Point;
+import java.awt.*;
 import javax.swing.JPanel;
 
 public class Player2 extends Player {
 
     public Player2(JPanel panel, TileMap tileMap, BackgroundManager backgroundManager) {
         super(panel, tileMap, backgroundManager);
+
+        Image strip = ImageManager.loadImage("src/images/Player2/Player2Idle.png");
+        idleAnim = new StripAnimation(strip, 4, 0, 0, panel);
+        idleAnim.start();
     }
 
     @Override
@@ -14,7 +18,7 @@ public class Player2 extends Player {
         Point tilePos = null;
 
         if (direction == 1) { // left
-            playerImage = playerLeftImage;
+            facingRight = false;
             newX -= 15;
             if (newX < 0) {
                 setX(0);
@@ -24,10 +28,9 @@ public class Player2 extends Player {
         }
 
         else if (direction == 2) { // right
-            playerImage = playerRightImage;
+            facingRight = true;
             newX += 15;
-            int width = getImage().getWidth(null);
-            tilePos = collidesWithTile(newX + width, getY());
+            tilePos = collidesWithTile(newX + getDisplayWidth(), getY());
         }
 
         else if (direction == 3) { // jump
@@ -39,7 +42,7 @@ public class Player2 extends Player {
             if (direction == 1)
                 setX(((int) tilePos.getX() + 1) * 64);
             else if (direction == 2)
-                setX(((int) tilePos.getX()) * 64 - getImage().getWidth(null));
+                setX(((int) tilePos.getX()) * 64 - getDisplayWidth());
         }
         else {
             // move player ONLY (no camera scroll)

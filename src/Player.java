@@ -18,10 +18,13 @@ public class Player {
    private int x;			// x-position of player's sprite
    private int y;			// y-position of player's sprite
 
+	protected static final int SCALE = 1;
+
    Graphics2D g2;
    private Dimension dimension;
 
-   protected Image playerImage, playerLeftImage, playerRightImage;
+	protected StripAnimation idleAnim;
+	protected boolean facingRight = true;
 
    private boolean jumping;
    private int timeElapsed;
@@ -43,19 +46,20 @@ public class Player {
       goingUp = goingDown = false;
       inAir = false;
 
-      playerLeftImage = ImageManager.loadImage("src/images/playerLeft.gif");
-      playerRightImage = ImageManager.loadImage("src/images/playerRight.gif");
-      playerImage = playerRightImage;
+	   Image strip = ImageManager.loadImage("src/images/Player1/Player1Idle.png"); // change for P2 later
+	   idleAnim = new StripAnimation(strip, 6, 0, 0, panel);
+	   idleAnim.start();
 
    }
 
 
    public Point collidesWithTile(int newX, int newY) {
 
-      	  int playerWidth = playerImage.getWidth(null);
-      	  int offsetY = tileMap.getOffsetY();
-	  int xTile = tileMap.pixelsToTiles(newX);
-	  int yTile = tileMap.pixelsToTiles(newY - offsetY);
+
+	   int playerWidth = getDisplayWidth();
+	   int offsetY = tileMap.getOffsetY();
+	   int xTile = tileMap.pixelsToTiles(newX);
+	   int yTile = tileMap.pixelsToTiles(newY - offsetY);
 
 	  if (tileMap.getTile(xTile, yTile) != null) {
 	        Point tilePos = new Point (xTile, yTile);
@@ -69,9 +73,10 @@ public class Player {
 
    public Point collidesWithTileDown (int newX, int newY) {
 
-	  int playerWidth = playerImage.getWidth(null);
-      	  int playerHeight = playerImage.getHeight(null);
-      	  int offsetY = tileMap.getOffsetY();
+
+	   int playerWidth = getDisplayWidth();
+	   int playerHeight = getDisplayHeight();
+	   int offsetY = tileMap.getOffsetY();
 	  int xTile = tileMap.pixelsToTiles(newX);
 	  int yTileFrom = tileMap.pixelsToTiles(y - offsetY);
 	  int yTileTo = tileMap.pixelsToTiles(newY - offsetY + playerHeight);
@@ -98,7 +103,8 @@ public class Player {
 
    public Point collidesWithTileUp (int newX, int newY) {
 
-	  int playerWidth = playerImage.getWidth(null);
+
+	   int playerWidth = getDisplayWidth();
 
       	  int offsetY = tileMap.getOffsetY();
 	  int xTile = tileMap.pixelsToTiles(newX);
@@ -165,7 +171,7 @@ public class Player {
       if (!panel.isVisible ()) return;
       
       if (direction == 1) {		// move left
-	  playerImage = playerLeftImage;
+		  facingRight = false;
           newX = x - DX;
 	  if (newX < 0) {
 		x = 0;
@@ -176,14 +182,15 @@ public class Player {
       }	
       else				
       if (direction == 2) {		// move right
-	  playerImage = playerRightImage;
-      	  int playerWidth = playerImage.getWidth(null);
+		  facingRight = true;
+
+		  int playerWidth = getDisplayWidth();
           newX = x + DX;
 
       	  int tileMapWidth = tileMap.getWidthPixels();
 
-	  if (newX + playerImage.getWidth(null) >= tileMapWidth) {
-	      x = tileMapWidth - playerImage.getWidth(null);
+	  if (newX + playerWidth >= tileMapWidth) {
+	      x = tileMapWidth - playerWidth;
 	      return;
 	  }
 
@@ -203,7 +210,9 @@ public class Player {
          else
          if (direction == 2) {
 	     System.out.println (": Collision going right");
-      	     int playerWidth = playerImage.getWidth(null);
+
+			 int playerWidth = getDisplayWidth();
+			 int playerHeight = getDisplayHeight();
              x = ((int) tilePos.getX()) * TILE_SIZE - playerWidth; // keep flush with left side of tile
 	 }
       }
@@ -228,18 +237,18 @@ public class Player {
 
    public boolean isInAir() {
 
-      int playerHeight;
-      Point tilePos;
+	   Point tilePos;
 
-      if (!jumping && !inAir) {   
-	  playerHeight = playerImage.getHeight(null);
-	  tilePos = collidesWithTile(x, y + playerHeight + 1); 	// check below player to see if there is a tile
+	   if (!jumping && !inAir) {
+
+		  int playerHeight = getDisplayHeight();
+		  tilePos = collidesWithTile(x, y + playerHeight + 1); 	// check below player to see if there is a tile
 	
-  	  if (tilePos == null)				   	// there is no tile below player, so player is in the air
-		return true;
-	  else							// there is a tile below player, so the player is on a tile
-		return false;
-      }
+		  if (tilePos == null)				   	// there is no tile below player, so player is in the air
+			return true;
+		  else							// there is a tile below player, so the player is on a tile
+			return false;
+		  }
 
       return false;
    }
@@ -278,6 +287,8 @@ public class Player {
       int distance = 0;
       int newY = 0;
 
+	   idleAnim.update();
+
       timeElapsed++;
 
       if (jumping || inAir) {
@@ -312,7 +323,8 @@ public class Player {
 		Point tilePos = collidesWithTileDown (x, newY);	
 	   	if (tilePos != null) {				// hits a tile going up
 		    System.out.println ("Jumping: Collision Going Down!");
-	  	    int playerHeight = playerImage.getHeight(null);
+
+			int playerHeight = getDisplayHeight();
 		    goingDown = false;
 
       	            int offsetY = tileMap.getOffsetY();
@@ -359,9 +371,16 @@ public class Player {
    }
 
 
-   public Image getImage() {
-      return playerImage;
-   }
+	public Image getImage() {
+		return idleAnim.getImage();
+	}
+
+	public int getDisplayWidth() {
+		return idleAnim.getImage().getWidth(null) * SCALE;
+	}
+	public int getDisplayHeight() {
+		return idleAnim.getImage().getHeight(null) * SCALE;
+	}
 
 	public void respawn(int x, int y) {
 		setX(x);

@@ -16,8 +16,15 @@ public class ImageManager {
 
 	}
 
-	public static Image loadImage (String fileName) {
-		return new ImageIcon(fileName).getImage();
+	public static Image loadImage(String fileName) {
+		try {
+			BufferedImage img = ImageIO.read(new File(fileName));
+			return img;
+		} catch (IOException e) {
+			System.out.println("Error loading image: " + fileName);
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public static BufferedImage loadBufferedImage(String filename) {
