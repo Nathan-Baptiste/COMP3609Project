@@ -1,6 +1,4 @@
-import java.awt.Image;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.util.LinkedList;
 import java.util.Iterator;
 import javax.swing.JPanel;
@@ -233,6 +231,29 @@ public class TileMap {
                     Math.round(player2.getY()),
                     null);
 
+        //Visible Countdown
+        if (!isPlayer2OnScreen(offsetX)) {
+
+            int drawX;
+
+            int seconds = (RESPAWN_TIME - p2OffScreenTime) / 20 + 1;
+
+            int p2ScreenX = Math.round(player2.getX()) + offsetX;
+            int p2ScreenY = Math.round(player2.getY());
+
+            if (p2ScreenY < 20) p2ScreenY = 20;
+            if (p2ScreenY > screenHeight - 20) p2ScreenY = screenHeight - 20;
+
+            if (p2ScreenX < 0) {
+                drawX = 10; // left edge
+            } else {
+                drawX = screenWidth - 30; // right edge
+            }
+
+            g2.setColor(Color.RED);
+            g2.setFont(new Font("Arial", Font.BOLD, 18));
+            g2.drawString("" + seconds, drawX, p2ScreenY);
+        }
 /*
         // draw sprites
         Iterator i = map.getSprites();

@@ -26,8 +26,6 @@ public class GamePanel extends JPanel
 	private volatile boolean isAnimShown;
 	private volatile boolean isAnimPaused;
 
-	private ImageEffect imageEffect;		// sprite demonstrating an image effect
-
 	TileMapManager tileManager;
 	TileMap	tileMap;
 
@@ -47,7 +45,6 @@ public class GamePanel extends JPanel
 
 	public void createGameEntities() {
 		animation = new BirdAnimation();
-		imageEffect = new ImageEffect (this);
 	}
 
 
@@ -72,7 +69,6 @@ public class GamePanel extends JPanel
 
 		if (!isPaused && isAnimShown)
 			animation.update();
-		imageEffect.update();
 	}
 
 
@@ -86,8 +82,6 @@ public class GamePanel extends JPanel
 
 		if (isAnimShown)
 			animation.draw(imageContext);		// draw the animation
-
-		imageEffect.draw(imageContext);			// draw the image effect
 
 		Graphics2D g2 = (Graphics2D) getGraphics();	// get the graphics context for the panel
 		g2.drawImage(image, 0, 0, 800, 600, null);	// draw the image on the graphics context
@@ -125,7 +119,7 @@ public class GamePanel extends JPanel
 	}
 
 
-	public void startNewGame() {				// initialise and start a new game thread 
+	public void startLevel2() {				// initialise and start a new game thread
 		if (gameThread != null || !isRunning) {
 			//soundManager.playSound ("background", true);
 
