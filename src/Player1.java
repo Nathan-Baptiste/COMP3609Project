@@ -6,9 +6,13 @@ public class Player1 extends Player {
     public Player1(JPanel panel, TileMap tileMap, BackgroundManager backgroundManager) {
         super(panel, tileMap, backgroundManager);
 
-        Image strip = ImageManager.loadImage("src/images/Player1/Player1Idle.png");
+        Image idleStrip = ImageManager.loadImage("src/images/Player1/Player1Idle.png");
+        idleAnim = new StripAnimation(idleStrip, 4, 0, 0, panel);
 
-        idleAnim = new StripAnimation(strip, 4, 0, 0, panel);
+        Image runStrip = ImageManager.loadImage("src/images/Player1/Player1Run.png");
+        runAnim = new StripAnimation(runStrip, 8, 0, 0, panel);
+
         idleAnim.start();
+        runAnim.start();
     }
 }

@@ -6,9 +6,14 @@ public class Player2 extends Player {
     public Player2(JPanel panel, TileMap tileMap, BackgroundManager backgroundManager) {
         super(panel, tileMap, backgroundManager);
 
-        Image strip = ImageManager.loadImage("src/images/Player2/Player2Idle.png");
-        idleAnim = new StripAnimation(strip, 4, 0, 0, panel);
+        Image idleStrip = ImageManager.loadImage("src/images/Player2/Player2Idle.png");
+        idleAnim = new StripAnimation(idleStrip, 4, 0, 0, panel);
+
+        Image runStrip = ImageManager.loadImage("src/images/Player2/Player2Run.png");
+        runAnim = new StripAnimation(runStrip, 6, 0, 0, panel);
+
         idleAnim.start();
+        runAnim.start();
     }
 
     @Override
@@ -18,6 +23,7 @@ public class Player2 extends Player {
         Point tilePos = null;
 
         if (direction == 1) { // left
+            moving = true;
             facingRight = false;
             newX -= 15;
             if (newX < 0) {
@@ -28,6 +34,7 @@ public class Player2 extends Player {
         }
 
         else if (direction == 2) { // right
+            moving = true;
             facingRight = true;
             newX += 15;
             tilePos = collidesWithTile(newX + getDisplayWidth(), getY());

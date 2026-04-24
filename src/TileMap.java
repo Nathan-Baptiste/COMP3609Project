@@ -236,6 +236,18 @@ public class TileMap {
             g2.drawImage(img2, p2X + w2, drawY2, -w2, h2, null);
         }
 
+        // HITBOX
+        Rectangle p2Box = player2.getHitBox();
+
+        g2.setColor(Color.BLUE);
+        g2.drawRect(
+                p2Box.x + offsetX,
+                p2Box.y,
+                p2Box.width,
+                p2Box.height
+        );
+
+
         //Player 1
         Image img1 = player1.getImage();
 
@@ -252,6 +264,17 @@ public class TileMap {
         } else {
             g2.drawImage(img1, p1X + w1, drawY, -w1, h1, null);
         }
+
+        // HITBOX
+        Rectangle p1Box = player1.getHitBox();
+
+        g2.setColor(Color.RED);
+        g2.drawRect(
+                p1Box.x + offsetX,
+                p1Box.y,
+                p1Box.width,
+                p1Box.height
+        );
 
 
 

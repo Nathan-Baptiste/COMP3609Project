@@ -1,8 +1,5 @@
-import java.awt.Dimension;
-import java.awt.Graphics2D;
+import java.awt.*;
 import javax.swing.JPanel;
-import java.awt.Image;
-import java.awt.Point;
 
 public class Player {			
 
@@ -23,9 +20,12 @@ public class Player {
    private Dimension dimension;
 
 	protected StripAnimation idleAnim;
+	protected StripAnimation runAnim;
+
 	protected boolean facingRight = true;
 
    private boolean jumping;
+   protected boolean moving;
    private int timeElapsed;
    private int startY;
 
@@ -110,7 +110,7 @@ public class Player {
 
 	  int yTileFrom = tileMap.pixelsToTiles(y - offsetY);
 	  int yTileTo = tileMap.pixelsToTiles(newY - offsetY);
-	 
+
 	  for (int yTile=yTileFrom; yTile>=yTileTo; yTile--) {
 		if (tileMap.getTile(xTile, yTile) != null) {
 	        	Point tilePos = new Point (xTile, yTile);
@@ -125,12 +125,12 @@ public class Player {
 			        }
 			}
 		}
-				    
+
 	  }
 
 	  return null;
    }
- 
+
 /*
 
    public Point collidesWithTile(int newX, int newY) {
@@ -156,7 +156,7 @@ public class Player {
 			}
 		}
 	 }
-	
+
 	 return null;
    }
 */
@@ -168,19 +168,21 @@ public class Player {
       Point tilePos = null;
 
       if (!panel.isVisible ()) return;
-      
+
       if (direction == 1) {		// move left
+		  moving = true;
 		  facingRight = false;
           newX = x - DX;
 	  if (newX < 0) {
 		x = 0;
 		return;
 	  }
-		
+
 	  tilePos = collidesWithTile(newX, y);
-      }	
-      else				
+      }
+      else
       if (direction == 2) {		// move right
+		  moving = true;
 		  facingRight = true;
 
 		  int playerWidth = getDisplayWidth();
@@ -193,15 +195,15 @@ public class Player {
 	      return;
 	  }
 
-	  tilePos = collidesWithTile(newX+playerWidth, y);			
+	  tilePos = collidesWithTile(newX+playerWidth, y);
       }
       else				// jump
       if (direction == 3 && !jumping && !inAir) {
           jump();
 	  return;
       }
-    
-      if (tilePos != null) {  
+
+      if (tilePos != null) {
          if (direction == 1) {
 	     System.out.println (": Collision going left");
              x = ((int) tilePos.getX() + 1) * TILE_SIZE;	   // keep flush with right side of tile
@@ -242,7 +244,7 @@ public class Player {
 
 		  int playerHeight = getDisplayHeight();
 		  tilePos = collidesWithTile(x, y + playerHeight + 1); 	// check below player to see if there is a tile
-	
+
 		  if (tilePos == null)				   	// there is no tile below player, so player is in the air
 			return true;
 		  else							// there is a tile below player, so the player is on a tile
@@ -267,7 +269,7 @@ public class Player {
    }
 
 
-   public void jump () {  
+   public void jump () {
 
       if (!panel.isVisible () || jumping || inAir) return;
 
@@ -287,11 +289,12 @@ public class Player {
       int newY = 0;
 
 	   idleAnim.update();
+	   runAnim.update();
 
       timeElapsed++;
 
       if (jumping || inAir) {
-	   distance = (int) (initialVelocity * timeElapsed - 
+	   distance = (int) (initialVelocity * timeElapsed -
                              4.9 * timeElapsed * timeElapsed);
 	   newY = startY - distance;
 
@@ -301,7 +304,7 @@ public class Player {
 	   }
 
 	   if (goingUp) {
-		Point tilePos = collidesWithTileUp (x, newY);	
+		Point tilePos = collidesWithTileUp (x, newY);
 	   	if (tilePos != null) {				// hits a tile going up
 		   	System.out.println ("Jumping: Collision Going Up!");
 
@@ -318,8 +321,8 @@ public class Player {
 	   	}
             }
 	    else
-	    if (goingDown) {			
-		Point tilePos = collidesWithTileDown (x, newY);	
+	    if (goingDown) {
+		Point tilePos = collidesWithTileDown (x, newY);
 	   	if (tilePos != null) {				// hits a tile going up
 		    System.out.println ("Jumping: Collision Going Down!");
 
@@ -339,6 +342,8 @@ public class Player {
 	       }
 	   }
       }
+
+	   moving = false;
    }
 
 
@@ -371,7 +376,15 @@ public class Player {
 
 
 	public Image getImage() {
-		return idleAnim.getImage();
+		if (inAir || jumping) {
+			return idleAnim.getImage(); // fallback for now
+		}
+		else if (moving) {
+			return runAnim.getImage();
+		}
+		else {
+			return idleAnim.getImage();
+		}
 	}
 
 	public int getDisplayWidth() {
@@ -385,6 +398,13 @@ public class Player {
 		setX(x);
 		setY(y);
 		fall();
+	}
+
+	public Rectangle getHitBox() {
+		int width = getDisplayWidth();
+		int height = getDisplayHeight();
+
+		return new Rectangle(x, y, width, height);
 	}
 
 }
