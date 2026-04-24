@@ -75,9 +75,11 @@ public class TileMap {
 
         player1.setX(x);
         player1.setY(y);
+        player1.fall();
 
         player2.setX(x + 20); // offset Player2
         player2.setY(y);
+        player2.fall();
 
 	System.out.println("Player coordinates: " + x + "," + y);
 

@@ -279,7 +279,7 @@ public class Player {
       goingDown = false;
 
       startY = y;
-      initialVelocity = 60;
+      initialVelocity = 50;
    }
 
 
@@ -295,7 +295,7 @@ public class Player {
 
       if (jumping || inAir) {
 	   distance = (int) (initialVelocity * timeElapsed -
-                             4.9 * timeElapsed * timeElapsed);
+                             3.0 * timeElapsed * timeElapsed);
 	   newY = startY - distance;
 
 	   if (newY > y && goingUp) {
