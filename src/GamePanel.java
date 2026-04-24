@@ -39,7 +39,7 @@ public class GamePanel extends JPanel
 
 		soundManager = SoundManager.getInstance();
 
-		image = new BufferedImage (800, 600, BufferedImage.TYPE_INT_RGB);
+		image = new BufferedImage (1280, 720, BufferedImage.TYPE_INT_RGB);
 	}
 
 
@@ -84,7 +84,7 @@ public class GamePanel extends JPanel
 			animation.draw(imageContext);		// draw the animation
 
 		Graphics2D g2 = (Graphics2D) getGraphics();	// get the graphics context for the panel
-		g2.drawImage(image, 0, 0, 800, 600, null);	// draw the image on the graphics context
+		g2.drawImage(image, 0, 0, 1280, 720, null);	// draw the image on the graphics context
 
 		imageContext.dispose();
 	}

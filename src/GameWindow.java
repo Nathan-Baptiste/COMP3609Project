@@ -47,7 +47,7 @@ public class GameWindow extends JFrame
 	public GameWindow() {
  
 		setTitle ("Tiled Bat and Ball Game: Ordinary Windowed Mode");
-		setSize (1000, 800);
+		setSize (1400, 900);
 
 		// create user interface objects
 
@@ -97,7 +97,7 @@ public class GameWindow extends JFrame
 		// create the gamePanel for game entities
 
 		gamePanel = new GamePanel(this);
-        	gamePanel.setPreferredSize(new Dimension(800, 600));
+        	gamePanel.setPreferredSize(new Dimension(1280, 720));
 
 		// create infoPanel
 

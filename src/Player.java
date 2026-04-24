@@ -8,6 +8,7 @@ public class Player {
 
    private static final int DX = 12;	// amount of X pixels to move in one keystroke
    private static final int DY = 32;	// amount of Y pixels to move in one keystroke
+	protected static final int SCALE = 1;
 
    private static final int TILE_SIZE = 64;
 
@@ -17,8 +18,6 @@ public class Player {
 
    private int x;			// x-position of player's sprite
    private int y;			// y-position of player's sprite
-
-	protected static final int SCALE = 1;
 
    Graphics2D g2;
    private Dimension dimension;
