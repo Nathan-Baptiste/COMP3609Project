@@ -55,6 +55,10 @@ public class StripAnimation {
         animation.update();
     }
 
+    public boolean isFinished() {
+        return !animation.isStillActive();
+    }
+
     public Image getImage() {
         return animation.getImage();
     }

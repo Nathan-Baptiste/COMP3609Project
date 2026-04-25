@@ -174,11 +174,15 @@ public class GamePanel extends JPanel
 	public void moveLeftP1() { tileMap.moveLeftP1(); }
 	public void moveRightP1() { tileMap.moveRightP1(); }
 	public void jumpP1() { tileMap.jumpP1(); }
+	public void attackP1() { tileMap.player1Attack(); }
+
 
 	// Player 2
 	public void moveLeftP2() { tileMap.moveLeftP2(); }
 	public void moveRightP2() { tileMap.moveRightP2(); }
 	public void jumpP2() { tileMap.jumpP2(); }
+	public void startChargeP2() { tileMap.player2StartCharge(); }
+	public void releaseShootP2() { tileMap.player2Shoot(); }
 
 	
 	public void showAnimation() {

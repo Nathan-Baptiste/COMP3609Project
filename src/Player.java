@@ -11,7 +11,7 @@ public class Player {
    private static final int TILE_SIZE = 64;
 
    private JPanel panel;		// reference to the JFrame on which player is drawn
-   private TileMap tileMap;
+   protected TileMap tileMap;
    private BackgroundManager bgManager;
 
    private int x;			// x-position of player's sprite
@@ -23,6 +23,9 @@ public class Player {
 	protected StripAnimation idleAnim;
 	protected StripAnimation runAnim;
 	protected StripAnimation jumpAnim;
+	protected StripAnimation attackAnim;
+	protected StripAnimation chargeAnim;
+	protected StripAnimation shootAnim;
 
 	protected boolean facingRight = true;
 
@@ -37,6 +40,14 @@ public class Player {
    protected boolean inAir;
    private int initialVelocity;
    private int startAir;
+
+	protected boolean attacking = false;
+	protected int attackTimer = 0;
+
+	protected boolean charging = false;
+	protected int chargeTime = 0;
+	protected boolean shooting = false;
+	protected int shootTimer = 0;
 
    public Player (JPanel panel, TileMap t, BackgroundManager b) {
       this.panel = panel;
@@ -291,7 +302,35 @@ public class Player {
 	   runAnim.update();
 	   jumpAnim.update();
 
+	   if (attacking) {
+		   attackAnim.update();
+
+		   if (attackAnim.isFinished()) {
+			   attacking = false;
+		   }
+	   }
+
+	   if (chargeAnim != null)
+		   chargeAnim.update();
+
+	   if (shootAnim != null)
+		   shootAnim.update();
+
       timeElapsed++;
+
+	   if (charging) {
+		   chargeTime++;
+	   }
+
+	   if (shooting) {
+		   shootTimer--;
+
+		   if (shootTimer <= 0) {
+			   shooting = false;
+			   shootTimer = 0;
+			   shootAnim.start();
+		   }
+	   }
 
       if (jumping || inAir) {
 	   distance = (int) (initialVelocity * timeElapsed -
@@ -376,15 +415,22 @@ public class Player {
 
 
 	public Image getImage() {
-		if (inAir || jumping) {
-			return jumpAnim.getImage(); // fallback for now
-		}
-		else if (moving) {
+		if (attacking)
+			return attackAnim.getImage();
+
+		if (charging)
+			return chargeAnim.getImage();
+
+		if (shooting)
+			return shootAnim.getImage();
+
+		if (inAir || jumping)
+			return jumpAnim.getImage();
+
+		if (moving)
 			return runAnim.getImage();
-		}
-		else {
-			return idleAnim.getImage();
-		}
+
+		return idleAnim.getImage();
 	}
 
 	public int getDisplayWidth() {

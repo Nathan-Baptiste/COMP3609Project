@@ -38,10 +38,12 @@ public class GameWindow extends JFrame
 	private boolean aHeld = false;
 	private boolean dHeld = false;
 	private boolean rHeld = false;
+	private boolean tHeld = false;
 
 	private boolean leftHeld  = false;
 	private boolean rightHeld = false;
 	private boolean num1Held = false;
+	private boolean num2Held = false;
 
 	@SuppressWarnings({"unchecked"})
 	public GameWindow() {
@@ -204,11 +206,16 @@ public class GameWindow extends JFrame
 		if (keyCode == KeyEvent.VK_A) aHeld = true;
 		if (keyCode == KeyEvent.VK_D) dHeld = true;
 		if (keyCode == KeyEvent.VK_R) rHeld = true;
+		if (keyCode == KeyEvent.VK_T) tHeld = true;
 
 		// Player 2 (Arrows)
 		if (keyCode == KeyEvent.VK_LEFT) leftHeld = true;
 		if (keyCode == KeyEvent.VK_RIGHT) rightHeld = true;
 		if (keyCode == KeyEvent.VK_NUMPAD1) num1Held = true;
+		if (keyCode == KeyEvent.VK_NUMPAD2) {
+			num2Held = true;
+			gamePanel.startChargeP2();
+		}
 	}
 
 	public void keyReleased(KeyEvent e) {
@@ -218,11 +225,16 @@ public class GameWindow extends JFrame
 		if (keyCode == KeyEvent.VK_A) aHeld = false;
 		if (keyCode == KeyEvent.VK_D) dHeld = false;
 		if (keyCode == KeyEvent.VK_R) rHeld = false;
+		if (keyCode == KeyEvent.VK_T) tHeld = false;
 
 		// Player 2
 		if (keyCode == KeyEvent.VK_LEFT) leftHeld = false;
 		if (keyCode == KeyEvent.VK_RIGHT) rightHeld = false;
 		if (keyCode == KeyEvent.VK_NUMPAD1) num1Held = false;
+		if (keyCode == KeyEvent.VK_NUMPAD2) {
+			num2Held = false;
+			gamePanel.releaseShootP2();
+		}
 	}
 
 	public void keyTyped(KeyEvent e) {
@@ -264,6 +276,7 @@ public class GameWindow extends JFrame
 		if (aHeld) gamePanel.moveLeftP1();
 		if (dHeld) gamePanel.moveRightP1();
 		if (rHeld) gamePanel.jumpP1();
+		if (tHeld) gamePanel.attackP1();
 
 		// Player 2 (no camera movement)
 		if (leftHeld) gamePanel.moveLeftP2();

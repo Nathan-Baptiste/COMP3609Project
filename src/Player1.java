@@ -15,8 +15,20 @@ public class Player1 extends Player {
         Image jumpStrip = ImageManager.loadImage("src/images/Player1/Player1Jump.png");
         jumpAnim = new StripAnimation(jumpStrip, 5, 0, 0, panel, false);
 
+        Image attackStrip = ImageManager.loadImage("src/images/Player1/Player1Attack.png");
+        attackAnim = new StripAnimation(attackStrip, 6, 0, 0, panel, false);
+
         idleAnim.start();
         runAnim.start();
         jumpAnim.start();
+        attackAnim.start();
+    }
+
+    public void attack() {
+        if (attacking) return;
+
+        attacking = true;
+
+        attackAnim.start();
     }
 }

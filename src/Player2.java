@@ -15,9 +15,17 @@ public class Player2 extends Player {
         Image jumpStrip = ImageManager.loadImage("src/images/Player2/Player2Jump.png");
         jumpAnim = new StripAnimation(jumpStrip, 6, 0, 0, panel, false);
 
+        Image chargeStrip = ImageManager.loadImage("src/images/Player2/Player2ChargeBow.png");
+        chargeAnim = new StripAnimation(chargeStrip, 5, 0, 0, panel, false);
+
+        Image shootStrip = ImageManager.loadImage("src/images/Player2/Player2Shoot.png");
+        shootAnim = new StripAnimation(shootStrip, 6, 0, 0, panel, false);
+
         idleAnim.start();
         runAnim.start();
         jumpAnim.start();
+        chargeAnim.start();
+        shootAnim.start();
     }
 
     @Override
@@ -63,5 +71,28 @@ public class Player2 extends Player {
             if (isInAir())
                 fall();
         }
+    }
+
+
+
+    public void startCharge() {
+        if (!charging) {
+            charging = true;
+            chargeTime = 0;
+        }
+    }
+
+    public void releaseShoot() {
+        if (!charging) return;
+
+        charging = false;
+
+        shooting = true;
+        shootTimer = 8;
+
+        int arrowX = getX();
+        int arrowY = getY() + 20;
+
+        tileMap.spawnArrow(arrowX, arrowY, facingRight);
     }
 }

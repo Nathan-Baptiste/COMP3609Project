@@ -2,6 +2,7 @@ import java.awt.*;
 import java.util.LinkedList;
 import java.util.Iterator;
 import javax.swing.JPanel;
+import java.util.ArrayList;
 
 /**
     The TileMap class contains the data for a tile-based
@@ -32,6 +33,7 @@ public class TileMap {
 
     private JPanel panel;
     private Dimension dimension;
+    private ArrayList<Arrow> arrows = new ArrayList<>();
 
     /**
         Creates a new TileMap with the specified width and
@@ -267,7 +269,11 @@ public class TileMap {
         int h1 = (int)(img1.getHeight(null) * SCALE);
 
         int p1Offset = 0;
-        if ((player1.jumping || player1.inAir) && player1.moving && player1.facingRight) { //align jumping and moving right sprites
+        if (player1.attacking && player1.facingRight) { // allign attacking right sprites
+            p1Offset = -30;
+        } else if (player1.attacking && !player1.facingRight){ //align attacking left sprites
+            p1Offset = -100;
+        } else if ((player1.jumping || player1.inAir) && player1.moving && player1.facingRight) { //align jumping and moving right sprites
             p1Offset = 10;
         } else if ((player1.jumping || player1.inAir) && player1.moving && !player1.facingRight) { //align jumping and moving left sprites
             p1Offset = 0;
@@ -305,6 +311,25 @@ public class TileMap {
                 p1Box.height
         );
 
+        //ATTACK HITBOX
+        if (player1.attacking) {
+
+            int hitWidth = 40;
+            int hitHeight = 30;
+
+            int hitX;
+
+            if (player1.facingRight)
+                hitX = player1.getX() + player1.getDisplayWidth();
+            else
+                hitX = player1.getX() - hitWidth;
+
+            Rectangle attackBox = new Rectangle(hitX, player1.getY(), hitWidth, hitHeight);
+
+            g2.setColor(Color.ORANGE);
+            g2.drawRect(attackBox.x + offsetX, attackBox.y, attackBox.width, attackBox.height);
+        }
+
 
         //Visible Countdown
         if (!isPlayer2OnScreen(offsetX)) {
@@ -328,6 +353,10 @@ public class TileMap {
             g2.setColor(Color.RED);
             g2.setFont(new Font("Arial", Font.BOLD, 18));
             g2.drawString("" + seconds, drawX, p2ScreenY);
+        }
+
+        for (Arrow a : arrows) {
+            a.draw(g2);
         }
     }
 
@@ -399,10 +428,40 @@ public class TileMap {
         player2.move(3);
     }
 
+    //Player 1
+    public void player1Attack() {
+        player1.attack();
+    }
+
+    //Player 2
+    public void player2StartCharge() {
+        player2.startCharge();
+    }
+
+    public void player2Shoot() {
+        player2.releaseShoot();
+    }
+
+    public void spawnArrow(int x, int y, boolean facingRight) {
+        Image arrowImg = ImageManager.loadImage("src/images/ItemsandObjects/Arrow.png");
+        arrows.add(new Arrow(x, y, facingRight, arrowImg));
+    }
+
+    private void updateArrows() {
+        for (int i = arrows.size() - 1; i >= 0; i--) {
+            Arrow a = arrows.get(i);
+            a.update();
+
+            if (a.getX() < 0 || a.getX() > screenWidth) {
+                arrows.remove(i);
+            }
+        }
+    }
 
     public void update() {
         player1.update();
         player2.update();
+        updateArrows();
 
         int mapWidthPixels = tilesToPixels(mapWidth);
 
