@@ -24,6 +24,8 @@ public class Player {
 	protected StripAnimation runAnim;
 	protected StripAnimation jumpAnim;
 	protected StripAnimation attackAnim;
+	protected StripAnimation moveAttackAnim;
+	protected StripAnimation jumpAttackAnim;
 	protected StripAnimation chargeAnim;
 	protected StripAnimation shootAnim;
 
@@ -42,7 +44,8 @@ public class Player {
    private int startAir;
 
 	protected boolean attacking = false;
-	protected int attackTimer = 0;
+	protected boolean moveAttacking = false;
+	protected boolean jumpAttacking = false;
 
 	protected boolean charging = false;
 	protected int chargeTime = 0;
@@ -177,8 +180,9 @@ public class Player {
       Point tilePos = null;
 
       if (!panel.isVisible ()) return;
+	  if ((attacking && !moveAttacking) && !inAir && !jumping) return;
 
-      if (direction == 1) {		// move left
+	   if (direction == 1) {		// move left
 		  moving = true;
 		  facingRight = false;
           newX = x - DX;
@@ -282,6 +286,8 @@ public class Player {
    public void jump () {
 
       if (!panel.isVisible () || jumping || inAir) return;
+	  if (attacking && !inAir) return;
+	  if (moveAttacking) return;
 
       jumping = true;
       timeElapsed = 0;
@@ -307,6 +313,22 @@ public class Player {
 
 		   if (attackAnim.isFinished()) {
 			   attacking = false;
+		   }
+	   }
+
+	   if (moveAttacking) {
+		   moveAttackAnim.update();
+
+		   if (moveAttackAnim.isFinished()) {
+			   moveAttacking = false;
+		   }
+	   }
+
+	   if (jumpAttacking) {
+		   jumpAttackAnim.update();
+
+		   if (jumpAttackAnim.isFinished()) {
+			   jumpAttacking = false;
 		   }
 	   }
 
@@ -368,12 +390,14 @@ public class Player {
 			int playerHeight = getDisplayHeight();
 		    goingDown = false;
 
-      	            int offsetY = tileMap.getOffsetY();
+			int offsetY = tileMap.getOffsetY();
 		    int topTileY = ((int) tilePos.getY()) * TILE_SIZE + offsetY;
 
-	            y = topTileY - playerHeight;
+			y = topTileY - playerHeight;
+
 	  	    jumping = false;
 		    inAir = false;
+			jumpAttacking = false;
 	       }
 	       else {
 		    y = newY;
@@ -415,13 +439,20 @@ public class Player {
 
 
 	public Image getImage() {
+
+		if (jumpAttacking)
+			return jumpAttackAnim.getImage();
+
+		if (moveAttacking)
+			return moveAttackAnim.getImage();
+
 		if (attacking)
 			return attackAnim.getImage();
 
 		if (charging)
 			return chargeAnim.getImage();
 
-		if (shooting)
+		if (shooting && !moving)
 			return shootAnim.getImage();
 
 		if (inAir || jumping)
@@ -451,6 +482,21 @@ public class Player {
 		int height = getDisplayHeight();
 
 		return new Rectangle(x, y, width, height);
+	}
+
+	public boolean isAttackActiveFrame() {
+
+		int frame = -1;
+
+		if (attacking)
+			frame = attackAnim.getCurrentFrame();
+		else if (moveAttacking)
+			frame = moveAttackAnim.getCurrentFrame();
+		else if (jumpAttacking)
+			frame = jumpAttackAnim.getCurrentFrame();
+
+		// Frames 2, 3, 4 (0-based index = 3rd, 4th, 5th frames)
+		return frame >= 2 && frame <= 4;
 	}
 
 }

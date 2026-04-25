@@ -18,17 +18,34 @@ public class Player1 extends Player {
         Image attackStrip = ImageManager.loadImage("src/images/Player1/Player1Attack.png");
         attackAnim = new StripAnimation(attackStrip, 6, 0, 0, panel, false);
 
+        Image moveAttackStrip = ImageManager.loadImage("src/images/Player1/Player1RunAttack.png");
+        moveAttackAnim = new StripAnimation(moveAttackStrip, 8, 0, 0, panel, false);
+
+        Image jumpAttackStrip = ImageManager.loadImage("src/images/Player1/Player1JumpAttack.png");
+        jumpAttackAnim = new StripAnimation(jumpAttackStrip, 6, 0, 0, panel, false);
+
         idleAnim.start();
         runAnim.start();
         jumpAnim.start();
         attackAnim.start();
+        moveAttackAnim.start();
+        jumpAttackAnim.start();
     }
 
     public void attack() {
-        if (attacking) return;
+        if (attacking || moveAttacking || jumpAttacking) return;
 
-        attacking = true;
-
-        attackAnim.start();
+        if (inAir || jumping) {
+            jumpAttacking = true;
+            jumpAttackAnim.start();
+        }
+        else if (moving) {
+            moveAttacking = true;
+            moveAttackAnim.start();
+        }
+        else {
+            attacking = true;
+            attackAnim.start();
+        }
     }
 }

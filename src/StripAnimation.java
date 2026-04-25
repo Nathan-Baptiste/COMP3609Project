@@ -63,7 +63,7 @@ public class StripAnimation {
         return animation.getImage();
     }
 
-
+    public int getCurrentFrame() { return animation.getCurrentFrameIndex(); }
 
     public void draw(Graphics2D g2, int screenX, int screenY, int displayWidth, int displayHeight) {
         g2.drawImage(animation.getImage(), screenX, screenY, displayWidth, displayHeight, null);

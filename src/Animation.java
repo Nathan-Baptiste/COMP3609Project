@@ -118,6 +118,8 @@ public class Animation {
         return frames.get(i);
     }
 
+    public int getCurrentFrameIndex() { return currFrameIndex; }
+
 
     public boolean isStillActive () {
 	return isActive;

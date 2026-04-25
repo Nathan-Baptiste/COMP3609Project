@@ -34,6 +34,19 @@ public class Player2 extends Player {
         int newX = getX();
         Point tilePos = null;
 
+        if (charging) {
+            if (direction == 1) {
+                facingRight = false;
+            } else if (direction == 2) {
+                facingRight = true;
+            }
+            return;
+        }
+
+        if (shooting && (direction == 1 || direction == 2)) {
+            shooting = false;
+        }
+
         if (direction == 1) { // left
             moving = true;
             facingRight = false;
@@ -79,6 +92,7 @@ public class Player2 extends Player {
         if (!charging) {
             charging = true;
             chargeTime = 0;
+            chargeAnim.start();
         }
     }
 

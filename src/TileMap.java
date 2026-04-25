@@ -221,7 +221,15 @@ public class TileMap {
         int h2 = (int)(img2.getHeight(null) * SCALE);
 
         int p2Offset = 0;
-        if ((player2.jumping || player2.inAir) && player2.moving && player2.facingRight) { //align jumping and moving right sprites
+        if (player2.charging && player2.facingRight) { // align charging right sprites
+            p2Offset = -4;
+        } else if (player2.charging && !player2.facingRight) { //align charging left sprites
+            p2Offset = -16;
+        } else if (player2.shooting && player2.facingRight) { // align shooting right sprites
+            p2Offset = -6;
+        } else if (player2.shooting && !player2.facingRight) { //align shooting left sprites
+            p2Offset = -14;
+        } else if ((player2.jumping || player2.inAir) && player2.moving && player2.facingRight) { //align jumping and moving right sprites
             p2Offset = 10;
         } else if ((player2.jumping || player2.inAir) && player2.moving && !player2.facingRight) { //align jumping and moving left sprites
             p2Offset = 12;
@@ -271,8 +279,16 @@ public class TileMap {
         int p1Offset = 0;
         if (player1.attacking && player1.facingRight) { // allign attacking right sprites
             p1Offset = -30;
-        } else if (player1.attacking && !player1.facingRight){ //align attacking left sprites
+        } else if (player1.attacking && !player1.facingRight) { //align attacking left sprites
             p1Offset = -100;
+        } else if (player1.moveAttacking && player1.facingRight) { //align right move attack sprites
+            p1Offset = -25;
+        } else if (player1.moveAttacking && !player1.facingRight) { //align left move attack sprites
+            p1Offset = -100;
+        }else if (player1.jumpAttacking && player1.facingRight) { //align right jump attack sprites
+            p1Offset = -28;
+        } else if (player1.jumpAttacking && !player1.facingRight) { //align left jump attack sprites
+            p1Offset = -70;
         } else if ((player1.jumping || player1.inAir) && player1.moving && player1.facingRight) { //align jumping and moving right sprites
             p1Offset = 10;
         } else if ((player1.jumping || player1.inAir) && player1.moving && !player1.facingRight) { //align jumping and moving left sprites
@@ -312,22 +328,50 @@ public class TileMap {
         );
 
         //ATTACK HITBOX
-        if (player1.attacking) {
+        if ((player1.attacking || player1.moveAttacking || player1.jumpAttacking)
+                && player1.isAttackActiveFrame()) {
 
             int hitWidth = 40;
             int hitHeight = 30;
 
-            int hitX;
+            int hitX = player1.getX();
+            int hitY = player1.getY();
 
-            if (player1.facingRight)
+            // adjust vertical hitbox for air attack
+            if (player1.jumpAttacking) {
+                hitHeight = 35;
+                hitY = player1.getY() - 10; // slightly above player
+            }
+
+            // move attack = slightly longer range
+            if (player1.moveAttacking) {
+                hitWidth = 55;
+                hitHeight = 30;
+            }
+
+            // direction handling (IMPORTANT)
+            if (player1.facingRight) {
                 hitX = player1.getX() + player1.getDisplayWidth();
-            else
+            } else {
                 hitX = player1.getX() - hitWidth;
+            }
 
-            Rectangle attackBox = new Rectangle(hitX, player1.getY(), hitWidth, hitHeight);
+            Rectangle attackBox = new Rectangle(hitX, hitY, hitWidth, hitHeight);
 
-            g2.setColor(Color.ORANGE);
-            g2.drawRect(attackBox.x + offsetX, attackBox.y, attackBox.width, attackBox.height);
+            // color per type (helps debugging)
+            if (player1.jumpAttacking)
+                g2.setColor(Color.CYAN);
+            else if (player1.moveAttacking)
+                g2.setColor(Color.ORANGE);
+            else
+                g2.setColor(Color.YELLOW);
+
+            g2.drawRect(
+                    attackBox.x + offsetX,
+                    attackBox.y,
+                    attackBox.width,
+                    attackBox.height
+            );
         }
 
 
