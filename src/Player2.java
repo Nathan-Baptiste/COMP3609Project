@@ -21,11 +21,19 @@ public class Player2 extends Player {
         Image shootStrip = ImageManager.loadImage("src/images/Player2/Player2Shoot.png");
         shootAnim = new StripAnimation(shootStrip, 6, 0, 0, panel, false);
 
+        Image jumpChargeStrip = ImageManager.loadImage("src/images/Player2/Player2JumpCharge.png");
+        jumpChargeAnim = new StripAnimation(jumpChargeStrip, 5, 0, 0, panel, false);
+
+        Image jumpShootStrip = ImageManager.loadImage("src/images/Player2/Player2JumpShoot.png");
+        jumpShootAnim = new StripAnimation(jumpShootStrip, 6, 0, 0, panel, false);
+
         idleAnim.start();
         runAnim.start();
         jumpAnim.start();
         chargeAnim.start();
         shootAnim.start();
+        jumpChargeAnim.start();
+        jumpShootAnim.start();
     }
 
     @Override
@@ -34,7 +42,12 @@ public class Player2 extends Player {
         int newX = getX();
         Point tilePos = null;
 
-        if (charging) {
+        if (direction == 3) {
+            jump();
+            return;
+        }
+
+        if (charging && !(jumping || inAir)) {
             if (direction == 1) {
                 facingRight = false;
             } else if (direction == 2) {
@@ -104,8 +117,20 @@ public class Player2 extends Player {
         shooting = true;
         shootTimer = 8;
 
-        int arrowX = getX();
-        int arrowY = getY() + 20;
+        if (jumpShootAnim != null && (isInAir() || jumping)) {
+            jumpShootAnim.start();
+        }
+
+        int arrowX;
+        int arrowY;
+
+        if (facingRight) {
+            arrowX = getX() - 100;
+            arrowY = getY() - 30;
+        } else {
+            arrowX = getX() - 140;
+            arrowY = getY() - 30;
+        }
 
         tileMap.spawnArrow(arrowX, arrowY, facingRight);
     }

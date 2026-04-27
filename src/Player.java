@@ -28,6 +28,8 @@ public class Player {
 	protected StripAnimation jumpAttackAnim;
 	protected StripAnimation chargeAnim;
 	protected StripAnimation shootAnim;
+	protected StripAnimation jumpChargeAnim;
+	protected StripAnimation jumpShootAnim;
 
 	protected boolean facingRight = true;
 
@@ -338,6 +340,12 @@ public class Player {
 	   if (shootAnim != null)
 		   shootAnim.update();
 
+	   if (jumpChargeAnim != null)
+		   jumpChargeAnim.update();
+
+	   if (jumpShootAnim != null)
+		   jumpShootAnim.update();
+
       timeElapsed++;
 
 	   if (charging) {
@@ -439,13 +447,25 @@ public class Player {
 
 
 	public Image getImage() {
-
+	   //P1 Attack States
 		if (jumpAttacking)
 			return jumpAttackAnim.getImage();
 
 		if (moveAttacking)
 			return moveAttackAnim.getImage();
 
+		//Air States
+		if (inAir || jumping) {
+			if (charging && jumpChargeAnim != null)
+				return jumpChargeAnim.getImage();
+
+			if (shooting && jumpShootAnim != null)
+				return jumpShootAnim.getImage();
+
+			return jumpAnim.getImage();
+		}
+
+		//Ground States
 		if (attacking)
 			return attackAnim.getImage();
 
@@ -454,9 +474,6 @@ public class Player {
 
 		if (shooting && !moving)
 			return shootAnim.getImage();
-
-		if (inAir || jumping)
-			return jumpAnim.getImage();
 
 		if (moving)
 			return runAnim.getImage();

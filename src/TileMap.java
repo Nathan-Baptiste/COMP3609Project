@@ -16,6 +16,7 @@ public class TileMap {
     private static final int TILE_SIZE = 64;
     private static final int TILE_SIZE_BITS = 6;
     protected static final double SCALE = 2;
+    private static final int MAX_ARROWS = 5;
 
     private int p2OffScreenTime = 0;
     private static final int RESPAWN_TIME = 100; // ~5 seconds (since 50ms per frame)
@@ -221,7 +222,15 @@ public class TileMap {
         int h2 = (int)(img2.getHeight(null) * SCALE);
 
         int p2Offset = 0;
-        if (player2.charging && player2.facingRight) { // align charging right sprites
+        if ((player2.jumping || player2.inAir) && player2.charging && player2.facingRight) { //align jump charging right
+            p2Offset = -5;
+        } else if ((player2.jumping || player2.inAir) && player2.charging && !player2.facingRight) { //align jump charging left
+            p2Offset = -16;
+        } else if ((player2.jumping || player2.inAir) && player2.shooting && player2.facingRight) { //align jump shooting right
+            p2Offset = -8;
+        } else if ((player2.jumping || player2.inAir) && player2.shooting && !player2.facingRight) { //align jump shooting left
+            p2Offset = -10;
+        } else if (player2.charging && player2.facingRight) { // align charging right sprites
             p2Offset = -4;
         } else if (player2.charging && !player2.facingRight) { //align charging left sprites
             p2Offset = -16;
@@ -291,8 +300,6 @@ public class TileMap {
             p1Offset = -70;
         } else if ((player1.jumping || player1.inAir) && player1.moving && player1.facingRight) { //align jumping and moving right sprites
             p1Offset = 10;
-        } else if ((player1.jumping || player1.inAir) && player1.moving && !player1.facingRight) { //align jumping and moving left sprites
-            p1Offset = 0;
         } else if ((player1.jumping || player1.inAir) && player1.facingRight) { //align jumping right sprites
             p1Offset = 10;
         } else if ((player1.jumping || player1.inAir) && !player1.facingRight) { //align jumping left sprites
@@ -487,6 +494,10 @@ public class TileMap {
     }
 
     public void spawnArrow(int x, int y, boolean facingRight) {
+        if (arrows.size() >= MAX_ARROWS) {
+            arrows.remove(0); // remove oldest arrow
+        }
+
         Image arrowImg = ImageManager.loadImage("src/images/ItemsandObjects/Arrow.png");
         arrows.add(new Arrow(x, y, facingRight, arrowImg));
     }

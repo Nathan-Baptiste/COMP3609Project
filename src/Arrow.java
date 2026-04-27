@@ -26,10 +26,15 @@ public class Arrow {
     public void draw(Graphics2D g2) {
         if (!active) return;
 
-        if (facingRight)
-            g2.drawImage(image, x, y, null);
-        else
-            g2.drawImage(image, x, y, null);
+        int w = image.getWidth(null) * 2;
+        int h = image.getHeight(null) * 2;
+
+        if (facingRight) {
+            g2.drawImage(image, x, y, w, h, null);
+        } else {
+            // flip while scaling
+            g2.drawImage(image, x + w, y, -w, h, null);
+        }
     }
 
     public Rectangle getHitBox() {
