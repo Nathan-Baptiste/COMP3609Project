@@ -37,6 +37,8 @@ public class TileMap {
 
     private ArrayList<Arrow> arrows = new ArrayList<>();
     private ArrayList<Slime> slimes = new ArrayList<>();
+    private ArrayList<Skeleton> skeletons = new ArrayList<>();
+    private ArrayList<EnemyArrow> enemyArrows = new ArrayList<>();
 
     /**
         Creates a new TileMap with the specified width and
@@ -209,7 +211,8 @@ public class TileMap {
             }
         }
 
-        //draw enemy
+        //draw slime
+
         for (Slime s : slimes) {
             Image img = s.getImage();
 
@@ -247,6 +250,56 @@ public class TileMap {
                     box.width,
                     box.height
             );
+        }
+
+        // draw skeleton
+
+        for (Skeleton s : skeletons) {
+
+            Image img = s.getImage();
+
+            int w = (int)(img.getWidth(null) * SCALE);
+            int h = (int)(img.getHeight(null) * SCALE);
+
+            int xOffset = -20;
+            int yOffset = -335;
+
+            int drawX;
+
+            if (s.charging && s.isFacingRight())
+                drawX = s.getX() + offsetX + xOffset - 32;
+            else if (s.gettingHit && s.isFacingRight())
+                drawX = s.getX() + offsetX + xOffset - 0;
+            else if (s.gettingHit && !s.isFacingRight())
+                drawX = s.getX() + offsetX + xOffset + 10;
+            else if (s.charging && !s.isFacingRight())
+                drawX = s.getX() + offsetX + xOffset - 18;
+            else if (s.shooting && s.isFacingRight())
+                drawX = s.getX() + offsetX + xOffset + 25;
+            else if (s.shooting && !s.isFacingRight())
+                drawX = s.getX() + offsetX + xOffset - 12;
+            else
+                drawX = s.getX() + offsetX + xOffset;
+
+            int drawY = s.getY() + offsetY + yOffset;
+
+            if (s.getImage() != null) {
+                if (s.isFacingRight())
+                    g2.drawImage(img, drawX + w, drawY, -w, h, null);
+                else
+                    g2.drawImage(img, drawX, drawY, w, h, null);
+            }
+
+            // HITBOX
+            Rectangle box = s.getHitBox();
+            g2.setColor(Color.GREEN);
+            g2.drawRect(box.x + offsetX, box.y, box.width, box.height);
+        }
+
+        // draw enemy arrow
+
+        for (EnemyArrow a : enemyArrows) {
+            a.draw(g2, offsetX);
         }
 
         // draw player
@@ -335,7 +388,9 @@ public class TileMap {
             int h1 = (int) (img1.getHeight(null) * SCALE);
 
             int p1Offset = -15;
-            if (player1.dead && !player1.gettingHit) { // align death sprites
+            if (player1.gettingHit)
+                p1Offset = -15;
+            else if (player1.dead && !player1.gettingHit) { // align death sprites
                 p1Offset += 30;
             } else if (player1.attacking && player1.facingRight) { // align attacking right sprites
                 p1Offset += -30;
@@ -500,6 +555,11 @@ public class TileMap {
         arrows.add(new Arrow(x, y, facingRight, arrowImg));
     }
 
+    public void spawnEnemyArrow(int x, int y, boolean facingRight) {
+        Image img = ImageManager.loadImage("src/images/ItemsandObjects/Arrow.png");
+        enemyArrows.add(new EnemyArrow(x, y - 12, facingRight, img));
+    }
+
     private void updateArrows() {
         int mapWidthPixels = tilesToPixels(mapWidth);
 
@@ -534,6 +594,10 @@ public class TileMap {
 
         }
 
+        for (Skeleton s : skeletons) {
+            s.update();
+        }
+
 
         if (!player1.dead &&
                 (player1.attacking || player1.moveAttacking || player1.jumpAttacking)
@@ -565,6 +629,14 @@ public class TileMap {
                     s.takeDamage(player1.getAttackDamage(), hitFromRight);
                 }
             }
+
+            for (Skeleton s : skeletons) {
+                if (attackBox.intersects(s.getHitBox())) {
+
+                    boolean hitFromRight = player1.getX() > s.getX();
+                    s.takeDamage(player1.getAttackDamage(), hitFromRight);
+                }
+            }
         }
 
         for (Arrow a : arrows) {
@@ -583,11 +655,49 @@ public class TileMap {
                     break;
                 }
             }
+
+            for (Skeleton s : skeletons) {
+                if (a.collides(s.getHitBox())) {
+
+                    boolean hitFromRight = a.getX() > s.getX();
+
+                    s.takeDamage(a.getDamage(), hitFromRight);
+                    a.deactivate();
+                    break;
+                }
+            }
+        }
+
+        for (int i = enemyArrows.size() - 1; i >= 0; i--) {
+            EnemyArrow a = enemyArrows.get(i);
+            a.update();
+
+            if (a.getX() < 0 || a.getX() > tilesToPixels(mapWidth)) {
+                enemyArrows.remove(i);
+                continue;
+            }
+
+            if (!player1.dead && a.collides(player1.getHitBox())) {
+                player1.takeDamage(a.getDamage(), a.getX() > player1.getX());
+                enemyArrows.remove(i);
+                continue;
+            }
+
+            if (!player2.dead && a.collides(player2.getHitBox())) {
+                player2.takeDamage(a.getDamage(), a.getX() > player2.getX());
+                enemyArrows.remove(i);
+            }
         }
 
         for (int i = slimes.size() - 1; i >= 0; i--) {
             if (slimes.get(i).isDead()) {
                 slimes.remove(i);
+            }
+        }
+
+        for (int i = skeletons.size() - 1; i >= 0; i--) {
+            if (skeletons.get(i).isDead()) {
+                skeletons.remove(i);
             }
         }
 
@@ -629,8 +739,8 @@ public class TileMap {
         slimes.add(s);
     }
 
-    public ArrayList<Slime> getSlimes() {
-        return slimes;
+    public void addSkeleton(Skeleton s) {
+        skeletons.add(s);
     }
 
     public Player1 getPlayer1() {

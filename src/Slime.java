@@ -16,7 +16,6 @@ public class Slime {
 
     private boolean movingRight = true;
 
-    // Gravity fields (mirroring Player logic)
     private boolean inAir = false;
     private boolean jumping = false;
     private int timeElapsed = 0;
@@ -27,7 +26,7 @@ public class Slime {
     private int hitCooldown = 0;
     private int hitTimer = 0;
 
-    private int hp = 200;
+    private int hp = 80;
     private int damage = 1; // how much damage slime does
     private int scoreValue = 10;
 

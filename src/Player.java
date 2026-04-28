@@ -315,6 +315,12 @@ public class Player {
 	   runAnim.update();
 	   jumpAnim.update();
 
+	   if (gettingHit) {
+		   attacking = false;
+		   moveAttacking = false;
+		   jumpAttacking = false;
+	   }
+
 	   if (dead) {
 		   moving = false;
 		   jumping = false;
@@ -324,7 +330,7 @@ public class Player {
 		   fall();
 	   }
 
-	   if (attacking) {
+	   if (attacking && !gettingHit) {
 		   attackAnim.update();
 
 		   if (attackAnim.isFinished()) {

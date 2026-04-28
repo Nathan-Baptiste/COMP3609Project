@@ -81,6 +81,10 @@ public class TileMapManager {
                     int spawnX = x * 64;
                     int spawnY = y * 64;
                     newMap.addSlime(new Slime(panel, newMap, spawnX, spawnY));
+                } else if (ch == '2') {
+                    int spawnX = x * 64;
+                    int spawnY = y * 64;
+                    newMap.addSkeleton(new Skeleton(panel, newMap, spawnX, spawnY));
                 }
 /*
                 // check if the char represents a sprite
