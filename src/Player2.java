@@ -139,10 +139,10 @@ public class Player2 extends Player {
         int arrowY;
 
         if (facingRight) {
-            arrowX = getX() - 100;
+            arrowX = getX();
             arrowY = getY() + 16;
         } else {
-            arrowX = getX() - 140;
+            arrowX = getX();
             arrowY = getY() + 16;
         }
 

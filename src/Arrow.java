@@ -25,16 +25,17 @@ public class Arrow {
             x -= speed;
     }
 
-    public void draw(Graphics2D g2) {
+    public void draw(Graphics2D g2, int offsetX) {
         if (!active) return;
 
         int w = image.getWidth(null) * SCALE;
         int h = image.getHeight(null) * SCALE;
+        int screenX = x + offsetX;
 
         if (facingRight) {
-            g2.drawImage(image, x, y, w, h, null);
+            g2.drawImage(image, screenX, y, w, h, null);
         } else {
-            g2.drawImage(image, x + w, y, -w, h, null);
+            g2.drawImage(image, screenX + w, y, -w, h, null);
         }
     }
 

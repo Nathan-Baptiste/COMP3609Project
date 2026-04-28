@@ -338,22 +338,15 @@ public class TileMap {
         if ((player1.attacking || player1.moveAttacking || player1.jumpAttacking)
                 && player1.isAttackActiveFrame()) {
 
-            int hitWidth = 40;
-            int hitHeight = 30;
+            int hitWidth = 100;
+            int hitHeight = 80;
 
             int hitX = player1.getX();
             int hitY = player1.getY();
 
             // adjust vertical hitbox for air attack
             if (player1.jumpAttacking) {
-                hitHeight = 35;
                 hitY = player1.getY() - 10; // slightly above player
-            }
-
-            // move attack = slightly longer range
-            if (player1.moveAttacking) {
-                hitWidth = 55;
-                hitHeight = 30;
             }
 
             // direction handling (IMPORTANT)
@@ -407,7 +400,7 @@ public class TileMap {
         }
 
         for (Arrow a : new ArrayList<>(arrows)) {
-            a.draw(g2);
+            a.draw(g2, offsetX);
         }
     }
 
@@ -503,11 +496,14 @@ public class TileMap {
     }
 
     private void updateArrows() {
+        int mapWidthPixels = tilesToPixels(mapWidth);
+
         for (int i = arrows.size() - 1; i >= 0; i--) {
             Arrow a = arrows.get(i);
             a.update();
 
-            if (a.getX() < 0 || a.getX() > screenWidth) {
+            // remove when outside the world, not screen — world coords have no offsetX
+            if (a.getX() < 0 || a.getX() > mapWidthPixels) {
                 arrows.remove(i);
             }
         }
