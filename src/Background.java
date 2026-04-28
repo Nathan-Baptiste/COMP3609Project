@@ -23,8 +23,6 @@ public class Background {
     		this.bgImage = loadImage(imageFile);
     		bgImageWidth = bgImage.getWidth(null);	// get width of the background
 
-		System.out.println ("bgImageWidth = " + bgImageWidth);
-
 		dimension = panel.getSize();
 
 		totalOffset = 0;

@@ -202,12 +202,10 @@ public class Player {
 
       if (tilePos != null) {
          if (direction == 1) {
-	     System.out.println (": Collision going left");
              x = ((int) tilePos.getX() + 1) * TILE_SIZE;	   // keep flush with right side of tile
 	 }
          else
          if (direction == 2) {
-	     System.out.println (": Collision going right");
 
 			 int playerWidth = getDisplayWidth();
 			 int playerHeight = getDisplayHeight();
@@ -226,7 +224,6 @@ public class Player {
    	  }
 
 	  if (isInAir()) {
-		  System.out.println("In the air. Starting to fall.");
 		  fall();
 	  }
       }
@@ -357,7 +354,6 @@ public class Player {
 	   if (goingUp) {
 		Point tilePos = collidesWithTileUp (x, newY);
 	   	if (tilePos != null) {				// hits a tile going up
-		   	System.out.println ("Jumping: Collision Going Up!");
 
       	  		int offsetY = tileMap.getOffsetY();
 			int topTileY = ((int) tilePos.getY()) * TILE_SIZE + offsetY;
@@ -368,14 +364,12 @@ public class Player {
 		}
 	   	else {
 			y = newY;
-			System.out.println ("Jumping: No collision.");
 	   	}
             }
 	    else
 	    if (goingDown) {
 		Point tilePos = collidesWithTileDown (x, newY);
 	   	if (tilePos != null) {				// hits a tile going up
-		    System.out.println ("Jumping: Collision Going Down!");
 
 			int playerHeight = getDisplayHeight();
 		    goingDown = false;
@@ -391,7 +385,6 @@ public class Player {
 	       }
 	       else {
 		    y = newY;
-		    System.out.println ("Jumping: No collision.");
 	       }
 	   }
       }

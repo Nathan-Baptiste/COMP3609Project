@@ -102,8 +102,6 @@ public class GamePanel extends JPanel
 				int w, h;
 				w = tileMap.getWidth();
 				h = tileMap.getHeight();
-				System.out.println ("Width of tilemap " + w);
-				System.out.println ("Height of tilemap " + h);
 			}
 			catch (Exception e) {
 				System.out.println(e);
@@ -130,8 +128,6 @@ public class GamePanel extends JPanel
 				int w, h;
 				w = tileMap.getWidth();
 				h = tileMap.getHeight();
-				System.out.println ("Width of tilemap " + w);
-				System.out.println ("Height of tilemap " + h);
 			}
 			catch (Exception e) {
 				System.out.println(e);

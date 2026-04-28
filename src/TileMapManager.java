@@ -77,6 +77,10 @@ public class TileMapManager {
                 int tile = ch - 'A';
                 if (tile >= 0 && tile < tiles.size()) {
                     newMap.setTile(x, y, tiles.get(tile));
+                } else if (ch == '1') {
+                    int spawnX = x * 64;
+                    int spawnY = y * 64;
+                    newMap.addSlime(new Slime(panel, newMap, spawnX, spawnY));
                 }
 /*
                 // check if the char represents a sprite

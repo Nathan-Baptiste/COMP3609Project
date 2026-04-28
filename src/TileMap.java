@@ -34,7 +34,9 @@ public class TileMap {
 
     private JPanel panel;
     private Dimension dimension;
+
     private ArrayList<Arrow> arrows = new ArrayList<>();
+    private ArrayList<Slime> slimes = new ArrayList<>();
 
     /**
         Creates a new TileMap with the specified width and
@@ -48,9 +50,6 @@ public class TileMap {
 	screenWidth = dimension.width;
 	screenHeight = dimension.height;
 
-	System.out.println ("Width: " + screenWidth);
-	System.out.println ("Height: " + screenHeight);
-
 
 	mapWidth = width;
 	mapHeight = height;
@@ -58,7 +57,6 @@ public class TileMap {
         // get the y offset to draw all sprites and tiles
 
        	offsetY = screenHeight - tilesToPixels(mapHeight);
-	System.out.println("offsetY: " + offsetY);
 
 	bgManager = new BackgroundManager (panel, 12);
 
@@ -83,8 +81,6 @@ public class TileMap {
         player2.setX(x + 20); // offset Player2
         player2.setY(y);
         player2.fall();
-
-	System.out.println("Player coordinates: " + x + "," + y);
 
     }
 
@@ -213,6 +209,13 @@ public class TileMap {
             }
         }
 
+        //draw enemy
+        for (Slime s : slimes) {
+            g2.drawImage(s.getImage(),
+                    s.getX() + offsetX,
+                    s.getY() + offsetY,
+                    null);
+        }
 
         // draw player
 
@@ -417,8 +420,6 @@ public class TileMap {
         int x = player1.getX();
         int y = player1.getY();
 
-        System.out.println("P1 Left: x=" + x + " y=" + y);
-
         player1.move(1);
     }
 
@@ -426,8 +427,6 @@ public class TileMap {
     public void moveRightP1() {
         int x = player1.getX();
         int y = player1.getY();
-
-        System.out.println("P1 Right: x=" + x + " y=" + y);
 
         player1.move(2);
     }
@@ -437,16 +436,12 @@ public class TileMap {
         int x = player2.getX();
         int y = player2.getY();
 
-        System.out.println("P2 Left: x=" + x + " y=" + y);
-
         player2.move(1);
     }
 
     public void moveRightP2() {
         int x = player2.getX();
         int y = player2.getY();
-
-        System.out.println("P2 Right: x=" + x + " y=" + y);
 
         player2.move(2);
     }
@@ -457,8 +452,6 @@ public class TileMap {
         int x = player1.getX();
         int y = player1.getY();
 
-        System.out.println("P1 Jump: x=" + x + " y=" + y);
-
         player1.move(3);
     }
 
@@ -466,8 +459,6 @@ public class TileMap {
     public void jumpP2() {
         int x = player2.getX();
         int y = player2.getY();
-
-        System.out.println("P2 Jump: x=" + x + " y=" + y);
 
         player2.move(3);
     }
@@ -514,6 +505,10 @@ public class TileMap {
         player2.update();
         updateArrows();
 
+        for (Slime s : slimes) {
+            s.update();
+        }
+
         int mapWidthPixels = tilesToPixels(mapWidth);
 
         int offsetX = screenWidth / 2 -
@@ -545,6 +540,15 @@ public class TileMap {
         player2.respawn(newX, newY);
 
         System.out.println("Player2 respawned next to Player1");
+    }
+
+
+    public void addSlime(Slime s) {
+        slimes.add(s);
+    }
+
+    public ArrayList<Slime> getSlimes() {
+        return slimes;
     }
 
 }
