@@ -2,6 +2,8 @@ import java.awt.*;
 
 public class Arrow {
 
+    private static final int SCALE = 2;
+
     private int x, y;
     private int speed = 18;
     private boolean facingRight;
@@ -26,19 +28,20 @@ public class Arrow {
     public void draw(Graphics2D g2) {
         if (!active) return;
 
-        int w = image.getWidth(null) * 2;
-        int h = image.getHeight(null) * 2;
+        int w = image.getWidth(null) * SCALE;
+        int h = image.getHeight(null) * SCALE;
 
         if (facingRight) {
             g2.drawImage(image, x, y, w, h, null);
         } else {
-            // flip while scaling
             g2.drawImage(image, x + w, y, -w, h, null);
         }
     }
 
     public Rectangle getHitBox() {
-        return new Rectangle(x, y, image.getWidth(null), image.getHeight(null));
+        int w = image.getWidth(null) * SCALE;
+        int h = image.getHeight(null) * SCALE;
+        return new Rectangle(x, y, w, h);
     }
 
     public boolean collides(Rectangle r) {

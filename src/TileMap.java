@@ -221,45 +221,45 @@ public class TileMap {
         int w2 = (int)(img2.getWidth(null) * SCALE);
         int h2 = (int)(img2.getHeight(null) * SCALE);
 
-        int p2Offset = 0;
+        int p2Offset = -10;
         if ((player2.jumping || player2.inAir) && player2.charging && player2.facingRight) { //align jump charging right
-            p2Offset = -5;
+            p2Offset += -5;
         } else if ((player2.jumping || player2.inAir) && player2.charging && !player2.facingRight) { //align jump charging left
-            p2Offset = -16;
+            p2Offset += -16;
         } else if ((player2.jumping || player2.inAir) && player2.shooting && player2.facingRight) { //align jump shooting right
-            p2Offset = -8;
+            p2Offset += -8;
         } else if ((player2.jumping || player2.inAir) && player2.shooting && !player2.facingRight) { //align jump shooting left
-            p2Offset = -10;
+            p2Offset += -10;
         } else if (player2.charging && player2.facingRight) { // align charging right sprites
-            p2Offset = -4;
+            p2Offset += -4;
         } else if (player2.charging && !player2.facingRight) { //align charging left sprites
-            p2Offset = -16;
+            p2Offset += -16;
         } else if (player2.shooting && player2.facingRight) { // align shooting right sprites
-            p2Offset = -6;
+            p2Offset += -6;
         } else if (player2.shooting && !player2.facingRight) { //align shooting left sprites
-            p2Offset = -14;
+            p2Offset += -14;
         } else if ((player2.jumping || player2.inAir) && player2.moving && player2.facingRight) { //align jumping and moving right sprites
-            p2Offset = 10;
+            p2Offset += 10;
         } else if ((player2.jumping || player2.inAir) && player2.moving && !player2.facingRight) { //align jumping and moving left sprites
-            p2Offset = 12;
+            p2Offset += 12;
         } else if ((player2.jumping || player2.inAir) && player2.facingRight) { //align jumping right sprites
-            p2Offset = 10;
+            p2Offset += 10;
         } else if ((player2.jumping || player2.inAir) && !player2.facingRight) { //align jumping left sprites
-            p2Offset = 15;
+            p2Offset += 15;
         }else if (!player2.facingRight && player2.moving) //align moving left sprites
-            p2Offset = -15;
+            p2Offset += -15;
         else if (!player2.facingRight) //align idle left sprites
-            p2Offset = -8;
+            p2Offset += -8;
         else if (player2.moving) //align moving right sprites.
-            p2Offset = -35;
+            p2Offset += -35;
         int p2X = Math.round(player2.getX()) + offsetX + p2Offset - 25;
         int p2Y = Math.round(player2.getY());
 
         int drawY2;
         if (player2.moving)
-            drawY2 = p2Y + 2 + (img2.getHeight(null) - h2);
+            drawY2 = p2Y + 47 + (img2.getHeight(null) - h2);
         else
-            drawY2 = p2Y + (img2.getHeight(null) - h2);
+            drawY2 = p2Y + 45 + (img2.getHeight(null) - h2);
 
         if (player2.facingRight) {
             g2.drawImage(img2, p2X, drawY2, w2, h2, null);
@@ -285,37 +285,37 @@ public class TileMap {
         int w1 = (int)(img1.getWidth(null) * SCALE);
         int h1 = (int)(img1.getHeight(null) * SCALE);
 
-        int p1Offset = 0;
+        int p1Offset = -15;
         if (player1.attacking && player1.facingRight) { // allign attacking right sprites
-            p1Offset = -30;
+            p1Offset += -30;
         } else if (player1.attacking && !player1.facingRight) { //align attacking left sprites
-            p1Offset = -100;
+            p1Offset += -100;
         } else if (player1.moveAttacking && player1.facingRight) { //align right move attack sprites
-            p1Offset = -25;
+            p1Offset += -25;
         } else if (player1.moveAttacking && !player1.facingRight) { //align left move attack sprites
-            p1Offset = -100;
+            p1Offset += -100;
         }else if (player1.jumpAttacking && player1.facingRight) { //align right jump attack sprites
-            p1Offset = -28;
+            p1Offset += -28;
         } else if (player1.jumpAttacking && !player1.facingRight) { //align left jump attack sprites
-            p1Offset = -70;
+            p1Offset += -70;
         } else if ((player1.jumping || player1.inAir) && player1.moving && player1.facingRight) { //align jumping and moving right sprites
-            p1Offset = 10;
+            p1Offset += 10;
         } else if ((player1.jumping || player1.inAir) && player1.facingRight) { //align jumping right sprites
-            p1Offset = 10;
+            p1Offset += 10;
         } else if ((player1.jumping || player1.inAir) && !player1.facingRight) { //align jumping left sprites
-            p1Offset = 5;
+            p1Offset += 5;
         } else if (!player1.facingRight && player1.moving) { //align moving left sprites
-            p1Offset = -80;
+            p1Offset += -80;
         } else if (!player1.facingRight) { //align idle left sprites
-            p1Offset = -28;
+            p1Offset += -28;
         } else if (player1.moving) { //align moving right sprites
-            p1Offset = -10;
+            p1Offset += -10;
         }
         int p1X = Math.round(player1.getX()) + offsetX + p1Offset - 25;
 
         int p1Y = Math.round(player1.getY());
 
-        int drawY = p1Y + (img1.getHeight(null) - h1);
+        int drawY = p1Y + 45 + (img1.getHeight(null) - h1);
 
         if (player1.facingRight) {
             g2.drawImage(img1, p1X, drawY, w1, h1, null);
@@ -406,7 +406,7 @@ public class TileMap {
             g2.drawString("" + seconds, drawX, p2ScreenY);
         }
 
-        for (Arrow a : arrows) {
+        for (Arrow a : new ArrayList<>(arrows)) {
             a.draw(g2);
         }
     }

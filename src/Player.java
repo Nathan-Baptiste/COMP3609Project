@@ -17,6 +17,9 @@ public class Player {
    private int x;			// x-position of player's sprite
    private int y;			// y-position of player's sprite
 
+	protected int collisionWidth = -1;
+	protected int collisionHeight = -1;
+
    Graphics2D g2;
    private Dimension dimension;
 
@@ -66,26 +69,37 @@ public class Player {
    }
 
 
-   public Point collidesWithTile(int newX, int newY) {
+    public Point collidesWithTile(int newX, int newY) {
 
+        int offsetY = tileMap.getOffsetY();
+        int playerHeight = getDisplayHeight();
+        int xTile = tileMap.pixelsToTiles(newX);
 
-	   int playerWidth = getDisplayWidth();
-	   int offsetY = tileMap.getOffsetY();
-	   int xTile = tileMap.pixelsToTiles(newX);
-	   int yTile = tileMap.pixelsToTiles(newY - offsetY);
+        int yTileTop    = tileMap.pixelsToTiles(newY - offsetY);
+        int yTileBottom = tileMap.pixelsToTiles(newY - offsetY + playerHeight - 1);
 
-	  if (tileMap.getTile(xTile, yTile) != null) {
-	        Point tilePos = new Point (xTile, yTile);
-	  	return tilePos;
-	  }
-	  else {
-		return null;
-	  }
-   }
+        for (int yTile = yTileTop; yTile <= yTileBottom; yTile++) {
+            if (tileMap.getTile(xTile, yTile) != null) {
+                return new Point(xTile, yTile);
+            }
+        }
+
+        return null;
+    }
+
+    public Point collidesWithTileAtPoint(int newX, int newY) {
+        int offsetY = tileMap.getOffsetY();
+        int xTile = tileMap.pixelsToTiles(newX);
+        int yTile = tileMap.pixelsToTiles(newY - offsetY);
+
+        if (tileMap.getTile(xTile, yTile) != null) {
+            return new Point(xTile, yTile);
+        }
+        return null;
+    }
 
 
    public Point collidesWithTileDown (int newX, int newY) {
-
 
 	   int playerWidth = getDisplayWidth();
 	   int playerHeight = getDisplayHeight();
@@ -258,8 +272,8 @@ public class Player {
 			int playerHeight = getDisplayHeight();
 			int playerWidth = getDisplayWidth();
 
-			Point tilePosLeft  = collidesWithTile(x, y + playerHeight + 1);
-			Point tilePosRight = collidesWithTile(x + playerWidth - 1, y + playerHeight + 1);
+			Point tilePosLeft  = collidesWithTileAtPoint(x, y + playerHeight + 1);
+			Point tilePosRight = collidesWithTileAtPoint(x + playerWidth - 1, y + playerHeight + 1);
 
 			if (tilePosLeft == null && tilePosRight == null)
 				return true;
@@ -482,10 +496,10 @@ public class Player {
 	}
 
 	public int getDisplayWidth() {
-		return idleAnim.getImage().getWidth(null) * SCALE;
+		return (idleAnim.getImage().getWidth(null) * SCALE) - 20;
 	}
 	public int getDisplayHeight() {
-		return idleAnim.getImage().getHeight(null) * SCALE;
+		return (idleAnim.getImage().getHeight(null) * SCALE) + 45;
 	}
 
 	public void respawn(int x, int y) {
@@ -495,7 +509,7 @@ public class Player {
 	}
 
 	public Rectangle getHitBox() {
-		int width = getDisplayWidth();
+		int width = getDisplayWidth() ;
 		int height = getDisplayHeight();
 
 		return new Rectangle(x, y, width, height);

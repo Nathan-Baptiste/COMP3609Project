@@ -3,6 +3,9 @@ import javax.swing.JPanel;
 
 public class Player2 extends Player {
 
+    private int shootCooldown = 0;
+    private static final int SHOOT_COOLDOWN_MAX = 5; // adjust feel (25 = ~0.5 sec if 50ms loop)
+
     public Player2(JPanel panel, TileMap tileMap, BackgroundManager backgroundManager) {
         super(panel, tileMap, backgroundManager);
 
@@ -36,7 +39,6 @@ public class Player2 extends Player {
         jumpShootAnim.start();
     }
 
-    @Override
     public synchronized void move(int direction) {
 
         int newX = getX();
@@ -99,9 +101,18 @@ public class Player2 extends Player {
         }
     }
 
+    public void update() {
+        super.update();
+
+        if (shootCooldown > 0) {
+            shootCooldown--;
+        }
+    }
 
 
     public void startCharge() {
+        if (shootCooldown > 0) return;
+
         if (!charging) {
             charging = true;
             chargeTime = 0;
@@ -112,10 +123,13 @@ public class Player2 extends Player {
     public void releaseShoot() {
         if (!charging) return;
 
-        charging = false;
+        if (shootCooldown > 0) return;
 
+        charging = false;
         shooting = true;
         shootTimer = 8;
+
+        shootCooldown = SHOOT_COOLDOWN_MAX;
 
         if (jumpShootAnim != null && (isInAir() || jumping)) {
             jumpShootAnim.start();
@@ -126,10 +140,10 @@ public class Player2 extends Player {
 
         if (facingRight) {
             arrowX = getX() - 100;
-            arrowY = getY() - 30;
+            arrowY = getY() + 16;
         } else {
             arrowX = getX() - 140;
-            arrowY = getY() - 30;
+            arrowY = getY() + 16;
         }
 
         tileMap.spawnArrow(arrowX, arrowY, facingRight);
