@@ -2,13 +2,21 @@ import java.awt.*;
 import javax.swing.JPanel;
 import javax.xml.transform.sax.SAXResult;
 
-public class Player {			
+public class Player {
 
    private static final int DX = 12;	// amount of X pixels to move in one keystroke
    private static final int DY = 32;	// amount of Y pixels to move in one keystroke
 	protected static final int SCALE = 1;
 
    private static final int TILE_SIZE = 64;
+
+	// HIT EFFECT
+	protected Image hitImage;
+	protected boolean gettingHit = false;
+	private int hitTimer = 0;
+	private static final int HIT_DURATION = 8; // ~0.4 sec
+
+	private static final int KNOCKBACK = 25;
 
    private JPanel panel;		// reference to the JFrame on which player is drawn
    protected TileMap tileMap;
@@ -33,6 +41,7 @@ public class Player {
 	protected StripAnimation shootAnim;
 	protected StripAnimation jumpChargeAnim;
 	protected StripAnimation jumpShootAnim;
+	protected Image deathImage;
 
 	protected boolean facingRight = true;
 
@@ -56,6 +65,18 @@ public class Player {
 	protected int chargeTime = 0;
 	protected boolean shooting = false;
 	protected int shootTimer = 0;
+
+	protected int health = 5;
+	protected boolean dead = false;
+	private static final int MAX_HEALTH = 5;
+	private int damageCooldown = 0;
+	private static final int DAMAGE_COOLDOWN_MAX = 6;
+
+	private boolean invincible = false;
+	private int invincibleTimer = 0;
+	private static final int INVINCIBLE_TIME = 20; // ~1 second (20 * 50ms)
+
+	private boolean visible = true; // for flashing
 
    public Player (JPanel panel, TileMap t, BackgroundManager b) {
       this.panel = panel;
@@ -159,6 +180,9 @@ public class Player {
    }
 
    public synchronized void move (int direction) {
+
+	   if (gettingHit) return;
+	   if (dead) return;
 
       int newX = x;
       Point tilePos = null;
@@ -266,6 +290,8 @@ public class Player {
 
    public void jump () {
 
+	   if (dead) return;
+
       if (!panel.isVisible () || jumping || inAir) return;
 	  if (attacking && !inAir) return;
 	  if (moveAttacking) return;
@@ -288,6 +314,15 @@ public class Player {
 	   idleAnim.update();
 	   runAnim.update();
 	   jumpAnim.update();
+
+	   if (dead) {
+		   moving = false;
+		   jumping = false;
+		   attacking = false;
+		   charging = false;
+		   shooting = false;
+		   fall();
+	   }
 
 	   if (attacking) {
 		   attackAnim.update();
@@ -338,6 +373,31 @@ public class Player {
 			   shooting = false;
 			   shootTimer = 0;
 			   shootAnim.start();
+		   }
+	   }
+
+	   if (damageCooldown > 0) {
+		   damageCooldown--;
+	   }
+
+	   // Handle invincibility + flashing
+	   if (invincible) {
+		   invincibleTimer--;
+
+		   // toggle visibility every few frames
+		   visible = (invincibleTimer % 4 < 2);
+
+		   if (invincibleTimer <= 0) {
+			   invincible = false;
+			   visible = true;
+		   }
+	   }
+
+	   // HIT TIMER
+	   if (gettingHit) {
+		   hitTimer--;
+		   if (hitTimer <= 0) {
+			   gettingHit = false;
 		   }
 	   }
 
@@ -420,8 +480,54 @@ public class Player {
       this.y = y;
    }
 
+	public int getHealth() {
+		return health;
+	}
+
+	public boolean takeDamage(int dmg, boolean hitFromRight) {
+		if (invincible || dead) return false;
+
+		health -= dmg;
+
+		// KNOCKBACK
+		if (hitFromRight) {
+			x -= KNOCKBACK; // hit from right → push left
+		} else {
+			x += KNOCKBACK; // hit from left → push right
+		}
+
+		// clamp inside map
+		if (x < 0) x = 0;
+		if (x > tileMap.getWidthPixels() - getDisplayWidth())
+			x = tileMap.getWidthPixels() - getDisplayWidth();
+
+		// HIT STATE
+		gettingHit = true;
+		hitTimer = HIT_DURATION;
+
+		if (health <= 0) {
+			health = 0;
+			dead = true;
+			visible = true;
+		}
+
+		invincible = true;
+		invincibleTimer = INVINCIBLE_TIME;
+
+		return true;
+	}
+
 
 	public Image getImage() {
+
+		if (gettingHit && hitImage != null) {
+			return hitImage;
+		}
+
+		if (dead) {
+			return deathImage;
+		}
+
 	   //P1 Attack States
 		if (jumpAttacking)
 			return jumpAttackAnim.getImage();
@@ -466,6 +572,14 @@ public class Player {
 	public void respawn(int x, int y) {
 		setX(x);
 		setY(y);
+
+		health = MAX_HEALTH;
+		dead = false;
+
+		visible = true;
+		invincible = false;
+		invincibleTimer = 0;
+
 		fall();
 	}
 
@@ -475,6 +589,7 @@ public class Player {
 
 		return new Rectangle(x, y, width, height);
 	}
+
 
 	public boolean isAttackActiveFrame() {
 
@@ -489,6 +604,14 @@ public class Player {
 
 		// Frames 2, 3, 4 (0-based index = 3rd, 4th, 5th frames)
 		return frame >= 2 && frame <= 4;
+	}
+
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public boolean isDead() {
+		return dead;
 	}
 
 }

@@ -9,6 +9,8 @@ public class Arrow {
     private boolean facingRight;
     private boolean active = true;
 
+    private int damage = 10;
+
     private Image image;
 
     public Arrow(int x, int y, boolean facingRight, Image image) {
@@ -59,4 +61,5 @@ public class Arrow {
 
     public int getX() { return x; }
     public int getY() { return y; }
+    public int getDamage() { return damage; }
 }

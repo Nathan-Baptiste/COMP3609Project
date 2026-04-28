@@ -3,6 +3,7 @@ import java.awt.*;
 
 public class Player1 extends Player {
 
+    private int attackDamage = 15;
 
     public Player1(JPanel panel, TileMap tileMap, BackgroundManager backgroundManager) {
         super(panel, tileMap, backgroundManager);
@@ -24,6 +25,9 @@ public class Player1 extends Player {
 
         Image jumpAttackStrip = ImageManager.loadImage("src/images/Player1/Player1JumpAttack.png");
         jumpAttackAnim = new StripAnimation(jumpAttackStrip, 6, 0, 0, panel, false);
+
+        hitImage = ImageManager.loadImage("src/images/Player1/Player1Hit.png");
+        deathImage = ImageManager.loadImage("src/images/Player1/PlayerDeath.png");
 
         idleAnim.start();
         runAnim.start();
@@ -48,5 +52,9 @@ public class Player1 extends Player {
             attacking = true;
             attackAnim.start();
         }
+    }
+
+    public int getAttackDamage() {
+        return attackDamage;
     }
 }

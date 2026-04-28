@@ -1,7 +1,6 @@
 import javax.swing.JPanel;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.Graphics2D;
 
 /**
    A component that displays all the game entities
@@ -21,6 +20,22 @@ public class GamePanel extends JPanel
 
 	private BufferedImage image;
  	private Image backgroundImage;
+
+	private long startTime;
+
+	// scores
+	private int p1Score = 0;
+	private int p2Score = 0;
+
+	// coins
+	private int p1Coins = 0;
+	private int p2Coins = 0;
+
+	private int p2RespawnTimer = -1;
+	private static final int RESPAWN_TIME = 200; // ~10 seconds
+
+	private boolean gameOver = false;
+	private int fadeAlpha = 0;
 
 	private BirdAnimation animation;
 	private volatile boolean isAnimShown;
@@ -69,6 +84,38 @@ public class GamePanel extends JPanel
 
 		if (!isPaused && isAnimShown)
 			animation.update();
+
+		// Handle P2 respawn
+		if (tileMap.getPlayer2().isDead()) {
+
+			if (p2RespawnTimer == -1) {
+				p2RespawnTimer = RESPAWN_TIME;
+			}
+
+			p2RespawnTimer--;
+
+			if (p2RespawnTimer <= 0) {
+				tileMap.respawnPlayer2();
+				p2RespawnTimer = -1;
+			}
+
+		} else {
+			p2RespawnTimer = -1; // reset if alive
+		}
+
+		// Game over check
+		if (tileMap.getPlayer1().isDead()) {
+			gameOver = true;
+		}
+
+		// Handle fade
+		if (gameOver && fadeAlpha < 255) {
+			fadeAlpha += 3; // speed of fade
+		}
+
+		if (fadeAlpha >= 255) {
+			endGame();
+		}
 	}
 
 
@@ -78,10 +125,29 @@ public class GamePanel extends JPanel
 
 		Graphics2D imageContext = (Graphics2D) image.getGraphics();
 
+		Font hudFont = new Font("Monospaced", Font.BOLD, 20);
+		imageContext.setFont(hudFont);
+
 		tileMap.draw (imageContext);
 
 		if (isAnimShown)
 			animation.draw(imageContext);		// draw the animation
+
+		drawHUD(imageContext);
+
+		if (gameOver) {
+			Graphics2D g = (Graphics2D) image.getGraphics();
+
+			g.setColor(new Color(0, 0, 0, fadeAlpha));
+			g.fillRect(0, 0, 1280, 720);
+
+			if (fadeAlpha >= 200) {
+				g.setFont(new Font("Monospaced", Font.BOLD, 60));
+				drawOutlinedString(g, "GAME OVER", 450, 360);
+			}
+
+			g.dispose();
+		}
 
 		Graphics2D g2 = (Graphics2D) getGraphics();	// get the graphics context for the panel
 		g2.drawImage(image, 0, 0, 1280, 720, null);	// draw the image on the graphics context
@@ -90,7 +156,9 @@ public class GamePanel extends JPanel
 	}
 
 
-	public void startGame() {				// initialise and start the game thread 
+	public void startGame() {				// initialise and start the game thread
+
+		startTime = System.currentTimeMillis();
 
 		if (gameThread == null) {
 			//soundManager.playSound ("background", true);
@@ -179,6 +247,82 @@ public class GamePanel extends JPanel
 	public void jumpP2() { tileMap.jumpP2(); }
 	public void startChargeP2() { tileMap.player2StartCharge(); }
 	public void releaseShootP2() { tileMap.player2Shoot(); }
+
+	private void drawHUD(Graphics2D g) {
+
+		g.setFont(new Font("Monospaced", Font.BOLD, 20));
+
+		// Timer
+		long elapsed = System.currentTimeMillis() - startTime;
+
+		int hours = (int)(elapsed / 3600000);
+		int minutes = (int)((elapsed / 60000) % 60);
+		int seconds = (int)((elapsed / 1000) % 60);
+
+		String timer = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+
+		// center top
+		drawOutlinedString(g, timer, 640 - 40, 30);
+
+		// Player 1
+		drawOutlinedString(g, "P1: " + String.format("%08d", p1Score), 20, 30);
+		drawOutlinedString(g, "Coins: " + p1Coins, 20, 60);
+
+		drawHealth(g, 20, 90, tileMap.getPlayer1Health());
+
+		// Player 2
+		drawOutlinedString(g, "P2: " + String.format("%08d", p2Score), 1050, 30);
+		drawOutlinedString(g, "Coins: " + p2Coins, 1050, 60);
+
+		if (tileMap.getPlayer2().isDead()) {
+			int secs = p2RespawnTimer / 20 + 1;
+			drawOutlinedString(g, "Respawn: " + secs, 1050, 90);
+		} else {
+			drawHealth(g, 1050, 90, tileMap.getPlayer2Health());
+
+		}
+	}
+
+	private void drawHealth(Graphics2D g, int x, int y, int health) {
+
+		// label
+		drawOutlinedString(g, "Health:", x, y);
+
+		int offsetX = x + 90;
+
+		for (int i = 0; i < 5; i++) {
+
+			int sx = offsetX + (i * 18);
+			int sy = y - 12;
+			int size = 12;
+
+			if (i < health) {
+				// green health square
+				g.setColor(Color.GREEN);
+				g.fillRect(sx, sy, size, size);
+			} else {
+				// empty square
+				g.setColor(Color.DARK_GRAY);
+				g.fillRect(sx, sy, size, size);
+			}
+
+			// BLACK outline for ALL squares
+			g.setColor(Color.BLACK);
+			g.drawRect(sx, sy, size, size);
+		}
+	}
+
+	private void drawOutlinedString(Graphics2D g, String text, int x, int y) {
+
+		g.setColor(Color.BLACK);
+		g.drawString(text, x - 1, y);
+		g.drawString(text, x + 1, y);
+		g.drawString(text, x, y - 1);
+		g.drawString(text, x, y + 1);
+
+		g.setColor(Color.WHITE);
+		g.drawString(text, x, y);
+	}
 
 	
 	public void showAnimation() {

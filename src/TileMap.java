@@ -217,15 +217,25 @@ public class TileMap {
             int h = (int)(img.getHeight(null) * SCALE);
 
             int xOffset = -20;
-            int yOffset = -327;
+            int yOffset = -326;
 
             int drawX = s.getX() + offsetX + xOffset;
             int drawY = s.getY() + offsetY + yOffset;
 
-            if (s.isMovingRight()) {
-                g2.drawImage(img, drawX + w, drawY, -w, h, null);
+            boolean hit = s.isGettingHit();
+
+            if (hit) {
+                if (s.isMovingRight()) {
+                    g2.drawImage(img, drawX + 28 + w, drawY + 6, -w, h, null);
+                } else {
+                    g2.drawImage(img, drawX + 28, drawY + 6, w, h, null);
+                }
             } else {
-                g2.drawImage(img, drawX + 18, drawY, w, h, null);
+                if (s.isMovingRight()) {
+                    g2.drawImage(img, drawX + w, drawY, -w, h, null);
+                } else {
+                    g2.drawImage(img, drawX + 18, drawY, w, h, null);
+                }
             }
 
             // HITBOX
@@ -242,166 +252,148 @@ public class TileMap {
         // draw player
 
         //Player 2
-        Image img2 = player2.getImage();
-        int w2 = (int)(img2.getWidth(null) * SCALE);
-        int h2 = (int)(img2.getHeight(null) * SCALE);
+        if (player2.isVisible()) {
+            Image img2 = player2.getImage();
+            int w2 = (int) (img2.getWidth(null) * SCALE);
+            int h2 = (int) (img2.getHeight(null) * SCALE);
 
-        int p2Offset = -10;
-        if ((player2.jumping || player2.inAir) && player2.charging && player2.facingRight) { //align jump charging right
-            p2Offset += -5;
-        } else if ((player2.jumping || player2.inAir) && player2.charging && !player2.facingRight) { //align jump charging left
-            p2Offset += -16;
-        } else if ((player2.jumping || player2.inAir) && player2.shooting && player2.facingRight) { //align jump shooting right
-            p2Offset += -8;
-        } else if ((player2.jumping || player2.inAir) && player2.shooting && !player2.facingRight) { //align jump shooting left
-            p2Offset += -10;
-        } else if (player2.charging && player2.facingRight) { // align charging right sprites
-            p2Offset += -4;
-        } else if (player2.charging && !player2.facingRight) { //align charging left sprites
-            p2Offset += -16;
-        } else if (player2.shooting && player2.facingRight) { // align shooting right sprites
-            p2Offset += -6;
-        } else if (player2.shooting && !player2.facingRight) { //align shooting left sprites
-            p2Offset += -14;
-        } else if ((player2.jumping || player2.inAir) && player2.moving && player2.facingRight) { //align jumping and moving right sprites
-            p2Offset += 10;
-        } else if ((player2.jumping || player2.inAir) && player2.moving && !player2.facingRight) { //align jumping and moving left sprites
-            p2Offset += 12;
-        } else if ((player2.jumping || player2.inAir) && player2.facingRight) { //align jumping right sprites
-            p2Offset += 10;
-        } else if ((player2.jumping || player2.inAir) && !player2.facingRight) { //align jumping left sprites
-            p2Offset += 15;
-        }else if (!player2.facingRight && player2.moving) //align moving left sprites
-            p2Offset += -15;
-        else if (!player2.facingRight) //align idle left sprites
-            p2Offset += -8;
-        else if (player2.moving) //align moving right sprites.
-            p2Offset += -35;
-        int p2X = Math.round(player2.getX()) + offsetX + p2Offset - 25;
-        int p2Y = Math.round(player2.getY());
+            int p2Offset = -10;
+            if (player2.dead && !player2.gettingHit) { // align death sprites
+                p2Offset += 20;
+            } else if (player2.gettingHit && player2.facingRight) { // align hit right sprites
+                p2Offset += 20;
+            } else if (player2.gettingHit && !player2.facingRight) { //align hit left sprites
+                p2Offset += 20;
+            } else if ((player2.jumping || player2.inAir) && player2.charging && player2.facingRight) { //align jump charging right
+                p2Offset += -5;
+            } else if ((player2.jumping || player2.inAir) && player2.charging && !player2.facingRight) { //align jump charging left
+                p2Offset += -16;
+            } else if ((player2.jumping || player2.inAir) && player2.shooting && player2.facingRight) { //align jump shooting right
+                p2Offset += -8;
+            } else if ((player2.jumping || player2.inAir) && player2.shooting && !player2.facingRight) { //align jump shooting left
+                p2Offset += -10;
+            } else if (player2.charging && player2.facingRight) { // align charging right sprites
+                p2Offset += -4;
+            } else if (player2.charging && !player2.facingRight) { //align charging left sprites
+                p2Offset += -16;
+            } else if (player2.shooting && player2.facingRight) { // align shooting right sprites
+                p2Offset += -6;
+            } else if (player2.shooting && !player2.facingRight) { //align shooting left sprites
+                p2Offset += -14;
+            } else if ((player2.jumping || player2.inAir) && player2.moving && player2.facingRight) { //align jumping and moving right sprites
+                p2Offset += 10;
+            } else if ((player2.jumping || player2.inAir) && player2.moving && !player2.facingRight) { //align jumping and moving left sprites
+                p2Offset += 12;
+            } else if ((player2.jumping || player2.inAir) && player2.facingRight) { //align jumping right sprites
+                p2Offset += 10;
+            } else if ((player2.jumping || player2.inAir) && !player2.facingRight) { //align jumping left sprites
+                p2Offset += 15;
+            } else if (!player2.facingRight && player2.moving) //align moving left sprites
+                p2Offset += -15;
+            else if (!player2.facingRight) //align idle left sprites
+                p2Offset += -8;
+            else if (player2.moving) //align moving right sprites.
+                p2Offset += -35;
+            int p2X = Math.round(player2.getX()) + offsetX + p2Offset - 25;
+            int p2Y = Math.round(player2.getY());
 
-        int drawY2;
-        if (player2.moving)
-            drawY2 = p2Y + 47 + (img2.getHeight(null) - h2);
-        else
-            drawY2 = p2Y + 45 + (img2.getHeight(null) - h2);
+            int drawY2;
+            if (player2.moving)
+                drawY2 = p2Y + 47 + (img2.getHeight(null) - h2);
+            else if (player2.gettingHit)
+                drawY2 = p2Y + 50 + (img2.getHeight(null) - h2);
+            else if (player2.dead && !player2.gettingHit)
+                drawY2 = p2Y + 62 + (img2.getHeight(null) - h2);
+            else
+                drawY2 = p2Y + 45 + (img2.getHeight(null) - h2);
 
-        if (player2.facingRight) {
-            g2.drawImage(img2, p2X, drawY2, w2, h2, null);
-        } else {
-            g2.drawImage(img2, p2X + w2, drawY2, -w2, h2, null);
+
+            if (player2.facingRight) {
+                g2.drawImage(img2, p2X, drawY2, w2, h2, null);
+            } else {
+                g2.drawImage(img2, p2X + w2, drawY2, -w2, h2, null);
+            }
+
+            // HITBOX
+            Rectangle p2Box = player2.getHitBox();
+
+            g2.setColor(Color.BLUE);
+            g2.drawRect(
+                    p2Box.x + offsetX,
+                    p2Box.y,
+                    p2Box.width,
+                    p2Box.height
+            );
         }
-
-        // HITBOX
-        Rectangle p2Box = player2.getHitBox();
-
-        g2.setColor(Color.BLUE);
-        g2.drawRect(
-                p2Box.x + offsetX,
-                p2Box.y,
-                p2Box.width,
-                p2Box.height
-        );
 
 
         //Player 1
-        Image img1 = player1.getImage();
+        if (player1.isVisible()) {
+            Image img1 = player1.getImage();
 
-        int w1 = (int)(img1.getWidth(null) * SCALE);
-        int h1 = (int)(img1.getHeight(null) * SCALE);
+            int w1 = (int) (img1.getWidth(null) * SCALE);
+            int h1 = (int) (img1.getHeight(null) * SCALE);
 
-        int p1Offset = -15;
-        if (player1.attacking && player1.facingRight) { // allign attacking right sprites
-            p1Offset += -30;
-        } else if (player1.attacking && !player1.facingRight) { //align attacking left sprites
-            p1Offset += -100;
-        } else if (player1.moveAttacking && player1.facingRight) { //align right move attack sprites
-            p1Offset += -25;
-        } else if (player1.moveAttacking && !player1.facingRight) { //align left move attack sprites
-            p1Offset += -100;
-        }else if (player1.jumpAttacking && player1.facingRight) { //align right jump attack sprites
-            p1Offset += -28;
-        } else if (player1.jumpAttacking && !player1.facingRight) { //align left jump attack sprites
-            p1Offset += -70;
-        } else if ((player1.jumping || player1.inAir) && player1.moving && player1.facingRight) { //align jumping and moving right sprites
-            p1Offset += 10;
-        } else if ((player1.jumping || player1.inAir) && player1.facingRight) { //align jumping right sprites
-            p1Offset += 10;
-        } else if ((player1.jumping || player1.inAir) && !player1.facingRight) { //align jumping left sprites
-            p1Offset += 5;
-        } else if (!player1.facingRight && player1.moving) { //align moving left sprites
-            p1Offset += -80;
-        } else if (!player1.facingRight) { //align idle left sprites
-            p1Offset += -28;
-        } else if (player1.moving) { //align moving right sprites
-            p1Offset += -10;
-        }
-        int p1X = Math.round(player1.getX()) + offsetX + p1Offset - 25;
-
-        int p1Y = Math.round(player1.getY());
-
-        int drawY = p1Y + 45 + (img1.getHeight(null) - h1);
-
-        if (player1.facingRight) {
-            g2.drawImage(img1, p1X, drawY, w1, h1, null);
-        } else {
-            g2.drawImage(img1, p1X + w1, drawY, -w1, h1, null);
-        }
-
-        // HITBOX
-        Rectangle p1Box = player1.getHitBox();
-
-        g2.setColor(Color.RED);
-        g2.drawRect(
-                p1Box.x + offsetX,
-                p1Box.y,
-                p1Box.width,
-                p1Box.height
-        );
-
-        //ATTACK HITBOX
-        if ((player1.attacking || player1.moveAttacking || player1.jumpAttacking)
-                && player1.isAttackActiveFrame()) {
-
-            int hitWidth = 100;
-            int hitHeight = 80;
-
-            int hitX = player1.getX();
-            int hitY = player1.getY();
-
-            // adjust vertical hitbox for air attack
-            if (player1.jumpAttacking) {
-                hitY = player1.getY() - 10; // slightly above player
+            int p1Offset = -15;
+            if (player1.dead && !player1.gettingHit) { // align death sprites
+                p1Offset += 30;
+            } else if (player1.attacking && player1.facingRight) { // align attacking right sprites
+                p1Offset += -30;
+            } else if (player1.attacking && !player1.facingRight) { //align attacking left sprites
+                p1Offset += -100;
+            } else if (player1.moveAttacking && player1.facingRight) { //align right move attack sprites
+                p1Offset += -25;
+            } else if (player1.moveAttacking && !player1.facingRight) { //align left move attack sprites
+                p1Offset += -100;
+            } else if (player1.jumpAttacking && player1.facingRight) { //align right jump attack sprites
+                p1Offset += -28;
+            } else if (player1.jumpAttacking && !player1.facingRight) { //align left jump attack sprites
+                p1Offset += -70;
+            } else if ((player1.jumping || player1.inAir) && player1.moving && player1.facingRight) { //align jumping and moving right sprites
+                p1Offset += 10;
+            } else if ((player1.jumping || player1.inAir) && player1.facingRight) { //align jumping right sprites
+                p1Offset += 10;
+            } else if ((player1.jumping || player1.inAir) && !player1.facingRight) { //align jumping left sprites
+                p1Offset += 5;
+            } else if (!player1.facingRight && player1.moving) { //align moving left sprites
+                p1Offset += -80;
+            } else if (!player1.facingRight) { //align idle left sprites
+                p1Offset += -28;
+            } else if (player1.moving) { //align moving right sprites
+                p1Offset += -10;
             }
+            int p1X = Math.round(player1.getX()) + offsetX + p1Offset - 25;
 
-            // direction handling (IMPORTANT)
-            if (player1.facingRight) {
-                hitX = player1.getX() + player1.getDisplayWidth();
-            } else {
-                hitX = player1.getX() - hitWidth;
-            }
+            int p1Y = Math.round(player1.getY());
 
-            Rectangle attackBox = new Rectangle(hitX, hitY, hitWidth, hitHeight);
+            int drawY;
 
-            // color per type (helps debugging)
-            if (player1.jumpAttacking)
-                g2.setColor(Color.CYAN);
-            else if (player1.moveAttacking)
-                g2.setColor(Color.ORANGE);
+            if (player1.dead && !player1.gettingHit)
+                drawY = p1Y + 60 + (img1.getHeight(null) - h1);
             else
-                g2.setColor(Color.YELLOW);
+                drawY = p1Y + 45 + (img1.getHeight(null) - h1);
 
+            if (player1.facingRight) {
+                g2.drawImage(img1, p1X, drawY, w1, h1, null);
+            } else {
+                g2.drawImage(img1, p1X + w1, drawY, -w1, h1, null);
+            }
+
+            // HITBOX
+            Rectangle p1Box = player1.getHitBox();
+
+            g2.setColor(Color.RED);
             g2.drawRect(
-                    attackBox.x + offsetX,
-                    attackBox.y,
-                    attackBox.width,
-                    attackBox.height
+                    p1Box.x + offsetX,
+                    p1Box.y,
+                    p1Box.width,
+                    p1Box.height
             );
         }
 
 
         //Visible Countdown
-        if (!isPlayer2OnScreen(offsetX)) {
+        if (!player2.isDead() && !isPlayer2OnScreen(offsetX)) {
 
             int drawX;
 
@@ -529,6 +521,74 @@ public class TileMap {
 
         for (Slime s : slimes) {
             s.update();
+
+            if (!player1.dead && s.getHitBox().intersects(player1.getHitBox())) {
+                boolean hitFromRight = s.getX() > player1.getX();
+                player1.takeDamage(s.getDamage(), hitFromRight);
+            }
+
+            if (!player2.dead && s.getHitBox().intersects(player2.getHitBox())) {
+                boolean hitFromRight = s.getX() > player2.getX();
+                player2.takeDamage(s.getDamage(), hitFromRight);
+            }
+
+        }
+
+
+        if (!player1.dead &&
+                (player1.attacking || player1.moveAttacking || player1.jumpAttacking)
+                && player1.isAttackActiveFrame()) {
+
+            int hitWidth = 100;
+            int hitHeight = 80;
+
+            int hitX = player1.getX();
+            int hitY = player1.getY();
+
+            if (player1.jumpAttacking) {
+                hitY = player1.getY() - 10;
+            }
+
+            if (player1.facingRight) {
+                hitX = player1.getX() + player1.getDisplayWidth();
+            } else {
+                hitX = player1.getX() - hitWidth;
+            }
+
+            Rectangle attackBox = new Rectangle(hitX, hitY, hitWidth, hitHeight);
+
+            for (Slime s : slimes) {
+                if (attackBox.intersects(s.getHitBox())) {
+
+                    boolean hitFromRight = player1.getX() > s.getX();
+
+                    s.takeDamage(player1.getAttackDamage(), hitFromRight);
+                }
+            }
+        }
+
+        for (Arrow a : arrows) {
+
+            if (!a.isActive()) continue;
+
+            for (Slime s : slimes) {
+
+                if (a.collides(s.getHitBox())) {
+
+                    boolean hitFromRight = a.getX() > s.getX();
+
+                    s.takeDamage(a.getDamage(), hitFromRight);
+
+                    a.deactivate(); // remove arrow after hit
+                    break;
+                }
+            }
+        }
+
+        for (int i = slimes.size() - 1; i >= 0; i--) {
+            if (slimes.get(i).isDead()) {
+                slimes.remove(i);
+            }
         }
 
         int mapWidthPixels = tilesToPixels(mapWidth);
@@ -540,7 +600,7 @@ public class TileMap {
         offsetX = Math.max(offsetX, screenWidth - mapWidthPixels);
 
         // check if player2 is visible
-        if (!isPlayer2OnScreen(offsetX)) {
+        if (!player2.isDead() && !isPlayer2OnScreen(offsetX)) {
             p2OffScreenTime++;
 
             if (p2OffScreenTime >= RESPAWN_TIME) {
@@ -552,7 +612,7 @@ public class TileMap {
         }
     }
 
-    private void respawnPlayer2() {
+    protected void respawnPlayer2() {
 
         int offset = 20; // distance from Player1
 
@@ -572,5 +632,17 @@ public class TileMap {
     public ArrayList<Slime> getSlimes() {
         return slimes;
     }
+
+    public Player1 getPlayer1() {
+        return player1;
+    }
+
+    public Player2 getPlayer2() {
+        return player2;
+    }
+
+    public int getPlayer1Health() { return player1.getHealth(); }
+    public int getPlayer2Health() { return player2.getHealth(); }
+
 
 }

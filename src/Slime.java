@@ -6,6 +6,8 @@ public class Slime {
     private static final int SPEED = 4;
     private static final int TILE_SIZE = 64;
     private static final double SCALE = 2;
+    private static final int HIT_COOLDOWN_TIME = 6; // ~1 second (adjust if needed)
+    private static final int HIT_TIME = 10; // frames to show hit sprite
 
     private JPanel panel;
     private TileMap tileMap;
@@ -22,14 +24,17 @@ public class Slime {
     private boolean goingUp = false;
     private boolean goingDown = false;
     private int initialVelocity = 0;
+    private int hitCooldown = 0;
+    private int hitTimer = 0;
 
-    private int hp = 30;
+    private int hp = 200;
+    private int damage = 1; // how much damage slime does
     private int scoreValue = 10;
 
     private boolean gettingHit = false;
 
     private StripAnimation moveAnim;
-    private StripAnimation hitAnim;
+    private Image hitImage;
 
     public Slime(JPanel panel, TileMap tileMap, int x, int y) {
         this.panel = panel;
@@ -40,31 +45,31 @@ public class Slime {
         Image moveStrip = ImageManager.loadImage("src/images/Enemies/Slime/SlimeMove.png");
         moveAnim = new StripAnimation(moveStrip, 4, 0, 0, panel, true);
 
-        Image hitStrip = ImageManager.loadImage("src/images/Enemies/Slime/SlimeHit.png");
-        hitAnim = new StripAnimation(hitStrip, 1, 0, 0, panel, false);
+        hitImage = ImageManager.loadImage("src/images/Enemies/Slime/SlimeHit.png");
 
         moveAnim.start();
-        hitAnim.start();
     }
 
     public void update() {
         moveAnim.update();
 
-        if (gettingHit) {
-            hitAnim.update();
-            if (hitAnim.isFinished()) {
+        if (hitCooldown > 0) {
+            hitCooldown--;
+        }
+
+        if (hitTimer > 0) {
+            hitTimer--;
+            if (hitTimer == 0) {
                 gettingHit = false;
             }
         }
 
         updateGravity();
 
-        // Only walk horizontally when grounded
-        if (!inAir && !jumping) {
+        if (!inAir && !jumping && !gettingHit) {
             walk();
         }
 
-        // Check if slime has walked off a ledge
         if (!inAir && !jumping && isInAir()) {
             fall();
         }
@@ -221,12 +226,6 @@ public class Slime {
         return null;
     }
 
-    public void takeDamage(int damage) {
-        hp -= damage;
-        gettingHit = true;
-        hitAnim.start();
-    }
-
     public boolean isDead() {
         return hp <= 0;
     }
@@ -236,12 +235,34 @@ public class Slime {
     }
 
     public Image getImage() {
-        if (gettingHit) return hitAnim.getImage();
+        if (gettingHit) return hitImage;
         return moveAnim.getImage();
     }
 
     public boolean isMovingRight() {
         return movingRight;
+    }
+
+    public void takeDamage(int damage, boolean hitFromRight) {
+        if (hitCooldown > 0) return;
+
+        hp -= damage;
+        System.out.println("Slime HP: " + hp);
+
+        movingRight = hitFromRight;
+
+        gettingHit = true;
+        hitTimer = HIT_TIME;
+
+        hitCooldown = HIT_COOLDOWN_TIME;
+
+        int knockback = 20;
+
+        if (hitFromRight) {
+            x -= knockback;
+        } else {
+            x += knockback;
+        }
     }
 
     public int getWidth()  { return (int)(moveAnim.getImage().getWidth(null)  * SCALE) - 25; }
@@ -251,4 +272,10 @@ public class Slime {
 
     public int getX() { return x; }
     public int getY() { return y; }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public boolean isGettingHit() { return gettingHit; }
 }
