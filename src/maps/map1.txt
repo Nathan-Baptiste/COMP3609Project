@@ -9,8 +9,8 @@
 #   1       Bad Guy 1 (grub)
 #   2       Bad Guy 2 (fly)
 
-                      IIIIIII      IIIIIII   
-                                                     EF
- II              EF                 IIIII           EGD         II
-        EF       CD                                EGAD
+                      IIIIIII           IIII
+                            1                       EF
+ II              EF        IIIIIII                 EGD         II
+        EF       CD                               EGAD
 BBBBBBBBGHBBBBBBBGHBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBGAAHBBBBBBBBBBB

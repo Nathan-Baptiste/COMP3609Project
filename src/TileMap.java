@@ -211,10 +211,32 @@ public class TileMap {
 
         //draw enemy
         for (Slime s : slimes) {
-            g2.drawImage(s.getImage(),
-                    s.getX() + offsetX,
-                    s.getY() + offsetY,
-                    null);
+            Image img = s.getImage();
+
+            int w = (int)(img.getWidth(null) * SCALE);
+            int h = (int)(img.getHeight(null) * SCALE);
+
+            int xOffset = -20;
+            int yOffset = -327;
+
+            int drawX = s.getX() + offsetX + xOffset;
+            int drawY = s.getY() + offsetY + yOffset;
+
+            if (s.isMovingRight()) {
+                g2.drawImage(img, drawX + w, drawY, -w, h, null);
+            } else {
+                g2.drawImage(img, drawX + 18, drawY, w, h, null);
+            }
+
+            // HITBOX
+            Rectangle box = s.getHitBox();
+            g2.setColor(Color.GREEN);
+            g2.drawRect(
+                    box.x + offsetX,
+                    box.y,
+                    box.width,
+                    box.height
+            );
         }
 
         // draw player
