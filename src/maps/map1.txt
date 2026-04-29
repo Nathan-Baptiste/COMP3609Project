@@ -10,7 +10,7 @@
 #   2       Bad Guy 2 (fly)
 
                       IIIIIII           IIII
-                                                    EF
+                                 3                   EF
  II              EF                                EGD         II
-        EF       CD      1         2              EGAD
+        EF       CD                             EGAD
 BBBBBBBBGHBBBBBBBGHBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBGAAHBBBBBBBBBBB

@@ -653,11 +653,14 @@ public class Player {
 		return (idleAnim.getImage().getHeight(null) * SCALE) + 45;
 	}
 
-	public void respawn(int x, int y) {
+	public void respawn(int x, int y, boolean restoreHealth) {
 		setX(x);
 		setY(y);
 
-		health = MAX_HEALTH;
+		if (restoreHealth) {
+			health = MAX_HEALTH;
+		}
+
 		dead = false;
 
 		visible = true;

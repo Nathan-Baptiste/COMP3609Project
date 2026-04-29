@@ -39,6 +39,7 @@ public class TileMap {
     private ArrayList<Slime> slimes = new ArrayList<>();
     private ArrayList<Skeleton> skeletons = new ArrayList<>();
     private ArrayList<EnemyArrow> enemyArrows = new ArrayList<>();
+    private ArrayList<Bear> bears = new ArrayList<>();
 
     /**
         Creates a new TileMap with the specified width and
@@ -293,6 +294,36 @@ public class TileMap {
             // HITBOX
             Rectangle box = s.getHitBox();
             g2.setColor(Color.GREEN);
+            g2.drawRect(box.x + offsetX, box.y, box.width, box.height);
+        }
+
+        // draw bear
+        for (Bear b : bears) {
+
+            Image img = b.getImage();
+
+            int w = (int)(img.getWidth(null) * SCALE);
+            int h = (int)(img.getHeight(null) * SCALE);
+
+            int drawX = b.getX() + offsetX - 20;
+            int drawY;
+
+            if (b.isMovingRight() && !b.chasing)
+                drawY = b.getY() + offsetY - 342;
+            else if (!b.isMovingRight() && !b.chasing)
+                drawY = b.getY() + offsetY - 342;
+            else
+                drawY = b.getY() + offsetY - 330;
+
+            if (b.isMovingRight()) {
+                g2.drawImage(img, drawX + w, drawY, -w, h, null);
+            } else {
+                g2.drawImage(img, drawX, drawY, w, h, null);
+            }
+
+            // HITBOX
+            Rectangle box = b.getHitBox();
+            g2.setColor(Color.YELLOW);
             g2.drawRect(box.x + offsetX, box.y, box.width, box.height);
         }
 
@@ -621,6 +652,10 @@ public class TileMap {
             s.update();
         }
 
+        for (Bear b : bears) {
+            b.update();
+        }
+
 
         if (!player1.dead &&
                 (player1.attacking || player1.moveAttacking || player1.jumpAttacking)
@@ -737,7 +772,13 @@ public class TileMap {
             p2OffScreenTime++;
 
             if (p2OffScreenTime >= RESPAWN_TIME) {
-                respawnPlayer2();
+                int offset = 20;
+
+                int newX = player1.getX() + offset;
+                int newY = player1.getY();
+
+                player2.respawn(newX, newY, false);
+
                 p2OffScreenTime = 0;
             }
         } else {
@@ -747,14 +788,12 @@ public class TileMap {
 
     protected void respawnPlayer2() {
 
-        int offset = 20; // distance from Player1
+        int offset = 20;
 
         int newX = player1.getX() + offset;
         int newY = player1.getY();
 
-        player2.respawn(newX, newY);
-
-        System.out.println("Player2 respawned next to Player1");
+        player2.respawn(newX, newY, true);
     }
 
 
@@ -764,6 +803,10 @@ public class TileMap {
 
     public void addSkeleton(Skeleton s) {
         skeletons.add(s);
+    }
+
+    public void addBear(Bear b) {
+        bears.add(b);
     }
 
     public Player1 getPlayer1() {
