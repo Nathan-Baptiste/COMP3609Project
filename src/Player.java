@@ -65,6 +65,7 @@ public class Player {
 	protected boolean blocking = false;
 	private int blockTimer = 0;
 	private static final int BLOCK_DURATION = 10;
+	private static final int BLOCK_PUSH = 24;
 
 	private boolean blockOnCooldown = false;
 	private int blockCooldownTimer = 0;
@@ -575,6 +576,23 @@ public class Player {
 		}
 	}
 
+	public void blockPush(boolean hitFromRight) {
+
+		if (!blocking) return;
+
+		if (hitFromRight) {
+			x -= BLOCK_PUSH; // slime on right → push player left
+		} else {
+			x += BLOCK_PUSH; // slime on left → push player right
+		}
+
+		// keep inside map bounds
+		if (x < 0) x = 0;
+		if (x > tileMap.getWidthPixels() - getDisplayWidth()) {
+			x = tileMap.getWidthPixels() - getDisplayWidth();
+		}
+	}
+
 	public void stopBlock() {
 		blocking = false;
 		blockTimer = 0;
@@ -675,6 +693,12 @@ public class Player {
 	public boolean isVisible() {
 		return visible;
 	}
+
+	public boolean isBlocking() {
+		return blocking;
+	}
+
+
 
 	public boolean isDead() {
 		return dead;

@@ -313,7 +313,11 @@ public class TileMap {
             int p2Offset = -10;
             if (player2.dead && !player2.gettingHit) { // align death sprites
                 p2Offset += 20;
-            } else if (player2.gettingHit && player2.facingRight) { // align hit right sprites
+            } else if (player2.isBlocking() && player2.facingRight) {// align block right sprites
+                p2Offset = 4;
+            }else if (player2.isBlocking() && !player2.facingRight) { // align block left sprites
+                p2Offset = 5;
+            }else if (player2.gettingHit && player2.facingRight) { // align hit right sprites
                 p2Offset += 20;
             } else if (player2.gettingHit && !player2.facingRight) { //align hit left sprites
                 p2Offset += 20;
@@ -352,11 +356,13 @@ public class TileMap {
 
             int drawY2;
             if (player2.moving)
-                drawY2 = p2Y + 47 + (img2.getHeight(null) - h2);
+                drawY2 = p2Y + 48 + (img2.getHeight(null) - h2);
             else if (player2.gettingHit)
                 drawY2 = p2Y + 50 + (img2.getHeight(null) - h2);
             else if (player2.dead && !player2.gettingHit)
                 drawY2 = p2Y + 62 + (img2.getHeight(null) - h2);
+            else if (player2.isBlocking())
+                drawY2 = p2Y + 49 + (img2.getHeight(null) - h2);
             else
                 drawY2 = p2Y + 45 + (img2.getHeight(null) - h2);
 
@@ -388,8 +394,12 @@ public class TileMap {
             int h1 = (int) (img1.getHeight(null) * SCALE);
 
             int p1Offset = -15;
-            if (player1.gettingHit)
+            if (player1.gettingHit) // align hit sprites
                 p1Offset = -15;
+            else if (player1.isBlocking() && player1.facingRight) // align block right sprites
+                p1Offset = 15;
+            else if (player1.isBlocking() && !player1.facingRight) // align block left sprites
+                p1Offset = 10;
             else if (player1.dead && !player1.gettingHit) { // align death sprites
                 p1Offset += 30;
             } else if (player1.attacking && player1.facingRight) { // align attacking right sprites
@@ -582,16 +592,29 @@ public class TileMap {
         for (Slime s : slimes) {
             s.update();
 
-            if (!player1.dead && s.getHitBox().intersects(player1.getHitBox())) {
+            // PLAYER 1
+            if (!player1.isDead() && s.getHitBox().intersects(player1.getHitBox())) {
+
                 boolean hitFromRight = s.getX() > player1.getX();
-                player1.takeDamage(s.getDamage(), hitFromRight);
+
+                if (player1.isBlocking()) {
+                    player1.blockPush(hitFromRight);
+                } else {
+                    player1.takeDamage(s.getDamage(), hitFromRight);
+                }
             }
 
-            if (!player2.dead && s.getHitBox().intersects(player2.getHitBox())) {
+            // PLAYER 2
+            if (!player2.isDead() && s.getHitBox().intersects(player2.getHitBox())) {
+
                 boolean hitFromRight = s.getX() > player2.getX();
-                player2.takeDamage(s.getDamage(), hitFromRight);
-            }
 
+                if (player2.isBlocking()) {
+                    player2.blockPush(hitFromRight);
+                } else {
+                    player2.takeDamage(s.getDamage(), hitFromRight);
+                }
+            }
         }
 
         for (Skeleton s : skeletons) {
