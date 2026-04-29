@@ -239,7 +239,8 @@ public class GamePanel extends JPanel
 	public void moveRightP1() { tileMap.moveRightP1(); }
 	public void jumpP1() { tileMap.jumpP1(); }
 	public void attackP1() { tileMap.player1Attack(); }
-
+	public void player1Block() { tileMap.getPlayer1().startBlock();	}
+	public void stopPlayer1Block() { tileMap.getPlayer1().stopBlock(); }
 
 	// Player 2
 	public void moveLeftP2() { tileMap.moveLeftP2(); }
@@ -247,6 +248,8 @@ public class GamePanel extends JPanel
 	public void jumpP2() { tileMap.jumpP2(); }
 	public void startChargeP2() { tileMap.player2StartCharge(); }
 	public void releaseShootP2() { tileMap.player2Shoot(); }
+	public void player2Block() { tileMap.getPlayer2().startBlock(); }
+	public void stopPlayer2Block() { tileMap.getPlayer2().stopBlock(); }
 
 	private void drawHUD(Graphics2D g) {
 

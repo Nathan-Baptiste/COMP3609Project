@@ -41,6 +41,7 @@ public class Player {
 	protected StripAnimation shootAnim;
 	protected StripAnimation jumpChargeAnim;
 	protected StripAnimation jumpShootAnim;
+	protected StripAnimation blockAnim;
 	protected Image deathImage;
 
 	protected boolean facingRight = true;
@@ -60,6 +61,14 @@ public class Player {
 	protected boolean attacking = false;
 	protected boolean moveAttacking = false;
 	protected boolean jumpAttacking = false;
+
+	protected boolean blocking = false;
+	private int blockTimer = 0;
+	private static final int BLOCK_DURATION = 10;
+
+	private boolean blockOnCooldown = false;
+	private int blockCooldownTimer = 0;
+	private static final int BLOCK_COOLDOWN = 10;
 
 	protected boolean charging = false;
 	protected int chargeTime = 0;
@@ -181,6 +190,7 @@ public class Player {
 
    public synchronized void move (int direction) {
 
+	   if (blocking) return;
 	   if (gettingHit) return;
 	   if (dead) return;
 
@@ -291,6 +301,7 @@ public class Player {
    public void jump () {
 
 	   if (dead) return;
+	   if (blocking) return;
 
       if (!panel.isVisible () || jumping || inAir) return;
 	  if (attacking && !inAir) return;
@@ -314,6 +325,35 @@ public class Player {
 	   idleAnim.update();
 	   runAnim.update();
 	   jumpAnim.update();
+
+	   if (blocking) {
+
+		   blockAnim.update();
+		   blockTimer--;
+
+		   // force stop when time ends
+		   if (blockTimer <= 0) {
+			   blocking = false;
+			   blockTimer = 0;
+
+			   // START COOLDOWN
+			   blockOnCooldown = true;
+			   blockCooldownTimer = BLOCK_COOLDOWN;
+		   }
+
+	   }
+
+	   // BLOCK COOLDOWN TIMER
+	   if (blockOnCooldown) {
+		   blockCooldownTimer--;
+
+		   if (blockCooldownTimer <= 0) {
+			   blockOnCooldown = false;
+			   blockCooldownTimer = 0;
+		   }
+	   }
+
+
 
 	   if (gettingHit) {
 		   attacking = false;
@@ -491,7 +531,7 @@ public class Player {
 	}
 
 	public boolean takeDamage(int dmg, boolean hitFromRight) {
-		if (invincible || dead) return false;
+		if (invincible || dead || blocking) return false;
 
 		health -= dmg;
 
@@ -523,6 +563,22 @@ public class Player {
 		return true;
 	}
 
+	public void startBlock() {
+		if (dead || gettingHit) return;
+		if (blockOnCooldown) return;
+
+		if (!blocking) {
+			blocking = true;
+			blockTimer = BLOCK_DURATION;
+
+			blockAnim.start();
+		}
+	}
+
+	public void stopBlock() {
+		blocking = false;
+		blockTimer = 0;
+	}
 
 	public Image getImage() {
 
@@ -532,6 +588,10 @@ public class Player {
 
 		if (dead) {
 			return deathImage;
+		}
+
+		if (blocking) {
+			return blockAnim.getImage();
 		}
 
 	   //P1 Attack States

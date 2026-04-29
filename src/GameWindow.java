@@ -39,11 +39,13 @@ public class GameWindow extends JFrame
 	private boolean dHeld = false;
 	private boolean rHeld = false;
 	private boolean tHeld = false;
+	private boolean yHeld = false;
 
 	private boolean leftHeld  = false;
 	private boolean rightHeld = false;
 	private boolean num1Held = false;
 	private boolean num2Held = false;
+	private boolean num3Held = false;
 
 	@SuppressWarnings({"unchecked"})
 	public GameWindow() {
@@ -207,6 +209,10 @@ public class GameWindow extends JFrame
 		if (keyCode == KeyEvent.VK_D) dHeld = true;
 		if (keyCode == KeyEvent.VK_R) rHeld = true;
 		if (keyCode == KeyEvent.VK_T) tHeld = true;
+		if (keyCode == KeyEvent.VK_Y) {
+			yHeld = true;
+			gamePanel.player1Block();
+		}
 
 		// Player 2 (Arrows)
 		if (keyCode == KeyEvent.VK_LEFT) leftHeld = true;
@@ -215,6 +221,10 @@ public class GameWindow extends JFrame
 		if (keyCode == KeyEvent.VK_NUMPAD2) {
 			num2Held = true;
 			gamePanel.startChargeP2();
+		}
+		if (keyCode == KeyEvent.VK_NUMPAD3) {
+			num3Held = true;
+			gamePanel.player2Block();
 		}
 	}
 
@@ -226,6 +236,10 @@ public class GameWindow extends JFrame
 		if (keyCode == KeyEvent.VK_D) dHeld = false;
 		if (keyCode == KeyEvent.VK_R) rHeld = false;
 		if (keyCode == KeyEvent.VK_T) tHeld = false;
+		if (keyCode == KeyEvent.VK_Y){
+			yHeld = false;
+			gamePanel.stopPlayer1Block();
+		}
 
 		// Player 2
 		if (keyCode == KeyEvent.VK_LEFT) leftHeld = false;
@@ -234,6 +248,10 @@ public class GameWindow extends JFrame
 		if (keyCode == KeyEvent.VK_NUMPAD2) {
 			num2Held = false;
 			gamePanel.releaseShootP2();
+		}
+		if (keyCode == KeyEvent.VK_NUMPAD3) {
+			num3Held = false;
+			gamePanel.stopPlayer2Block();
 		}
 	}
 

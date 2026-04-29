@@ -26,6 +26,10 @@ public class Player1 extends Player {
         Image jumpAttackStrip = ImageManager.loadImage("src/images/Player1/Player1JumpAttack.png");
         jumpAttackAnim = new StripAnimation(jumpAttackStrip, 6, 0, 0, panel, false);
 
+        Image blockStrip = ImageManager.loadImage("src/images/Player1/Player1Block.png");
+        blockAnim = new StripAnimation(blockStrip, 4, 0, 0, panel, true);
+
+
         hitImage = ImageManager.loadImage("src/images/Player1/Player1Hit.png");
         deathImage = ImageManager.loadImage("src/images/Player1/PlayerDeath.png");
 
@@ -35,6 +39,7 @@ public class Player1 extends Player {
         attackAnim.start();
         moveAttackAnim.start();
         jumpAttackAnim.start();
+        blockAnim.start();
     }
 
     public void attack() {

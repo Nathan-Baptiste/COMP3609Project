@@ -30,6 +30,9 @@ public class Player2 extends Player {
         Image jumpShootStrip = ImageManager.loadImage("src/images/Player2/Player2JumpShoot.png");
         jumpShootAnim = new StripAnimation(jumpShootStrip, 6, 0, 0, panel, false);
 
+        Image blockStrip = ImageManager.loadImage("src/images/Player2/Player2Block.png");
+        blockAnim = new StripAnimation(blockStrip, 4, 0, 0, panel, true);
+
         hitImage = ImageManager.loadImage("src/images/Player2/Player2Hit.png");
         deathImage = ImageManager.loadImage("src/images/Player1/PlayerDeath.png");
 
@@ -40,12 +43,14 @@ public class Player2 extends Player {
         shootAnim.start();
         jumpChargeAnim.start();
         jumpShootAnim.start();
+        blockAnim.start();
     }
 
     public synchronized void move(int direction) {
 
         if (gettingHit) return;
         if (isDead()) return;
+        if (blocking) return;
 
         int newX = getX();
         Point tilePos = null;
