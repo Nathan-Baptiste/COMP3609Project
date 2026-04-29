@@ -220,6 +220,7 @@ public class TileMap {
             int w = (int)(img.getWidth(null) * SCALE);
             int h = (int)(img.getHeight(null) * SCALE);
 
+            int tileOffset = 385;
             int xOffset = -20;
             int yOffset = -326;
 
@@ -230,27 +231,17 @@ public class TileMap {
 
             if (hit) {
                 if (s.isMovingRight()) {
-                    g2.drawImage(img, drawX + 28 + w, drawY + 6, -w, h, null);
+                    g2.drawImage(img, drawX + 28 + w, drawY + 6 + tileOffset, -w, h, null);
                 } else {
-                    g2.drawImage(img, drawX + 28, drawY + 6, w, h, null);
+                    g2.drawImage(img, drawX + 28, drawY + 6 + tileOffset, w, h, null);
                 }
             } else {
                 if (s.isMovingRight()) {
-                    g2.drawImage(img, drawX + w, drawY, -w, h, null);
+                    g2.drawImage(img, drawX + w, drawY + tileOffset, -w, h, null);
                 } else {
-                    g2.drawImage(img, drawX + 18, drawY, w, h, null);
+                    g2.drawImage(img, drawX + 18, drawY + tileOffset, w, h, null);
                 }
             }
-
-            // HITBOX
-            Rectangle box = s.getHitBox();
-            g2.setColor(Color.GREEN);
-            g2.drawRect(
-                    box.x + offsetX,
-                    box.y,
-                    box.width,
-                    box.height
-            );
         }
 
         // draw skeleton
@@ -262,6 +253,7 @@ public class TileMap {
             int w = (int)(img.getWidth(null) * SCALE);
             int h = (int)(img.getHeight(null) * SCALE);
 
+            int tileOffset = 385;
             int xOffset = -20;
             int yOffset = -335;
 
@@ -286,15 +278,10 @@ public class TileMap {
 
             if (s.getImage() != null) {
                 if (s.isFacingRight())
-                    g2.drawImage(img, drawX + w, drawY, -w, h, null);
+                    g2.drawImage(img, drawX + w, drawY + tileOffset, -w, h, null);
                 else
-                    g2.drawImage(img, drawX, drawY, w, h, null);
+                    g2.drawImage(img, drawX, drawY + tileOffset, w, h, null);
             }
-
-            // HITBOX
-            Rectangle box = s.getHitBox();
-            g2.setColor(Color.GREEN);
-            g2.drawRect(box.x + offsetX, box.y, box.width, box.height);
         }
 
         // draw bear
@@ -302,29 +289,47 @@ public class TileMap {
 
             Image img = b.getImage();
 
+            int tileOffset = 385;
             int w = (int)(img.getWidth(null) * SCALE);
             int h = (int)(img.getHeight(null) * SCALE);
 
-            int drawX = b.getX() + offsetX - 20;
+            int drawX;
+
+            if (b.idling)
+                drawX = b.getX() + offsetX;
+            else if (b.attacking && b.isFacingRight())
+                drawX = b.getX() + offsetX - 20;
+            else if (b.attacking && !b.isFacingRight())
+                drawX = b.getX() + offsetX - 40;
+            else if (b.chasing)
+                drawX = b.getX() + offsetX - 20;
+            else if (b.isMoving() && b.isFacingRight())
+                drawX = b.getX() + offsetX;
+            else if (b.isMoving() && !b.isFacingRight())
+                drawX = b.getX() + offsetX - 30;
+            else
+                drawX = b.getX() + offsetX - 25;
+
             int drawY;
 
-            if (b.isMovingRight() && !b.chasing)
-                drawY = b.getY() + offsetY - 342;
-            else if (!b.isMovingRight() && !b.chasing)
-                drawY = b.getY() + offsetY - 342;
+            if (b.idling)
+                drawY = b.getY() + offsetY - 335;
+            else if (b.attacking && !b.gettingHit)
+                drawY = b.getY() + offsetY - 335;
+            else if (b.chasing && !b.gettingHit && !b.attacking)
+                drawY = b.getY() + offsetY - 352;
+            else if (b.gettingHit)
+                drawY = b.getY() + offsetY - 335;
+            else if (b.isMoving())
+                drawY = b.getY() + offsetY - 335;
             else
-                drawY = b.getY() + offsetY - 330;
+                drawY = b.getY() + offsetY - 348;
 
-            if (b.isMovingRight()) {
-                g2.drawImage(img, drawX + w, drawY, -w, h, null);
+            if (b.isFacingRight()) {
+                g2.drawImage(img, drawX + w, drawY + tileOffset, -w, h, null);
             } else {
-                g2.drawImage(img, drawX, drawY, w, h, null);
+                g2.drawImage(img, drawX, drawY + tileOffset, w, h, null);
             }
-
-            // HITBOX
-            Rectangle box = b.getHitBox();
-            g2.setColor(Color.YELLOW);
-            g2.drawRect(box.x + offsetX, box.y, box.width, box.height);
         }
 
         // draw enemy arrow
@@ -695,6 +700,14 @@ public class TileMap {
                     s.takeDamage(player1.getAttackDamage(), hitFromRight);
                 }
             }
+
+            for (Bear b : bears) {
+                if (attackBox.intersects(b.getHitBox())) {
+
+                    boolean hitFromRight = player1.getX() > b.getX();
+                    b.takeDamage(player1.getAttackDamage(), hitFromRight);
+                }
+            }
         }
 
         for (Arrow a : arrows) {
@@ -720,6 +733,17 @@ public class TileMap {
                     boolean hitFromRight = a.getX() > s.getX();
 
                     s.takeDamage(a.getDamage(), hitFromRight);
+                    a.deactivate();
+                    break;
+                }
+            }
+
+            for (Bear b : bears) {
+                if (a.collides(b.getHitBox())) {
+
+                    boolean hitFromRight = a.getX() > b.getX();
+
+                    b.takeDamage(a.getDamage(), hitFromRight);
                     a.deactivate();
                     break;
                 }
@@ -756,6 +780,12 @@ public class TileMap {
         for (int i = skeletons.size() - 1; i >= 0; i--) {
             if (skeletons.get(i).isDead()) {
                 skeletons.remove(i);
+            }
+        }
+
+        for (int i = bears.size() - 1; i >= 0; i--) {
+            if (bears.get(i).isDead()) {
+                bears.remove(i);
             }
         }
 

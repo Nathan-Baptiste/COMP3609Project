@@ -8,7 +8,7 @@ public class Skeleton {
     private static final int TILE_SIZE = 64;
 
     private int x, y;
-    private int hp = 150;
+    private int hp = 100;
 
     private boolean facingRight = true;
 
@@ -158,19 +158,28 @@ public class Skeleton {
         if (hitCooldown > 0) return;
 
         hp -= dmg;
-
         gettingHit = true;
         hitTimer = 10;
         hitCooldown = 6;
-
         charging = false;
         shooting = false;
         shootTimer = 0;
 
         int knockback = 25;
+        int dx = hitFromRight ? -knockback : knockback;
+        int newX = x + dx;
+        int width = getWidth();
+        int height = getHeight();
 
-        if (hitFromRight) x -= knockback;
-        else x += knockback;
+        if (dx > 0) {
+            Point tile = collidesWithTileVertical(newX + width, y + 5, height - 10);
+            if (tile != null) newX = (int)(tile.getX() + 1) * TILE_SIZE;
+        } else {
+            Point tile = collidesWithTileVertical(newX, y + 5, height - 10);
+            if (tile != null) newX = (int)tile.getX() * TILE_SIZE - width;
+        }
+
+        x = newX;
     }
 
     private void updateGravity() {
@@ -223,6 +232,19 @@ public class Skeleton {
         Point right = collidesWithTileAtPoint(x + width - 1, y + height + 1);
 
         return (left == null && right == null);
+    }
+
+    private Point collidesWithTileVertical(int px, int topY, int height) {
+        int offsetY = tileMap.getOffsetY();
+        int xTile = tileMap.pixelsToTiles(px);
+        int yTileTop = tileMap.pixelsToTiles(topY - offsetY);
+        int yTileBot = tileMap.pixelsToTiles(topY - offsetY + height);
+
+        for (int yTile = yTileTop; yTile <= yTileBot; yTile++) {
+            if (tileMap.getTile(xTile, yTile) != null)
+                return new Point(xTile, yTile);
+        }
+        return null;
     }
 
     private Point collidesWithTileAtPoint(int px, int py) {

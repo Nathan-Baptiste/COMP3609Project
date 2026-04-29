@@ -10,19 +10,19 @@ public class Bear {
     private static final double SCALE = 2;
 
     private static final int DETECTION_RANGE = 350;
-    private static final int ATTACK_RANGE = 80;
+    private static final int ATTACK_RANGE = 65;
 
     private JPanel panel;
     private TileMap tileMap;
 
     private int x, y;
-    private int hp = 200;
+    private int hp = 150;
 
     private boolean movingRight = true;
     protected boolean chasing = false;
-    private boolean attacking = false;
-    private boolean gettingHit = false;
-    private boolean idling = false;
+    protected boolean attacking = false;
+    protected boolean gettingHit = false;
+    protected boolean idling = false;
     private int idleTimer = 0;
 
     private boolean chaseCooldown = false;
@@ -32,7 +32,7 @@ public class Bear {
     private int hitTimer = 0;
     private int hitCooldown = 0;
 
-    private StripAnimation idleAnim;
+    private Image idleImage;
     private StripAnimation moveAnim;
     private StripAnimation chaseAnim;
     private StripAnimation attackAnim;
@@ -42,13 +42,16 @@ public class Bear {
     private Random rand = new Random();
     private int moveTimer = 0;
 
+
     // Gravity
     private boolean inAir = false;
+    private boolean moving = false;
     private boolean jumping = false;
     private int timeElapsed = 0;
     private int startY = 0;
     private int initialVelocity = 0;
     private boolean goingDown = false;
+    private boolean facingRight = true; // add this field
 
     public Bear(JPanel panel, TileMap tileMap, int x, int y) {
         this.panel = panel;
@@ -56,25 +59,19 @@ public class Bear {
         this.x = x;
         this.y = y;
 
-        idleAnim = new StripAnimation(
-                ImageManager.loadImage("src/images/Enemies/Bear/BearIdle.png"),
-                1, 0, 0, panel, true);
+        idleImage = ImageManager.loadImage("src/images/Enemies/Bear/BearIdle.png");
 
-        moveAnim = new StripAnimation(
-                ImageManager.loadImage("src/images/Enemies/Bear/BearMove.png"),
-                8, 0, 0, panel, true);
+        Image moveStrip = ImageManager.loadImage("src/images/Enemies/Bear/BearMove.png");
+        moveAnim = new StripAnimation(moveStrip, 8, 0, 0, panel, true);
 
-        chaseAnim = new StripAnimation(
-                ImageManager.loadImage("src/images/Enemies/Bear/BearChase.png"),
-                4, 0, 0, panel, true);
+        Image chaseStrip = ImageManager.loadImage("src/images/Enemies/Bear/BearChase.png");
+        chaseAnim = new StripAnimation(chaseStrip, 4, 0, 0, panel, true);
 
-        attackAnim = new StripAnimation(
-                ImageManager.loadImage("src/images/Enemies/Bear/BearAttack.png"),
-                10, 0, 0, panel, false);
+        Image attackStrip = ImageManager.loadImage("src/images/Enemies/Bear/BearAttack.png");
+        attackAnim = new StripAnimation(attackStrip, 10, 0, 0, panel, false);
 
         hitImage = ImageManager.loadImage("src/images/Enemies/Bear/BearHit.png");
 
-        idleAnim.start();
         moveAnim.start();
         chaseAnim.start();
         attackAnim.start();
@@ -82,7 +79,8 @@ public class Bear {
 
     public void update() {
 
-        idleAnim.update();
+        moving = false;
+
         moveAnim.update();
         chaseAnim.update();
         attackAnim.update();
@@ -94,6 +92,10 @@ public class Bear {
                 chaseCooldown = false;
                 chaseCooldownTimer = 0;
             }
+        }
+
+        if (gettingHit) {
+            moving = false;
         }
 
         if (hitCooldown > 0) hitCooldown--;
@@ -108,7 +110,7 @@ public class Bear {
                     && !chaseCooldown
                     && isPlayerOnSameLevel(target);
 
-            if (dist < ATTACK_RANGE && !attacking) {
+            if (dist < ATTACK_RANGE && !attacking  && isPlayerOnSameLevel(target)) {
                 startAttack();
             }
         } else {
@@ -131,6 +133,7 @@ public class Bear {
     private void wander() {
 
         if (idling) {
+            moving = false;
             idleTimer++;
 
             // stay idle for a bit
@@ -151,6 +154,7 @@ public class Bear {
         if (moveTimer > 60) {
             moveTimer = 0;
             idling = true; // enter idle state
+            System.out.println("True");
             return;
         }
 
@@ -161,20 +165,13 @@ public class Bear {
         if (target == null) return;
 
         movingRight = target.getX() > x;
-
         boolean moved = move(movingRight ? CHASE_SPEED : -CHASE_SPEED);
+        moving = moved;
 
-        // If hit wall while chasing → trigger cooldown
         if (!moved) {
             chaseCooldown = true;
             chaseCooldownTimer = 0;
-
-            chasing = false;
-
-            // turn around and patrol opposite direction
             movingRight = !movingRight;
-
-            // reset wander so it starts moving immediately
             idling = false;
             moveTimer = 0;
         }
@@ -189,18 +186,20 @@ public class Bear {
             Point tile = collidesWithTileVertical(newX + width, y + 5, height - 10);
             if (tile != null) {
                 movingRight = false;
-                return false; // HIT WALL
+                return false;
             } else {
                 x = newX;
+                facingRight = true;  // ← add
                 return true;
             }
         } else {
             Point tile = collidesWithTileVertical(newX, y + 5, height - 10);
             if (tile != null) {
                 movingRight = true;
-                return false; // HIT WALL
+                return false;
             } else {
                 x = newX;
+                facingRight = false;  // ← add
                 return true;
             }
         }
@@ -213,37 +212,50 @@ public class Bear {
     }
 
     private void handleAttack() {
+        moving = false;
         attackTimer++;
 
-        // ACTIVE FRAMES 6–9
-        if (attackTimer >= 6 && attackTimer <= 9) {
+        if (attackTimer >= 9 && attackTimer <= 10) {
             Rectangle attackBox = getAttackBox();
-
             Player p1 = tileMap.getPlayer1();
             Player p2 = tileMap.getPlayer2();
 
+            // PLAYER 1
             if (!p1.isDead() && attackBox.intersects(p1.getHitBox())) {
-                p1.takeDamage(2, x < p1.getX());
+                boolean hitFromRight = x > p1.getX();
+
+                if (p1.isBlocking()) {
+                    p1.blockPush(hitFromRight);
+                } else {
+                    p1.takeDamage(2, hitFromRight);
+                }
             }
 
+            // PLAYER 2
             if (!p2.isDead() && attackBox.intersects(p2.getHitBox())) {
-                p2.takeDamage(2, x < p2.getX());
+                boolean hitFromRight = x > p2.getX();
+
+                if (p2.isBlocking()) {
+                    p2.blockPush(hitFromRight);
+                } else {
+                    p2.takeDamage(2, hitFromRight);
+                }
             }
         }
 
-        if (attackTimer > 10) {
+        if (attackAnim.isFinished()) {
             attacking = false;
         }
     }
 
-    private Rectangle getAttackBox() {
-        int width = 80;
+    protected Rectangle getAttackBox() {
+        int width = 90;
         int height = 80;
 
         if (movingRight) {
-            return new Rectangle(x + getWidth(), y, width, height);
+            return new Rectangle(x + getWidth() - 60, y, width, height);
         } else {
-            return new Rectangle(x - width, y, width, height);
+            return new Rectangle(x - width + 60, y, width, height);
         }
     }
 
@@ -251,14 +263,33 @@ public class Bear {
         if (hitCooldown > 0) return;
 
         hp -= dmg;
-
         gettingHit = true;
         hitTimer = 10;
         hitCooldown = 6;
 
+        attacking = false;
+        attackTimer = 0;
+
         int knockback = 30;
-        if (hitFromRight) x -= knockback;
-        else x += knockback;
+        int dx = hitFromRight ? -knockback : knockback;
+        int newX = x + dx;
+        int height = getHeight();
+        int width = getWidth();
+
+        if (dx > 0) {
+            Point tile = collidesWithTileVertical(newX + width, y + 5, height - 10);
+            if (tile != null) newX = tile.x * TILE_SIZE - width;
+        } else {
+            Point tile = collidesWithTileVertical(newX, y + 5, height - 10);
+            if (tile != null) newX = (tile.x + 1) * TILE_SIZE;
+        }
+
+        x = newX;
+
+        // reset gravity so it re-checks ground from new position
+        inAir = false;
+        goingDown = false;
+        timeElapsed = 0;
     }
 
     // ---------- GRAVITY ----------
@@ -342,16 +373,21 @@ public class Bear {
     }
 
     private Point collidesWithTileDown(int px, int newY) {
-        int width = getWidth();
+        int width  = getWidth();
         int height = getHeight();
         int offsetY = tileMap.getOffsetY();
-        int xTile = tileMap.pixelsToTiles(px);
-        int yTileFrom = tileMap.pixelsToTiles(y - offsetY);
-        int yTileTo = tileMap.pixelsToTiles(newY - offsetY + height);
+
+        int yTileFrom = tileMap.pixelsToTiles(y    - offsetY);
+        int yTileTo   = tileMap.pixelsToTiles(newY - offsetY + height);
+
+        int xTileLeft  = tileMap.pixelsToTiles(px);
+        int xTileRight = tileMap.pixelsToTiles(px + width - 1);
 
         for (int yTile = yTileFrom; yTile <= yTileTo; yTile++) {
-            if (tileMap.getTile(xTile, yTile) != null)
-                return new Point(xTile, yTile);
+            if (tileMap.getTile(xTileLeft, yTile) != null)
+                return new Point(xTileLeft, yTile);
+            if (xTileRight != xTileLeft && tileMap.getTile(xTileRight, yTile) != null)
+                return new Point(xTileRight, yTile);
         }
         return null;
     }
@@ -371,9 +407,9 @@ public class Bear {
         if (gettingHit) return hitImage;
         if (attacking) return attackAnim.getImage();
         if (chasing) return chaseAnim.getImage();
-        if (!idling) return moveAnim.getImage();
+        if (idling) return idleImage;
 
-        return idleAnim.getImage();
+        return moveAnim.getImage();
     }
 
     public Rectangle getHitBox() {
@@ -381,11 +417,11 @@ public class Bear {
     }
 
     public int getWidth() {
-        return (int)(idleAnim.getImage().getWidth(null) * SCALE) - 30;
+        return (int)(idleImage.getWidth(null) * SCALE) - 10;
     }
 
     public int getHeight() {
-        return (int)(idleAnim.getImage().getHeight(null) * SCALE);
+        return (int)(idleImage.getHeight(null) * SCALE);
     }
 
     public boolean isDead() {
@@ -395,4 +431,10 @@ public class Bear {
     public int getX() { return x; }
     public int getY() { return y; }
     public boolean isMovingRight() { return movingRight; }
+
+    public boolean isMoving() {
+        return moving;
+    }
+
+    public boolean isFacingRight() { return facingRight; }
 }

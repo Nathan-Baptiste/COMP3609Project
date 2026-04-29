@@ -246,22 +246,26 @@ public class Slime {
         if (hitCooldown > 0) return;
 
         hp -= damage;
-        System.out.println("Slime HP: " + hp);
-
         movingRight = hitFromRight;
-
         gettingHit = true;
         hitTimer = HIT_TIME;
-
         hitCooldown = HIT_COOLDOWN_TIME;
 
         int knockback = 20;
+        int dx = hitFromRight ? -knockback : knockback;
+        int newX = x + dx;
+        int width = getWidth();
+        int height = getHeight();
 
-        if (hitFromRight) {
-            x -= knockback;
+        if (dx > 0) {
+            Point tile = collidesWithTileVertical(newX + width, newX, height);
+            if (tile != null) newX = (int)(tile.getX() + 1) * TILE_SIZE;
         } else {
-            x += knockback;
+            Point tile = collidesWithTileVertical(newX, newX, height);
+            if (tile != null) newX = (int)tile.getX() * TILE_SIZE - width;
         }
+
+        x = newX;
     }
 
     public int getWidth()  { return (int)(moveAnim.getImage().getWidth(null)  * SCALE) - 25; }
