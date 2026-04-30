@@ -554,6 +554,16 @@ public class Player {
 		return health;
 	}
 
+	public void heal(int amount) {
+		if (dead) return;
+
+		health += amount;
+
+		if (health > MAX_HEALTH) {
+			health = MAX_HEALTH;
+		}
+	}
+
 	public boolean takeDamage(int dmg, boolean hitFromRight) {
 		if (invincible || dead || blocking) return false;
 

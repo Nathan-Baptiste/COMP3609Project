@@ -20,5 +20,5 @@
 
                                                     EF
  II              EF                                EGD         II
-        EF       CD   1           1               EGAD                        !
+        EF       CD   1 *   o    *1   o     *     EGAD    o   *               !
 BBBBBBBBGHBBBBBBBGHBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBGAAHBBBBBBBBBBBBBBBBBBBBBBBBBBB

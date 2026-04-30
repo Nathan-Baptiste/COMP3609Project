@@ -100,6 +100,24 @@ public class TileMapManager {
                     Image flagImg = ImageManager.loadImage("src/images/ItemsandObjects/EndFlag.png");
                     newMap.addEndFlag(new EndFlag(spawnX, spawnY, flagImg, 3, 0, -266));
                 }
+                else if (ch == '*') {
+                    int spawnX = x * 64;
+                    int spawnY = y * 64 + newMap.getOffsetY();
+
+                    newMap.addCollectible(
+                            new Collectible(spawnX, spawnY, Collectible.COIN)
+                    );
+                }
+                else if (ch == 'o') {
+                    int spawnX = x * 64;
+                    int spawnY = y * 64 + newMap.getOffsetY();
+
+                    int foodType = Collectible.foodTypeFromTilePosition(x, y);
+
+                    newMap.addCollectible(
+                            new Collectible(spawnX, spawnY, foodType)
+                    );
+                }
 /*
                 // check if the char represents a sprite
                 else if (ch == 'o') {

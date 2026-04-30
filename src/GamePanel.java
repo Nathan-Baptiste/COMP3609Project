@@ -271,14 +271,14 @@ public class GamePanel extends JPanel
 		drawOutlinedString(g, timer, 640 - 40, 30);
 
 		// Player 1
-		drawOutlinedString(g, "P1: " + String.format("%08d", p1Score), 20, 30);
-		drawOutlinedString(g, "Coins: " + p1Coins, 20, 60);
+		drawOutlinedString(g, "P1: " + String.format("%08d", tileMap.getP1Score()), 20, 30);
+		drawOutlinedString(g, "Coins: " + tileMap.getP1Coins(), 20, 60);
 
 		drawHealth(g, 20, 90, tileMap.getPlayer1Health());
 
 		// Player 2
-		drawOutlinedString(g, "P2: " + String.format("%08d", p2Score), 1050, 30);
-		drawOutlinedString(g, "Coins: " + p2Coins, 1050, 60);
+		drawOutlinedString(g, "P2: " + String.format("%08d", tileMap.getP2Score()), 1050, 30);
+		drawOutlinedString(g, "Coins: " + tileMap.getP2Coins(), 1050, 60);
 
 		if (tileMap.getPlayer2().isDead()) {
 			int secs = p2RespawnTimer / 20 + 1;

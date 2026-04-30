@@ -42,6 +42,12 @@ public class TileMap {
     private ArrayList<Bear> bears = new ArrayList<>();
     private ArrayList<Minitroll> minitrols = new ArrayList<>();
     private ArrayList<EndFlag> endFlags = new ArrayList<>();
+    private ArrayList<Collectible> collectibles = new ArrayList<>();
+
+    private int p1Score = 0;
+    private int p2Score = 0;
+    private int p1Coins = 0;
+    private int p2Coins = 0;
 
     private boolean levelComplete = false;
 
@@ -220,6 +226,11 @@ public class TileMap {
 
         for (EndFlag f : endFlags) {
             f.draw(g2, offsetX, offsetY);
+        }
+
+        // draw collectibles
+        for (Collectible c : collectibles) {
+            c.draw(g2, offsetX);
         }
 
         //draw slime
@@ -458,12 +469,14 @@ public class TileMap {
             Rectangle p2Box = player2.getHitBox();
 
             g2.setColor(Color.BLUE);
+            /*
             g2.drawRect(
                     p2Box.x + offsetX,
                     p2Box.y,
                     p2Box.width,
                     p2Box.height
             );
+            */
         }
 
 
@@ -529,12 +542,14 @@ public class TileMap {
             Rectangle p1Box = player1.getHitBox();
 
             g2.setColor(Color.RED);
+            /*
             g2.drawRect(
                     p1Box.x + offsetX,
                     p1Box.y,
                     p1Box.width,
                     p1Box.height
             );
+            */
         }
 
 
@@ -669,6 +684,7 @@ public class TileMap {
         player1.update();
         player2.update();
         updateArrows();
+        updateCollectibles();
 
         for (Slime s : slimes) {
             s.update();
@@ -893,6 +909,52 @@ public class TileMap {
         }
     }
 
+
+    private void updateCollectibles() {
+
+        for (int i = collectibles.size() - 1; i >= 0; i--) {
+
+            Collectible c = collectibles.get(i);
+
+            c.update();
+
+            if (c.collidesWith(player1)) {
+
+                if (c.isCoin()) {
+                    p1Coins++;
+                    p1Score += c.getPoints();
+
+                    System.out.println("Player 1 collected a coin! Coins: " + p1Coins + " Score: " + p1Score);
+                }
+                else if (c.isFood()) {
+                    player1.heal(c.getHealAmount());
+                    System.out.println("Player 1 collected food! +1 health");
+                }
+
+                c.collect();
+                collectibles.remove(i);
+                continue;
+            }
+
+            if (c.collidesWith(player2)) {
+
+                if (c.isCoin()) {
+                    p2Coins++;
+                    p2Score += c.getPoints();
+
+                    System.out.println("Player 2 collected a coin! Coins: " + p2Coins + " Score: " + p2Score);
+                }
+                else if (c.isFood()) {
+                    player2.heal(c.getHealAmount());
+                    System.out.println("Player 2 collected food! +1 health");
+                }
+
+                c.collect();
+                collectibles.remove(i);
+            }
+        }
+    }
+
     protected void respawnPlayer2() {
 
         int offset = 20;
@@ -924,6 +986,10 @@ public class TileMap {
         endFlags.add(e);
     }
 
+    public void addCollectible(Collectible c) {
+        collectibles.add(c);
+    }
+
     public Player1 getPlayer1() {
         return player1;
     }
@@ -938,6 +1004,22 @@ public class TileMap {
 
     public int getPlayer1Health() { return player1.getHealth(); }
     public int getPlayer2Health() { return player2.getHealth(); }
+
+    public int getP1Score() {
+        return p1Score;
+    }
+
+    public int getP2Score() {
+        return p2Score;
+    }
+
+    public int getP1Coins() {
+        return p1Coins;
+    }
+
+    public int getP2Coins() {
+        return p2Coins;
+    }
 
 
 }
