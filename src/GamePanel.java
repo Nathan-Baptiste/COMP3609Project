@@ -22,6 +22,7 @@ public class GamePanel extends JPanel
  	private Image backgroundImage;
 
 	private long startTime;
+	private int currentLevel = 1;
 
 	// scores
 	private int p1Score = 0;
@@ -116,6 +117,15 @@ public class GamePanel extends JPanel
 		if (fadeAlpha >= 255) {
 			endGame();
 		}
+
+		if (tileMap.isLevelComplete()) {
+			if (currentLevel == 1) {
+				startLevel2();
+			} else {
+				endGame();
+			}
+			return;
+		}
 	}
 
 
@@ -158,6 +168,8 @@ public class GamePanel extends JPanel
 
 	public void startGame() {				// initialise and start the game thread
 
+		currentLevel = 1;
+
 		startTime = System.currentTimeMillis();
 
 		if (gameThread == null) {
@@ -166,7 +178,7 @@ public class GamePanel extends JPanel
 			tileManager = new TileMapManager (this);
 
 			try {
-				tileMap = tileManager.loadMap("src/maps/map1.txt");
+				tileMap = tileManager.loadMap("src/maps/map1.txt", 1);
 				int w, h;
 				w = tileMap.getWidth();
 				h = tileMap.getHeight();
@@ -186,28 +198,19 @@ public class GamePanel extends JPanel
 
 
 	public void startLevel2() {				// initialise and start a new game thread
-		if (gameThread != null || !isRunning) {
-			//soundManager.playSound ("background", true);
+		currentLevel = 2;
 
-			tileManager = new TileMapManager (this);
-
-			try {
-				tileMap = tileManager.loadMap("src/maps/map2.txt");
-				int w, h;
-				w = tileMap.getWidth();
-				h = tileMap.getHeight();
-			}
-			catch (Exception e) {
-				System.out.println(e);
-				System.exit(0);
-			}
-
-			createGameEntities();
-
-			gameThread = new Thread(this);
-			gameThread.start();			
-
+		tileManager = new TileMapManager(this);
+		try {
+			tileMap = tileManager.loadMap("src/maps/map2.txt", 2);
+		} catch (Exception e) {
+			System.out.println(e);
+			System.exit(0);
 		}
+
+		gameOver = false;
+		fadeAlpha = 0;
+		p2RespawnTimer = -1;
 	}
 
 

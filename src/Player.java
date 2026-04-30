@@ -8,6 +8,10 @@ public class Player {
    private static final int DY = 32;	// amount of Y pixels to move in one keystroke
 	protected static final int SCALE = 1;
 
+	private static final int MAX_SPEED = 20;
+	private static final int ACCEL = 1;
+	protected int currentSpeed = 12; // starts at DX
+
    private static final int TILE_SIZE = 64;
 
 	// HIT EFFECT
@@ -204,7 +208,7 @@ public class Player {
 	   if (direction == 1) {		// move left
 		  moving = true;
 		  facingRight = false;
-          newX = x - DX;
+		   newX = x - currentSpeed;
 	  if (newX < 0) {
 		x = 0;
 		return;
@@ -218,7 +222,7 @@ public class Player {
 		  facingRight = true;
 
 		  int playerWidth = getDisplayWidth();
-          newX = x + DX;
+		  newX = x + currentSpeed;
 
       	  int tileMapWidth = tileMap.getWidthPixels();
 
@@ -513,6 +517,8 @@ public class Player {
 	   }
       }
 
+	   if (!moving) currentSpeed = 12;
+	   else currentSpeed = Math.min(currentSpeed + ACCEL, MAX_SPEED);
 	   moving = false;
    }
 

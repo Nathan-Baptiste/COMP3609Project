@@ -16,13 +16,9 @@ import javax.swing.JPanel;
 
 public class BackgroundManager {
 
-	private String bgImages[] = {"src/images/Level1/Background/Sky.png",
-								"src/images/Level1/Background/Clouds.png",
-			       	     		"src/images/Level1/Background/Bg2Grass.png",
-				     			"src/images/Level1/Background/Bg1Grass.png",
-				     			"src/images/Level1/Background/Bg0Grass.png"};
+	private String bgImages[];
 
-  	private int moveAmount[] = {1, 2, 3, 5, 10};
+  	private int[] moveAmount;
 						// pixel amounts to move each background left or right
      						// a move amount of 0 makes a background stationary
 
@@ -31,11 +27,33 @@ public class BackgroundManager {
 
   	private JPanel panel;			// JPanel on which backgrounds are drawn
 
-  	public BackgroundManager(JPanel panel, int moveSize) {
+  	public BackgroundManager(JPanel panel, int moveSize, int level) {
 						// ignore moveSize
     		this.panel = panel;
 
-    		numBackgrounds = bgImages.length;
+			if (level == 1) {
+				bgImages = new String[] {
+						"src/images/Level1/Background/Sky.png",
+						"src/images/Level1/Background/Clouds.png",
+						"src/images/Level1/Background/Bg2Grass.png",
+						"src/images/Level1/Background/Bg1Grass.png",
+						"src/images/Level1/Background/Bg0Grass.png"
+				};
+
+				moveAmount = new int[]{1, 2, 3, 5, 10};
+			}
+
+			if (level == 2) {
+				bgImages = new String[] {
+						"src/images/Level2/Background/Bg0Wall.png",
+						"src/images/Level2/Background/Bg1Pillar.png"
+				};
+
+				moveAmount = new int[]{1, 4};
+			}
+
+
+		numBackgrounds = bgImages.length;
     		backgrounds = new Background[numBackgrounds];
 
     		for (int i = 0; i < numBackgrounds; i++) {

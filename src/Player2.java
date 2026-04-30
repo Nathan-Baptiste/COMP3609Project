@@ -76,7 +76,7 @@ public class Player2 extends Player {
         if (direction == 1) { // left
             moving = true;
             facingRight = false;
-            newX -= 15;
+            newX -= currentSpeed + 3;
             if (newX < 0) {
                 setX(0);
                 return;
@@ -87,7 +87,7 @@ public class Player2 extends Player {
         else if (direction == 2) { // right
             moving = true;
             facingRight = true;
-            newX += 15;
+            newX += currentSpeed + 3;
             tilePos = collidesWithTile(newX + getDisplayWidth(), getY());
         }
 

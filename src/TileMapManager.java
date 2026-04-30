@@ -28,6 +28,7 @@ public class TileMapManager {
     private Sprite flySprite;
 */
 
+
     public TileMapManager(JPanel panel) {
 	this.panel = panel;
 
@@ -38,7 +39,7 @@ public class TileMapManager {
     }
 
 
-     public TileMap loadMap(String filename)
+     public TileMap loadMap(String filename, int level)
         throws IOException
     {
         ArrayList<String> lines = new ArrayList<String>();
@@ -67,7 +68,7 @@ public class TileMapManager {
         // parse the lines to create a TileMap
         mapHeight = lines.size();
 
-        TileMap newMap = new TileMap(panel, mapWidth, mapHeight);
+        TileMap newMap = new TileMap(panel, mapWidth, mapHeight, level);
         for (int y=0; y<mapHeight; y++) {
             String line = lines.get(y);
             for (int x=0; x<line.length(); x++) {
@@ -93,6 +94,11 @@ public class TileMapManager {
                     int spawnX = x * 64;
                     int spawnY = y * 64;
                     newMap.addMinitroll(new Minitroll(panel, newMap, spawnX, spawnY));
+                } else if (ch == '!') {
+                    int spawnX = x * 64;
+                    int spawnY = y * 64;
+                    Image flagImg = ImageManager.loadImage("src/images/ItemsandObjects/EndFlag.png");
+                    newMap.addEndFlag(new EndFlag(spawnX, spawnY, flagImg, 3, 0, -266));
                 }
 /*
                 // check if the char represents a sprite

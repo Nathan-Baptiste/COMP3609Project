@@ -41,12 +41,15 @@ public class TileMap {
     private ArrayList<EnemyArrow> enemyArrows = new ArrayList<>();
     private ArrayList<Bear> bears = new ArrayList<>();
     private ArrayList<Minitroll> minitrols = new ArrayList<>();
+    private ArrayList<EndFlag> endFlags = new ArrayList<>();
+
+    private boolean levelComplete = false;
 
     /**
         Creates a new TileMap with the specified width and
         height (in number of tiles) of the map.
     */
-    public TileMap(JPanel panel, int width, int height) {
+    public TileMap(JPanel panel, int width, int height, int level) {
 
 	this.panel = panel;
 	dimension = panel.getSize();
@@ -62,7 +65,7 @@ public class TileMap {
 
        	offsetY = screenHeight - tilesToPixels(mapHeight);
 
-	bgManager = new BackgroundManager (panel, 12);
+	bgManager = new BackgroundManager (panel, 12, level);
 
         tiles = new Image[mapWidth][mapHeight];
         player1 = new Player1(panel, this, bgManager);
@@ -211,6 +214,12 @@ public class TileMap {
                         null);
                 }
             }
+        }
+
+        // draw end flags
+
+        for (EndFlag f : endFlags) {
+            f.draw(g2, offsetX, offsetY);
         }
 
         //draw slime
@@ -701,6 +710,15 @@ public class TileMap {
             m.update();
         }
 
+        // check end flag collision
+        for (EndFlag f : endFlags) {
+            f.update();
+            if (!player1.isDead() && f.getHitBox().intersects(player1.getHitBox()))
+                levelComplete = true;
+            if (!player2.isDead() && f.getHitBox().intersects(player2.getHitBox()))
+                levelComplete = true;
+        }
+
 
         if (!player1.dead &&
                 (player1.attacking || player1.moveAttacking || player1.jumpAttacking)
@@ -902,12 +920,20 @@ public class TileMap {
         minitrols.add(m);
     }
 
+    public void addEndFlag(EndFlag e) {
+        endFlags.add(e);
+    }
+
     public Player1 getPlayer1() {
         return player1;
     }
 
     public Player2 getPlayer2() {
         return player2;
+    }
+
+    public boolean isLevelComplete() {
+        return levelComplete;
     }
 
     public int getPlayer1Health() { return player1.getHealth(); }
