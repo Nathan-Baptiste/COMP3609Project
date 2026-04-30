@@ -112,25 +112,12 @@ public class TileMapManager {
                     newMap.addCollectible(
                             new Collectible(spawnX, spawnY, foodType)
                     );
+                } else if (ch == '!') {
+                    int spawnX = x * 64;
+                    int spawnY = y * 64;
+                    Image flagImg = ImageManager.loadImage("src/images/ItemsandObjects/EndFlag.png");
+                    newMap.addEndFlag(new EndFlag(spawnX, spawnY, flagImg, 3, 0, -266));
                 }
-/*
-                // check if the char represents a sprite
-                else if (ch == 'o') {
-                    addSprite(newMap, coinSprite, x, y);
-                }
-                else if (ch == '!') {
-                    addSprite(newMap, musicSprite, x, y);
-                }
-                else if (ch == '*') {
-                    addSprite(newMap, goalSprite, x, y);
-                }
-                else if (ch == '1') {
-                    addSprite(newMap, grubSprite, x, y);
-                }
-                else if (ch == '2') {
-                    addSprite(newMap, flySprite, x, y);
-                }
-*/
             }
         }
 

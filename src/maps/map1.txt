@@ -10,15 +10,15 @@
 #   2       Skeleton
 #   3       Bear
 #   4       Minitroll
-
-
-
-
-                                      o
-                                    MOOOON
-
-AAAAAAC                       1                        4    2
-AAAAAAC                    MOOOON                    KJJJJJJJJJJJL 3        1
-AAAAAAC                                              BAAAAAAAAAAAAJJJJJJJJJJJJJJ
-AAAAAAC            * * *               1         1   BAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJAAAAAAAAAAAAAAAAAAAAAAAAAAAAJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ
+                                                                                                                   HEEEEEEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEEI                                                                                                          BAAC
+                                                                                                                         BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEEEEI                                         * * * *                  2                                   *****  BAAC
+                                                                                 *                                       HEEEEEEEEEEEEEEAAAAAAAAAAAAAEEEEI                                                   3           o      KJJL                                 o o o  BAAC
+                                                                               *   *                                                    HEEEEEEEEEEEI                                                KJJJJJJJJJJJL    KJJJJJJJJJAAAAJJJL    *  *         KJL    1  KJJJJJJJJAAAC
+                              * * *                                          o                                                                                                     *  *      MOOON   HEEEEEEEEEEEI    HEEEEEEEEEEEEEEEEI               MJEEEJJJJJJJEEEEEEEEEEEEI  
+                             MOOOON                                        KJJJL    *                                   *    *                                                   KJJJJJJN                                                  MOOOOON                                 
+                                                                           BAAAC                                       KJJJJJL   *    * * * * *                                 MEEEEEEI                                                                                                                                                                   *                   
+                         1                     *  * 2 *  *            KJJJJAAAAC    *           2                  * * BAAAAAAJJJJJJL * * * * *                                                                                                                                                   KJJJL                                                  *    *
+                       MOOOON                 KJJJJJJJJJJJL        1  BAAAAAAAAAJJJJJJL   o  KJJJJL               KJJJJAAAAAAAAAAAAAC * * * * *                            o                                   *  *  *  *                                                          o              BAAAC        *                  KJJL             MJJJJJJN      *                     o
+                                              BAAAAAAAAAAAAJJJJJJJJJJJAAAAAAAAAAAAAAAAAJJJJJJAAAAAC            o  BAAAAAAAAAAAAAAAAAAJJJJJJJJJJJL   *   *                KJJJL            *    *    *       KL                              KL                  *  *    *  *                   KJJAAAAC    KJL      *  *  *   KJJJAAAC    MJJJJN   HEEEEEEI                         KJJJJJJL
+              * * *             1         1   BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJJJJL     KJJJJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJJJJJJJJJJL             BAAAC                   3          BC        1    KJJJL  3         BC       KL	     1            1      KJJJL         BAAAAAAC    BAAJJJL            BAAAAAAC     HEEI                         4           BAAAAAAC                  !
+JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJJJJJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJJJJJJ   JJJJAAAAAJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJAAJJJJJJJJJJJJJAAAAAJJJJJJJJJJJJAAJJJJJJJAAJJJJJJJJJJJJJJJJJJJJJJJJJJAAAAAJJJJJJJJJAAAAAAAC    BAAAAAAJJJJJJJJJJJJAAAAAAAA                       JJJJJJJJJJJJJJJJJJJJJJJAAAAAAAAJJJJJJJJJJJJJJJJJJJJJJ
