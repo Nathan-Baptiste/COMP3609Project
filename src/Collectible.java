@@ -52,8 +52,6 @@ public class Collectible {
             animation.start();
             currentImage = animation.getImage();
         }
-
-        System.out.println("Collectible loaded. Frames: " + animation.getNumFrames());
     }
 
     private void loadFramesFromSpriteSheet(BufferedImage sheet) {
@@ -162,7 +160,7 @@ public class Collectible {
 
     public int getPoints() {
         if (isCoin()) {
-            return 5;
+            return 100;
         }
 
         return 0;

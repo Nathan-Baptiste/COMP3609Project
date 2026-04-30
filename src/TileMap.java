@@ -572,9 +572,23 @@ public class TileMap {
                 drawX = screenWidth - 30; // right edge
             }
 
+            g2.setFont(new Font("Arial", Font.BOLD, 32));
+
+            String text = "" + seconds;
+
+            g2.setColor(Color.WHITE);
+            g2.drawString(text, drawX - 1, p2ScreenY);
+            g2.drawString(text, drawX + 1, p2ScreenY);
+            g2.drawString(text, drawX, p2ScreenY - 1);
+            g2.drawString(text, drawX, p2ScreenY + 1);
+
+            g2.drawString(text, drawX - 1, p2ScreenY - 1);
+            g2.drawString(text, drawX + 1, p2ScreenY - 1);
+            g2.drawString(text, drawX - 1, p2ScreenY + 1);
+            g2.drawString(text, drawX + 1, p2ScreenY + 1);
+
             g2.setColor(Color.RED);
-            g2.setFont(new Font("Arial", Font.BOLD, 18));
-            g2.drawString("" + seconds, drawX, p2ScreenY);
+            g2.drawString(text, drawX, p2ScreenY);
         }
 
         for (Arrow a : new ArrayList<>(arrows)) {
@@ -861,25 +875,38 @@ public class TileMap {
 
         for (int i = slimes.size() - 1; i >= 0; i--) {
             if (slimes.get(i).isDead()) {
+                boolean p1Killed = Math.abs(player1.getX() - slimes.get(i).getX())
+                        < Math.abs(player2.getX() - slimes.get(i).getX());
+                addScore(p1Killed, slimes.get(i).getScoreValue());
                 slimes.remove(i);
             }
         }
 
         for (int i = skeletons.size() - 1; i >= 0; i--) {
             if (skeletons.get(i).isDead()) {
+                boolean p1Killed = Math.abs(player1.getX() - skeletons.get(i).getX())
+                        < Math.abs(player2.getX() - skeletons.get(i).getX());
+                addScore(p1Killed, skeletons.get(i).getScoreValue());
                 skeletons.remove(i);
             }
         }
 
         for (int i = bears.size() - 1; i >= 0; i--) {
             if (bears.get(i).isDead()) {
+                boolean p1Killed = Math.abs(player1.getX() - bears.get(i).getX())
+                        < Math.abs(player2.getX() - bears.get(i).getX());
+                addScore(p1Killed, bears.get(i).getScoreValue());
                 bears.remove(i);
             }
         }
 
         for (int i = minitrols.size() - 1; i >= 0; i--) {
-            if (minitrols.get(i).isDead())
+            if (minitrols.get(i).isDead()) {
+                boolean p1Killed = Math.abs(player1.getX() - minitrols.get(i).getX())
+                        < Math.abs(player2.getX() - minitrols.get(i).getX());
+                addScore(p1Killed, minitrols.get(i).getScoreValue());
                 minitrols.remove(i);
+            }
         }
 
         int mapWidthPixels = tilesToPixels(mapWidth);
@@ -923,12 +950,9 @@ public class TileMap {
                 if (c.isCoin()) {
                     p1Coins++;
                     p1Score += c.getPoints();
-
-                    System.out.println("Player 1 collected a coin! Coins: " + p1Coins + " Score: " + p1Score);
                 }
                 else if (c.isFood()) {
                     player1.heal(c.getHealAmount());
-                    System.out.println("Player 1 collected food! +1 health");
                 }
 
                 c.collect();
@@ -941,12 +965,9 @@ public class TileMap {
                 if (c.isCoin()) {
                     p2Coins++;
                     p2Score += c.getPoints();
-
-                    System.out.println("Player 2 collected a coin! Coins: " + p2Coins + " Score: " + p2Score);
                 }
                 else if (c.isFood()) {
                     player2.heal(c.getHealAmount());
-                    System.out.println("Player 2 collected food! +1 health");
                 }
 
                 c.collect();
@@ -965,6 +986,10 @@ public class TileMap {
         player2.respawn(newX, newY, true);
     }
 
+    public void addScore(boolean player1Killed, int amount) {
+        if (!player1Killed) p1Score += amount;
+        else p2Score += amount;
+    }
 
     public void addSlime(Slime s) {
         slimes.add(s);

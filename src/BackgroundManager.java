@@ -40,7 +40,7 @@ public class BackgroundManager {
 						"src/images/Level1/Background/Bg0Grass.png"
 				};
 
-				moveAmount = new int[]{1, 2, 3, 5, 10};
+				moveAmount = new int[]{1, 2, 4, 5, 10};
 			}
 
 			if (level == 2) {

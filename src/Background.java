@@ -27,9 +27,6 @@ public class Background {
 
 		totalOffset = 0;
 
-		if (bgImageWidth < dimension.width)
-      			System.out.println("Background width < panel width");
-
     		this.bgDX = bgDX;
 
   	}
@@ -48,7 +45,6 @@ public class Background {
 		backgroundX2 = backgroundX2 - bgDX;
 
 		if ((bgX + bgImageWidth) % bgImageWidth == 0) {
-			System.out.println ("Background change: bgX = " + bgX);
 			backgroundX = 0;
 			backgroundX2 = bgImageWidth;
 		}
@@ -69,7 +65,6 @@ public class Background {
 		backgroundX2 = backgroundX2 + bgDX;
 
 		if ((bgX + bgImageWidth) % bgImageWidth == 0) {
-			//System.out.println ("Background change: bgX = " + bgX);
 			backgroundX = bgImageWidth * -1;
 			backgroundX2 = 0;
 		}

@@ -9,12 +9,14 @@ public class Skeleton {
 
     private int x, y;
     private int hp = 100;
+    private int scoreValue = 3000;
 
     private boolean facingRight = true;
 
     private int shootTimer = 0;
     private int hitCooldown = 0;
     private int hitTimer = 0;
+
 
     protected boolean gettingHit = false;
     protected boolean charging = false;
@@ -345,4 +347,6 @@ public class Skeleton {
 
     public int getX() { return x; }
     public int getY() { return y; }
+
+    public int getScoreValue() { return scoreValue; }
 }

@@ -17,6 +17,7 @@ public class Bear {
 
     private int x, y;
     private int hp = 150;
+    private int scoreValue = 4500;
 
     private boolean movingRight = true;
     protected boolean chasing = false;
@@ -159,7 +160,6 @@ public class Bear {
         if (moveTimer > 60) {
             moveTimer = 0;
             idling = true; // enter idle state
-            System.out.println("True");
             return;
         }
 
@@ -442,4 +442,5 @@ public class Bear {
     }
 
     public boolean isFacingRight() { return facingRight; }
+    public int getScoreValue() { return scoreValue; }
 }

@@ -28,7 +28,7 @@ public class Slime {
 
     private int hp = 80;
     private int damage = 1; // how much damage slime does
-    private int scoreValue = 10;
+    private int scoreValue = 1000;
 
     private boolean gettingHit = false;
 

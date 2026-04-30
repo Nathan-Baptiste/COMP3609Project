@@ -21,6 +21,7 @@ public class Minitroll {
 
     private int x, y;
     private int hp = 20;
+    private int scoreValue = 5000;
 
     private boolean facingRight = true;
 
@@ -361,4 +362,5 @@ public class Minitroll {
     public boolean isDead()  { return dead; }
     public boolean isFacingRight() { return facingRight; }
     public boolean isExploding()   { return exploding; }
+    public int getScoreValue() { return scoreValue; }
 }
