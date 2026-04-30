@@ -11,8 +11,8 @@ public class Minitroll {
     private static final int CLOSE_RANGE     = 70;    // pixels to start countdown
     private static final int EXPLOSION_RANGE = 120;   // explosion radius (unblockable)
 
-    private static final int COUNTDOWN_MIN = 80;
-    private static final int COUNTDOWN_MAX = 100;
+    private static final int COUNTDOWN_MIN = 6;
+    private static final int COUNTDOWN_MAX = 8;
 
     private static final int CHASE_SPEED = 14;
 

@@ -337,7 +337,7 @@ public class TileMap {
                 drawY = b.getY() + offsetY - 335;
             else if (b.attacking && !b.gettingHit)
                 drawY = b.getY() + offsetY - 335;
-            else if (b.chasing && !b.gettingHit && !b.attacking)
+            else if (b.chasing && !b.gettingHit && !b.attacking && !b.idling)
                 drawY = b.getY() + offsetY - 352;
             else if (b.gettingHit)
                 drawY = b.getY() + offsetY - 335;
