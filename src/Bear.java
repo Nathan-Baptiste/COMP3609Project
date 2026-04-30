@@ -81,6 +81,11 @@ public class Bear {
 
         moving = false;
 
+        if (y > tileMap.getOffsetY() + tileMap.tilesToPixels(tileMap.getHeight()) + 100) {
+            hp = 0;
+            return;
+        }
+
         moveAnim.update();
         chaseAnim.update();
         attackAnim.update();

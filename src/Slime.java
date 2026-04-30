@@ -52,6 +52,11 @@ public class Slime {
     public void update() {
         moveAnim.update();
 
+        if (y > tileMap.getOffsetY() + tileMap.tilesToPixels(tileMap.getHeight()) + 100) {
+            hp = 0;
+            return;
+        }
+
         if (hitCooldown > 0) {
             hitCooldown--;
         }

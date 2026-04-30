@@ -69,6 +69,11 @@ public class Skeleton {
         chargeAnim.update();
         updateFacing();
 
+        if (y > tileMap.getOffsetY() + tileMap.tilesToPixels(tileMap.getHeight()) + 100) {
+            hp = 0;
+            return;
+        }
+
         Player target = getClosestPlayer();
         if (target == null) {
             shootTimer = 0;

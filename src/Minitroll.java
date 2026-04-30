@@ -85,6 +85,11 @@ public class Minitroll {
 
         if (dead) return;
 
+        if (y > tileMap.getOffsetY() + tileMap.tilesToPixels(tileMap.getHeight()) + 100) {
+            dead = true;
+            return;
+        }
+
         idleAnim.update();
         chaseAnim.update();
         closeAnim.update();

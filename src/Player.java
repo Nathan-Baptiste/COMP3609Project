@@ -448,6 +448,23 @@ public class Player {
 		   }
 	   }
 
+	   int screenBottom = panel.getHeight();
+
+	   if (!dead && y > screenBottom + 200) {
+		   health = 0;
+		   dead = true;
+
+		   moving = false;
+		   jumping = false;
+		   attacking = false;
+		   charging = false;
+		   shooting = false;
+		   blocking = false;
+
+		   fall(); // optional: forces fall animation state
+		   return;
+	   }
+
       if (jumping || inAir) {
 	   distance = (int) (initialVelocity * timeElapsed -
                              3.0 * timeElapsed * timeElapsed);
