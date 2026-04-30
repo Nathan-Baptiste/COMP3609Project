@@ -38,6 +38,7 @@ public class Minitroll {
     private int hitCooldown = 0;
     private int hitTimer    = 0;
     private boolean gettingHit = false;
+    private boolean killedByArrow = false;
 
     // Gravity
     private boolean inAir      = false;
@@ -223,8 +224,9 @@ public class Minitroll {
         }
     }
 
-    public void takeDamage(int dmg, boolean hitFromRight) {
+    public void takeDamage(int dmg, boolean hitFromRight, boolean fromArrow) {
         if (hitCooldown > 0 || exploding || dead) return;
+        if (fromArrow) killedByArrow = true;
 
         hp -= dmg;
         gettingHit  = true;
@@ -363,4 +365,5 @@ public class Minitroll {
     public boolean isFacingRight() { return facingRight; }
     public boolean isExploding()   { return exploding; }
     public int getScoreValue() { return scoreValue; }
+    public boolean wasKilledByArrow() { return killedByArrow; }
 }

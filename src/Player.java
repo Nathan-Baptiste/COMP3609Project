@@ -744,8 +744,6 @@ public class Player {
 		return blocking;
 	}
 
-
-
 	public boolean isDead() {
 		return dead;
 	}

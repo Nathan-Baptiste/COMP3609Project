@@ -21,6 +21,7 @@ public class Skeleton {
     protected boolean gettingHit = false;
     protected boolean charging = false;
     protected boolean shooting = false;
+    private boolean killedByArrow = false;
 
     private JPanel panel;
     private TileMap tileMap;
@@ -161,8 +162,9 @@ public class Skeleton {
         chargeAnim.start(); // optional reset
     }
 
-    public void takeDamage(int dmg, boolean hitFromRight) {
+    public void takeDamage(int dmg, boolean hitFromRight, boolean fromArrow) {
         if (hitCooldown > 0) return;
+        if (fromArrow) killedByArrow = true;
 
         hp -= dmg;
         gettingHit = true;
@@ -174,16 +176,27 @@ public class Skeleton {
 
         int knockback = 25;
         int dx = hitFromRight ? -knockback : knockback;
+
         int newX = x + dx;
+
         int width = getWidth();
         int height = getHeight();
 
+        Point rightHit = collidesWithTileVertical(newX + width, y + 5, height - 10);
+        Point leftHit  = collidesWithTileVertical(newX, y + 5, height - 10);
+
         if (dx > 0) {
-            Point tile = collidesWithTileVertical(newX + width, y + 5, height - 10);
-            if (tile != null) newX = (int)(tile.getX() + 1) * TILE_SIZE;
+            // moving right
+            if (rightHit != null) {
+                // snap to left side of tile
+                newX = (int)(rightHit.getX()) * TILE_SIZE - width;
+            }
         } else {
-            Point tile = collidesWithTileVertical(newX, y + 5, height - 10);
-            if (tile != null) newX = (int)tile.getX() * TILE_SIZE - width;
+            // moving left
+            if (leftHit != null) {
+                // snap to right side of tile
+                newX = (int)(leftHit.getX() + 1) * TILE_SIZE;
+            }
         }
 
         x = newX;
@@ -349,4 +362,5 @@ public class Skeleton {
     public int getY() { return y; }
 
     public int getScoreValue() { return scoreValue; }
+    public boolean wasKilledByArrow() { return killedByArrow; }
 }

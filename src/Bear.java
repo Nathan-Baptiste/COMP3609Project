@@ -32,6 +32,7 @@ public class Bear {
     private int attackTimer = 0;
     private int hitTimer = 0;
     private int hitCooldown = 0;
+    private boolean killedByArrow = false;
 
     private Image idleImage;
     private StripAnimation moveAnim;
@@ -160,6 +161,7 @@ public class Bear {
         if (moveTimer > 60) {
             moveTimer = 0;
             idling = true; // enter idle state
+            System.out.println("True");
             return;
         }
 
@@ -264,8 +266,9 @@ public class Bear {
         }
     }
 
-    public void takeDamage(int dmg, boolean hitFromRight) {
+    public void takeDamage(int dmg, boolean hitFromRight, boolean fromArrow) {
         if (hitCooldown > 0) return;
+        if (fromArrow) killedByArrow = true;
 
         hp -= dmg;
         gettingHit = true;
@@ -443,4 +446,5 @@ public class Bear {
 
     public boolean isFacingRight() { return facingRight; }
     public int getScoreValue() { return scoreValue; }
+    public boolean wasKilledByArrow() { return killedByArrow; }
 }

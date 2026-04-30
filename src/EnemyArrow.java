@@ -44,7 +44,7 @@ public class EnemyArrow {
 
     public Rectangle getHitBox() {
         int w = image.getWidth(null) * SCALE;
-        int h = image.getHeight(null) * SCALE;
+        int h = image.getHeight(null) * SCALE - 20;
         return new Rectangle(x, y, w, h);
     }
 

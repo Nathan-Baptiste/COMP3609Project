@@ -777,7 +777,7 @@ public class TileMap {
 
                     boolean hitFromRight = player1.getX() > s.getX();
 
-                    s.takeDamage(player1.getAttackDamage(), hitFromRight);
+                    s.takeDamage(player1.getAttackDamage(), hitFromRight, false);
                 }
             }
 
@@ -785,7 +785,7 @@ public class TileMap {
                 if (attackBox.intersects(s.getHitBox())) {
 
                     boolean hitFromRight = player1.getX() > s.getX();
-                    s.takeDamage(player1.getAttackDamage(), hitFromRight);
+                    s.takeDamage(player1.getAttackDamage(), hitFromRight, false);
                 }
             }
 
@@ -793,13 +793,13 @@ public class TileMap {
                 if (attackBox.intersects(b.getHitBox())) {
 
                     boolean hitFromRight = player1.getX() > b.getX();
-                    b.takeDamage(player1.getAttackDamage(), hitFromRight);
+                    b.takeDamage(player1.getAttackDamage(), hitFromRight, false);
                 }
             }
 
             for (Minitroll m : minitrols) {
                 if (attackBox.intersects(m.getHitBox())) {
-                    m.takeDamage(player1.getAttackDamage(), player1.getX() > m.getX());
+                    m.takeDamage(player1.getAttackDamage(), player1.getX() > m.getX(), false);
                 }
             }
         }
@@ -814,7 +814,7 @@ public class TileMap {
 
                     boolean hitFromRight = a.getX() > s.getX();
 
-                    s.takeDamage(a.getDamage(), hitFromRight);
+                    s.takeDamage(a.getDamage(), hitFromRight, true);
 
                     a.deactivate(); // remove arrow after hit
                     break;
@@ -826,7 +826,7 @@ public class TileMap {
 
                     boolean hitFromRight = a.getX() > s.getX();
 
-                    s.takeDamage(a.getDamage(), hitFromRight);
+                    s.takeDamage(a.getDamage(), hitFromRight, true);
                     a.deactivate();
                     break;
                 }
@@ -837,7 +837,7 @@ public class TileMap {
 
                     boolean hitFromRight = a.getX() > b.getX();
 
-                    b.takeDamage(a.getDamage(), hitFromRight);
+                    b.takeDamage(a.getDamage(), hitFromRight, true);
                     a.deactivate();
                     break;
                 }
@@ -845,7 +845,7 @@ public class TileMap {
 
             for (Minitroll m : minitrols) {
                 if (a.collides(m.getHitBox())) {
-                    m.takeDamage(a.getDamage(), a.getX() > m.getX());
+                    m.takeDamage(a.getDamage(), a.getX() > m.getX(), true);
                     a.deactivate();
                     break;
                 }
@@ -875,8 +875,7 @@ public class TileMap {
 
         for (int i = slimes.size() - 1; i >= 0; i--) {
             if (slimes.get(i).isDead()) {
-                boolean p1Killed = Math.abs(player1.getX() - slimes.get(i).getX())
-                        < Math.abs(player2.getX() - slimes.get(i).getX());
+                boolean p1Killed = !slimes.get(i).wasKilledByArrow();
                 addScore(p1Killed, slimes.get(i).getScoreValue());
                 slimes.remove(i);
             }
@@ -884,8 +883,7 @@ public class TileMap {
 
         for (int i = skeletons.size() - 1; i >= 0; i--) {
             if (skeletons.get(i).isDead()) {
-                boolean p1Killed = Math.abs(player1.getX() - skeletons.get(i).getX())
-                        < Math.abs(player2.getX() - skeletons.get(i).getX());
+                boolean p1Killed = !skeletons.get(i).wasKilledByArrow();
                 addScore(p1Killed, skeletons.get(i).getScoreValue());
                 skeletons.remove(i);
             }
@@ -893,8 +891,7 @@ public class TileMap {
 
         for (int i = bears.size() - 1; i >= 0; i--) {
             if (bears.get(i).isDead()) {
-                boolean p1Killed = Math.abs(player1.getX() - bears.get(i).getX())
-                        < Math.abs(player2.getX() - bears.get(i).getX());
+                boolean p1Killed = !bears.get(i).wasKilledByArrow();
                 addScore(p1Killed, bears.get(i).getScoreValue());
                 bears.remove(i);
             }
@@ -902,8 +899,7 @@ public class TileMap {
 
         for (int i = minitrols.size() - 1; i >= 0; i--) {
             if (minitrols.get(i).isDead()) {
-                boolean p1Killed = Math.abs(player1.getX() - minitrols.get(i).getX())
-                        < Math.abs(player2.getX() - minitrols.get(i).getX());
+                boolean p1Killed = !minitrols.get(i).wasKilledByArrow();
                 addScore(p1Killed, minitrols.get(i).getScoreValue());
                 minitrols.remove(i);
             }
@@ -986,8 +982,9 @@ public class TileMap {
         player2.respawn(newX, newY, true);
     }
 
+    // Fix addScore (the inverted logic bug from before)
     public void addScore(boolean player1Killed, int amount) {
-        if (!player1Killed) p1Score += amount;
+        if (player1Killed) p1Score += amount;
         else p2Score += amount;
     }
 

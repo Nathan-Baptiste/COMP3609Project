@@ -31,6 +31,7 @@ public class Slime {
     private int scoreValue = 1000;
 
     private boolean gettingHit = false;
+    private boolean killedByArrow = false;
 
     private StripAnimation moveAnim;
     private Image hitImage;
@@ -247,8 +248,9 @@ public class Slime {
         return movingRight;
     }
 
-    public void takeDamage(int damage, boolean hitFromRight) {
+    public void takeDamage(int damage, boolean hitFromRight, boolean fromArrow) {
         if (hitCooldown > 0) return;
+        if (fromArrow) killedByArrow = true;
 
         hp -= damage;
         movingRight = hitFromRight;
@@ -286,4 +288,5 @@ public class Slime {
     }
 
     public boolean isGettingHit() { return gettingHit; }
+    public boolean wasKilledByArrow() { return killedByArrow; }
 }
