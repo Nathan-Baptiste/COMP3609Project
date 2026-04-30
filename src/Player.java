@@ -253,13 +253,23 @@ public class Player {
       }
       else {
           if (direction == 1) {
-	      x = newX;
-	      bgManager.moveLeft();
+			  int offsetXBefore = tileMap.getOffsetX();
+
+			  x = newX;
+
+			  if (offsetXBefore < 0) {
+				  bgManager.moveLeft();
+			  }
           }
 	  else
 	  if (direction == 2) {
-	      x = newX;
-	      bgManager.moveRight();
+		  int offsetXBefore = tileMap.getOffsetX();
+
+		  x = newX;
+
+		  if (offsetXBefore < 0) {
+			  bgManager.moveRight();
+		  }
    	  }
 
 	  if (isInAir()) {

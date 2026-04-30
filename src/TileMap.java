@@ -1023,6 +1023,18 @@ public class TileMap {
         return player2;
     }
 
+    public int getOffsetX() {
+        int mapWidthPixels = tilesToPixels(mapWidth);
+
+        int offsetX = screenWidth / 2 -
+                Math.round(player1.getX()) - TILE_SIZE;
+
+        offsetX = Math.min(offsetX, 0);
+        offsetX = Math.max(offsetX, screenWidth - mapWidthPixels);
+
+        return offsetX;
+    }
+
     public boolean isLevelComplete() {
         return levelComplete;
     }
