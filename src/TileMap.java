@@ -40,6 +40,7 @@ public class TileMap {
     private ArrayList<Skeleton> skeletons = new ArrayList<>();
     private ArrayList<EnemyArrow> enemyArrows = new ArrayList<>();
     private ArrayList<Bear> bears = new ArrayList<>();
+    private ArrayList<Minitroll> minitrols = new ArrayList<>();
 
     /**
         Creates a new TileMap with the specified width and
@@ -330,6 +331,41 @@ public class TileMap {
             } else {
                 g2.drawImage(img, drawX, drawY + tileOffset, w, h, null);
             }
+        }
+
+        // draw minitrolls
+        for (Minitroll m : minitrols) {
+            Image img = m.getImage();
+            if (img == null) continue;
+
+            int w = (int)(img.getWidth(null)  * SCALE);
+            int h = (int)(img.getHeight(null) * SCALE);
+
+            int drawX;
+
+            if (m.isFacingRight() && !m.exploding)
+                drawX = m.getX() + offsetX - 10;
+            else if (m.exploding)
+                if (m.isFacingRight())
+                    drawX = m.getX() + offsetX - 40;
+                else
+                    drawX = m.getX() + offsetX - 15;
+            else
+                drawX = m.getX() + offsetX;
+
+            int drawY;
+
+            if (m.chasing)
+                drawY = m.getY() + offsetY - 336;
+            else if (m.exploding)
+                drawY = m.getY() + offsetY - 350;
+            else
+                drawY = m.getY() + offsetY - 335;
+
+            if (m.isFacingRight())
+                g2.drawImage(img, drawX + w, drawY + 385, -w, h, null);
+            else
+                g2.drawImage(img, drawX,     drawY + 385,  w, h, null);
         }
 
         // draw enemy arrow
@@ -661,6 +697,10 @@ public class TileMap {
             b.update();
         }
 
+        for (Minitroll m : minitrols) {
+            m.update();
+        }
+
 
         if (!player1.dead &&
                 (player1.attacking || player1.moveAttacking || player1.jumpAttacking)
@@ -708,6 +748,12 @@ public class TileMap {
                     b.takeDamage(player1.getAttackDamage(), hitFromRight);
                 }
             }
+
+            for (Minitroll m : minitrols) {
+                if (attackBox.intersects(m.getHitBox())) {
+                    m.takeDamage(player1.getAttackDamage(), player1.getX() > m.getX());
+                }
+            }
         }
 
         for (Arrow a : arrows) {
@@ -744,6 +790,14 @@ public class TileMap {
                     boolean hitFromRight = a.getX() > b.getX();
 
                     b.takeDamage(a.getDamage(), hitFromRight);
+                    a.deactivate();
+                    break;
+                }
+            }
+
+            for (Minitroll m : minitrols) {
+                if (a.collides(m.getHitBox())) {
+                    m.takeDamage(a.getDamage(), a.getX() > m.getX());
                     a.deactivate();
                     break;
                 }
@@ -787,6 +841,11 @@ public class TileMap {
             if (bears.get(i).isDead()) {
                 bears.remove(i);
             }
+        }
+
+        for (int i = minitrols.size() - 1; i >= 0; i--) {
+            if (minitrols.get(i).isDead())
+                minitrols.remove(i);
         }
 
         int mapWidthPixels = tilesToPixels(mapWidth);
@@ -837,6 +896,10 @@ public class TileMap {
 
     public void addBear(Bear b) {
         bears.add(b);
+    }
+
+    public void addMinitroll(Minitroll m) {
+        minitrols.add(m);
     }
 
     public Player1 getPlayer1() {

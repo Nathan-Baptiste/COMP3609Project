@@ -50,7 +50,7 @@ public class GameWindow extends JFrame
 	@SuppressWarnings({"unchecked"})
 	public GameWindow() {
  
-		setTitle ("Tiled Bat and Ball Game: Ordinary Windowed Mode");
+		setTitle ("The Ascent: Forest to Fortress");
 		setSize (1400, 900);
 
 		// create user interface objects
