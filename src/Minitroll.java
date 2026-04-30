@@ -25,6 +25,8 @@ public class Minitroll {
 
     private boolean facingRight = true;
 
+    private SoundManager soundManager;
+
     // State flags
     private boolean idle      = true;
     protected boolean chasing   = false;
@@ -64,6 +66,8 @@ public class Minitroll {
         this.tileMap = tileMap;
         this.x = x;
         this.y = y;
+
+        soundManager = SoundManager.getInstance();
 
         Image idleStrip    = ImageManager.loadImage("src/images/Enemies/Minitroll/MinitrollIdle.png");
         Image chaseStrip   = ImageManager.loadImage("src/images/Enemies/Minitroll/MinitrollChase.png");
@@ -168,6 +172,8 @@ public class Minitroll {
         chasing    = true;
         closeState = false;
         exploding  = false;
+        soundManager.playSound("minitrolChase", false);
+        soundManager.playSound("minitrolLaughing", false);
     }
 
     private void enterClose() {
@@ -178,6 +184,7 @@ public class Minitroll {
         countdownTimer  = 0;
         countdownTarget = COUNTDOWN_MIN + rand.nextInt(COUNTDOWN_MAX - COUNTDOWN_MIN + 1);
         closeAnim.start();
+        soundManager.playSound("minitrolClose", false);
     }
 
     private void enterExplode() {
@@ -187,6 +194,8 @@ public class Minitroll {
         exploding         = true;
         explodeDamageDealt = false;
         explodeAnim.start();
+        soundManager.playSound("minitrolExplode", false);
+        soundManager.playSound("minitrolHit", false);
     }
 
     private void moveToward(Player target) {
@@ -227,6 +236,8 @@ public class Minitroll {
     public void takeDamage(int dmg, boolean hitFromRight, boolean fromArrow) {
         if (hitCooldown > 0 || exploding || dead) return;
         if (fromArrow) killedByArrow = true;
+
+        soundManager.playSound("minitrolHit", false);
 
         hp -= dmg;
         gettingHit  = true;

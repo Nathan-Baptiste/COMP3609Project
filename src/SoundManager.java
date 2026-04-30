@@ -30,6 +30,13 @@ public class SoundManager {				// a Singleton class
 		clip = loadClip("src/sounds/ItemsandObjects/EndFlag.wav");
 		clips.put("goal", clip);
 
+		//Bow
+		clip = loadClip("src/sounds/Players/Bow/ChargeBow.wav");
+		clips.put("chargeBow", clip);
+
+		clip = loadClip("src/sounds/Players/Bow/ShootBow.wav");
+		clips.put("shootBow", clip);
+
 		//Bears
 		clip = loadClip("src/sounds/Enemies/Bear/BearAttack.wav");
 		clips.put("bearAttack", clip);
@@ -52,6 +59,33 @@ public class SoundManager {				// a Singleton class
 
 		clip = loadClip("src/sounds/Enemies/Slime/SlimeMove.wav");
 		clips.put("slimeMove", clip);
+
+		//Skeletons
+		clip = loadClip("src/sounds/Enemies/Skeleton/SkeletonHit.wav");
+		clips.put("skeletonHit", clip);
+
+		clip = loadClip("src/sounds/Enemies/Skeleton/SkeletonShoot.wav");
+		clips.put("skeletonShoot", clip);
+
+		clip = loadClip("src/sounds/Enemies/Slime/SkeletonCharge.wav");
+		clips.put("skeletonCharge", clip);
+
+		//Minitroll
+		clip = loadClip("src/sounds/Enemies/Minitroll/MinitrollChase.wav");
+		clips.put("minitrolChase", clip);
+
+		clip = loadClip("src/sounds/Enemies/Minitroll/MinitrollClose.wav");
+		clips.put("minitrolClose", clip);
+
+		clip = loadClip("src/sounds/Enemies/Minitroll/MinitrollExplode.wav");
+		clips.put("minitrolExplode", clip);
+
+		clip = loadClip("src/sounds/Enemies/Minitroll/MinitrollHit.wav");
+		clips.put("minitrolHit", clip);
+
+		clip = loadClip("src/sounds/Enemies/Minitroll/MinitrollLaughing.wav");
+		clips.put("minitrolLaughing", clip);
+
 	}
 
 

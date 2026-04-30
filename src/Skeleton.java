@@ -23,6 +23,8 @@ public class Skeleton {
     protected boolean shooting = false;
     private boolean killedByArrow = false;
 
+    private SoundManager soundManager;
+
     private JPanel panel;
     private TileMap tileMap;
 
@@ -48,6 +50,8 @@ public class Skeleton {
         this.tileMap = tileMap;
         this.x = x;
         this.y = y;
+
+        soundManager = SoundManager.getInstance();
 
         Image idleStrip = ImageManager.loadImage("src/images/Enemies/Skeleton/SkeletonIdle.png");
         idleAnim = new StripAnimation(idleStrip, 4, 0, 0, panel, true);
@@ -102,6 +106,8 @@ public class Skeleton {
 
             if (isPlayerOnSameLevel()) {
                 charging = true;
+                soundManager.playSound("skeletonCharge", false);
+                soundManager.playSound("chargeBow", false);
                 chargeAnim.start();
             } else {
                 // skip shot if not aligned
@@ -155,6 +161,9 @@ public class Skeleton {
         charging = false;
         shooting = true;
 
+        soundManager.playSound("skeletonShoot", false);
+        soundManager.playSound("shootBow", false);
+
         tileMap.spawnEnemyArrow(x, y + 20, facingRight);
         shootAnim.start();
 
@@ -173,6 +182,8 @@ public class Skeleton {
         charging = false;
         shooting = false;
         shootTimer = 0;
+
+        soundManager.playSound("skeletonHit", false);
 
         int knockback = 25;
         int dx = hitFromRight ? -knockback : knockback;
