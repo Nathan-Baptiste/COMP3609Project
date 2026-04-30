@@ -3,11 +3,13 @@
 # The tiles are:
 #   (Space) Empty tile
 #   A..Z    Tiles A through Z
-#   o       Star
-#   !       Music Note
-#   *       Goal
-#   1       Bad Guy 1 (grub)
-#   2       Bad Guy 2 (fly)
+#   o       Food
+#   !       Goal
+#   *       Coin
+#   1       Slime
+#   2       Skeleton
+#   3       Bear
+#   4       Minitroll
 
 
 
