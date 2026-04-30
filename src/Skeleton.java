@@ -230,10 +230,10 @@ public class Skeleton {
     }
 
     private boolean isInAir() {
-        int width = getWidth();
+        int width  = getWidth();
         int height = getHeight();
 
-        Point left = collidesWithTileAtPoint(x, y + height + 1);
+        Point left  = collidesWithTileAtPoint(x,             y + height + 1);
         Point right = collidesWithTileAtPoint(x + width - 1, y + height + 1);
 
         return (left == null && right == null);
@@ -264,22 +264,20 @@ public class Skeleton {
     }
 
     private Point collidesWithTileDown(int px, int newY) {
-        int width    = getWidth();
-        int height   = getHeight();
-        int offsetY  = tileMap.getOffsetY();
-        int xTile    = tileMap.pixelsToTiles(px);
-        int yTileFrom = tileMap.pixelsToTiles(y  - offsetY);
-        int yTileTo   = tileMap.pixelsToTiles(newY - offsetY + height);
+        int width   = getWidth();
+        int height  = getHeight();
+        int offsetY = tileMap.getOffsetY();
+
+        int feetY     = y + height;
+        int yTileFrom = tileMap.pixelsToTiles(feetY - offsetY) + 1;
+        int yTileTo   = tileMap.pixelsToTiles(newY + height - offsetY);
+
+        int xLeft  = tileMap.pixelsToTiles(px);
+        int xRight = tileMap.pixelsToTiles(px + width - 1);
 
         for (int yTile = yTileFrom; yTile <= yTileTo; yTile++) {
-            if (tileMap.getTile(xTile, yTile) != null)
-                return new Point(xTile, yTile);
-
-            if (tileMap.getTile(xTile + 1, yTile) != null) {
-                int leftSide = (xTile + 1) * TILE_SIZE;
-                if (px + width > leftSide)
-                    return new Point(xTile + 1, yTile);
-            }
+            if (tileMap.getTile(xLeft,  yTile) != null) return new Point(xLeft,  yTile);
+            if (xRight != xLeft && tileMap.getTile(xRight, yTile) != null) return new Point(xRight, yTile);
         }
         return null;
     }

@@ -80,25 +80,20 @@ public class TileMapManager {
                     newMap.setTile(x, y, tiles.get(tile));
                 } else if (ch == '1') {
                     int spawnX = x * 64;
-                    int spawnY = y * 64;
+                    int spawnY = y * 64 + newMap.getOffsetY() - 50;
                     newMap.addSlime(new Slime(panel, newMap, spawnX, spawnY));
                 } else if (ch == '2') {
                     int spawnX = x * 64;
-                    int spawnY = y * 64;
+                    int spawnY = y * 64 + newMap.getOffsetY() - 50;
                     newMap.addSkeleton(new Skeleton(panel, newMap, spawnX, spawnY));
                 } else if (ch == '3') {
                     int spawnX = x * 64;
-                    int spawnY = y * 64;
+                    int spawnY = y * 64 + newMap.getOffsetY() - 50;
                     newMap.addBear(new Bear(panel, newMap, spawnX, spawnY));
                 } else if (ch == '4') {
                     int spawnX = x * 64;
-                    int spawnY = y * 64;
+                    int spawnY = y * 64 + newMap.getOffsetY() - 50;
                     newMap.addMinitroll(new Minitroll(panel, newMap, spawnX, spawnY));
-                } else if (ch == '!') {
-                    int spawnX = x * 64;
-                    int spawnY = y * 64;
-                    Image flagImg = ImageManager.loadImage("src/images/ItemsandObjects/EndFlag.png");
-                    newMap.addEndFlag(new EndFlag(spawnX, spawnY, flagImg, 3, 0, -266));
                 }
 /*
                 // check if the char represents a sprite

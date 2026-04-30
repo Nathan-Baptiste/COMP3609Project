@@ -194,7 +194,7 @@ public class Slime {
         int height   = getHeight();
         int offsetY  = tileMap.getOffsetY();
         int xTile    = tileMap.pixelsToTiles(px);
-        int yTileFrom = tileMap.pixelsToTiles(y  - offsetY);
+        int yTileFrom = tileMap.pixelsToTiles((y + height) - offsetY);
         int yTileTo   = tileMap.pixelsToTiles(newY - offsetY + height);
 
         for (int yTile = yTileFrom; yTile <= yTileTo; yTile++) {

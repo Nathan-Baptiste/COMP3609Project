@@ -312,8 +312,8 @@ public class Minitroll {
         int width   = getWidth();
         int height  = getHeight();
         int offsetY = tileMap.getOffsetY();
-        int yFrom   = tileMap.pixelsToTiles(y    - offsetY);
-        int yTo     = tileMap.pixelsToTiles(newY - offsetY + height);
+        int yFrom = tileMap.pixelsToTiles((y + height) - offsetY);
+        int yTo   = tileMap.pixelsToTiles(newY - offsetY + height);
         int xLeft   = tileMap.pixelsToTiles(px);
         int xRight  = tileMap.pixelsToTiles(px + width - 1);
         for (int yt = yFrom; yt <= yTo; yt++) {

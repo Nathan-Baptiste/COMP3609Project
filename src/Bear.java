@@ -382,7 +382,7 @@ public class Bear {
         int height = getHeight();
         int offsetY = tileMap.getOffsetY();
 
-        int yTileFrom = tileMap.pixelsToTiles(y    - offsetY);
+        int yTileFrom = tileMap.pixelsToTiles((y + height) - offsetY);
         int yTileTo   = tileMap.pixelsToTiles(newY - offsetY + height);
 
         int xTileLeft  = tileMap.pixelsToTiles(px);
