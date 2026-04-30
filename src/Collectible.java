@@ -20,10 +20,14 @@ public class Collectible {
     private Animation animation;
     private Image currentImage;
 
+    private SoundManager soundManager;
+
     public Collectible(int x, int y, int type) {
         this.x = x;
         this.y = y;
         this.type = type;
+
+        soundManager = SoundManager.getInstance();
 
         BufferedImage spriteSheet = null;
 
@@ -144,6 +148,12 @@ public class Collectible {
 
     public void collect() {
         collected = true;
+        if (isCoin()) {
+            soundManager.playCoin();
+        } else {
+            soundManager.playSound("eat", false);
+            soundManager.playSound("heal", false);
+        }
     }
 
     public boolean isCollected() {

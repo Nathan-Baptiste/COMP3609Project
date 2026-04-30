@@ -38,7 +38,6 @@ public class GamePanel extends JPanel
 	private boolean gameOver = false;
 	private int fadeAlpha = 0;
 
-	private BirdAnimation animation;
 	private volatile boolean isAnimShown;
 	private volatile boolean isAnimPaused;
 
@@ -60,7 +59,6 @@ public class GamePanel extends JPanel
 
 
 	public void createGameEntities() {
-		animation = new BirdAnimation();
 	}
 
 
@@ -82,9 +80,6 @@ public class GamePanel extends JPanel
 
 		tileMap.update();
 		window.movement();
-
-		if (!isPaused && isAnimShown)
-			animation.update();
 
 		// Handle P2 respawn
 		if (tileMap.getPlayer2().isDead()) {
@@ -139,9 +134,6 @@ public class GamePanel extends JPanel
 		imageContext.setFont(hudFont);
 
 		tileMap.draw (imageContext);
-
-		if (isAnimShown)
-			animation.draw(imageContext);		// draw the animation
 
 		drawHUD(imageContext);
 
@@ -220,13 +212,6 @@ public class GamePanel extends JPanel
 				isPaused = false;
 			else
 				isPaused = true;
-
-			if (isAnimShown) {
-				if (isPaused)
-					animation.stopSound();
-				else
-					animation.playSound();
-			}
 		}
 	}
 
@@ -329,12 +314,4 @@ public class GamePanel extends JPanel
 		g.setColor(Color.WHITE);
 		g.drawString(text, x, y);
 	}
-
-	
-	public void showAnimation() {
-		isAnimShown = true;
-		animation.start();
-		
-	}
-
 }

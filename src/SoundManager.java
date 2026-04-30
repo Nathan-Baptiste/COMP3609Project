@@ -8,10 +8,6 @@ import java.util.HashMap;				// for storing sound clips
 public class SoundManager {				// a Singleton class
 	HashMap<String, Clip> clips;
 
-   	Clip hitClip = null;				// played when bat hits ball
-   	Clip appearClip = null;				// played when ball is re-generated
-   	Clip backgroundClip = null;			// played continuously after ball is created
-
 	private static SoundManager instance = null;	// keeps track of Singleton instance
 
 	private SoundManager () {
@@ -21,16 +17,17 @@ public class SoundManager {				// a Singleton class
 		//Clip clip = loadClip("sounds/background.wav");
 		//clips.put("background", clip);		// background theme sound
 
-		clip = loadClip("src/sounds/hitSound.wav");
-		clips.put("hit", clip);			// played when player's sprite collides 
-							//   with another sprice
+		clip = loadClip("src/sounds/ItemsandObjects/Coin.wav");
+		clips.put("coin", clip);
 
-		clip = loadClip("src/sounds/appearSound.wav");
-		clips.put("appear", clip);		// played when a special sprite 
-							//   makes an appearance
+		clip = loadClip("src/sounds/ItemsandObjects/Eating.wav");
+		clips.put("eat", clip);
 
-		clip = loadClip("src/sounds/BirdSound.wav");
-		clips.put("birdSound", clip);		// played for bird-flying animation
+		clip = loadClip("src/sounds/ItemsandObjects/Heal.wav");
+		clips.put("heal", clip);
+
+		clip = loadClip("src/sounds/ItemsandObjects/EndFlag.wav");
+		clips.put("goal", clip);
 	}
 
 
@@ -75,6 +72,22 @@ public class SoundManager {				// a Singleton class
 				clip.start();
 		}
     	}
+
+	public void playCoin() {
+		try {
+			AudioInputStream audioIn =
+					AudioSystem.getAudioInputStream(new File("src/sounds/ItemsandObjects/Coin.wav"));
+
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioIn);
+
+			clip.setFramePosition(0);
+			clip.start();
+
+		} catch (Exception e) {
+			System.out.println("Coin sound error: " + e);
+		}
+	}
 
 
     	public void stopSound(String title) {
