@@ -17,6 +17,7 @@ public class SoundManager {				// a Singleton class
 		//Clip clip = loadClip("sounds/background.wav");
 		//clips.put("background", clip);		// background theme sound
 
+		//Items and Objects
 		clip = loadClip("src/sounds/ItemsandObjects/Coin.wav");
 		clips.put("coin", clip);
 
@@ -28,6 +29,29 @@ public class SoundManager {				// a Singleton class
 
 		clip = loadClip("src/sounds/ItemsandObjects/EndFlag.wav");
 		clips.put("goal", clip);
+
+		//Bears
+		clip = loadClip("src/sounds/Enemies/Bear/BearAttack.wav");
+		clips.put("bearAttack", clip);
+
+		clip = loadClip("src/sounds/Enemies/Bear/BearChase.wav");
+		clips.put("bearChase", clip);
+
+		clip = loadClip("src/sounds/Enemies/Bear/BearHit.wav");
+		clips.put("bearHit", clip);
+
+		clip = loadClip("src/sounds/Enemies/Bear/BearIdle.wav");
+		clips.put("bearIdle", clip);
+
+		//Slimes
+		clip = loadClip("src/sounds/Enemies/Slime/SlimeAttack.wav");
+		clips.put("slimeAttack", clip);
+
+		clip = loadClip("src/sounds/Enemies/Slime/SlimeHit.wav");
+		clips.put("slimeHit", clip);
+
+		clip = loadClip("src/sounds/Enemies/Slime/SlimeMove.wav");
+		clips.put("slimeMove", clip);
 	}
 
 

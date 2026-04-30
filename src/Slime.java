@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.Random;
 import javax.swing.JPanel;
 
 public class Slime {
@@ -9,12 +10,17 @@ public class Slime {
     private static final int HIT_COOLDOWN_TIME = 6; // ~1 second (adjust if needed)
     private static final int HIT_TIME = 10; // frames to show hit sprite
 
+    protected int attackSoundCooldown = 0;
+
     private JPanel panel;
     private TileMap tileMap;
 
     private int x, y;
 
     private boolean movingRight = true;
+
+    private Random rand = new Random();
+    private int moveSoundCooldown = 0;
 
     private boolean inAir = false;
     private boolean jumping = false;
@@ -33,6 +39,8 @@ public class Slime {
     private boolean gettingHit = false;
     private boolean killedByArrow = false;
 
+    private SoundManager soundManager;
+
     private StripAnimation moveAnim;
     private Image hitImage;
 
@@ -41,6 +49,8 @@ public class Slime {
         this.tileMap = tileMap;
         this.x = x;
         this.y = y;
+
+        soundManager = SoundManager.getInstance();
 
         Image moveStrip = ImageManager.loadImage("src/images/Enemies/Slime/SlimeMove.png");
         moveAnim = new StripAnimation(moveStrip, 4, 0, 0, panel, true);
@@ -52,6 +62,13 @@ public class Slime {
 
     public void update() {
         moveAnim.update();
+
+        if (attackSoundCooldown > 0)
+            attackSoundCooldown--;
+
+        if (moveSoundCooldown > 0) {
+            moveSoundCooldown--;
+        }
 
         if (y > tileMap.getOffsetY() + tileMap.tilesToPixels(tileMap.getHeight()) + 100) {
             hp = 0;
@@ -84,6 +101,16 @@ public class Slime {
         int newX = x;
         int width = getWidth();
         int height = getHeight();
+
+        if (moveSoundCooldown == 0) {
+
+            int chance = rand.nextInt(100); // 0 - 99
+
+            if (chance < 3) {
+                soundManager.playSound("slimeMove", false);
+                moveSoundCooldown = 60;
+            }
+        }
 
         if (movingRight) {
             newX += SPEED;
@@ -251,6 +278,8 @@ public class Slime {
     public void takeDamage(int damage, boolean hitFromRight, boolean fromArrow) {
         if (hitCooldown > 0) return;
         if (fromArrow) killedByArrow = true;
+
+        soundManager.playSound("slimeHit", false);
 
         hp -= damage;
         movingRight = hitFromRight;

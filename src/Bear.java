@@ -18,6 +18,7 @@ public class Bear {
     private int x, y;
     private int hp = 150;
     private int scoreValue = 4500;
+    protected int attackSoundCooldown = 0;
 
     private boolean movingRight = true;
     protected boolean chasing = false;
@@ -28,6 +29,8 @@ public class Bear {
 
     private boolean chaseCooldown = false;
     private int chaseCooldownTimer = 0;
+
+    private SoundManager soundManager;
 
     private int attackTimer = 0;
     private int hitTimer = 0;
@@ -61,6 +64,8 @@ public class Bear {
         this.x = x;
         this.y = y;
 
+        soundManager = SoundManager.getInstance();
+
         idleImage = ImageManager.loadImage("src/images/Enemies/Bear/BearIdle.png");
 
         Image moveStrip = ImageManager.loadImage("src/images/Enemies/Bear/BearMove.png");
@@ -80,6 +85,9 @@ public class Bear {
     }
 
     public void update() {
+
+        if (attackSoundCooldown > 0)
+            attackSoundCooldown--;
 
         moving = false;
 
@@ -132,7 +140,9 @@ public class Bear {
             }
         }
 
-        if (attacking) handleAttack();
+        if (attacking) {
+            handleAttack();
+        }
 
         updateGravity();
     }
@@ -161,7 +171,9 @@ public class Bear {
         if (moveTimer > 60) {
             moveTimer = 0;
             idling = true; // enter idle state
-            System.out.println("True");
+            if (isOnScreen()) {
+                soundManager.playSound("bearIdle", false);
+            }
             return;
         }
 
@@ -170,6 +182,12 @@ public class Bear {
 
     private void chase(Player target) {
         if (target == null) return;
+
+        if (attackSoundCooldown == 0) {
+            soundManager.playSound("bearChase", false);
+            attackSoundCooldown = 20;
+        }
+
 
         movingRight = target.getX() > x;
         boolean moved = move(movingRight ? CHASE_SPEED : -CHASE_SPEED);
@@ -223,6 +241,7 @@ public class Bear {
         attackTimer++;
 
         if (attackTimer >= 9 && attackTimer <= 10) {
+            soundManager.playSound("bearAttack", false);
             Rectangle attackBox = getAttackBox();
             Player p1 = tileMap.getPlayer1();
             Player p2 = tileMap.getPlayer2();
@@ -269,6 +288,8 @@ public class Bear {
     public void takeDamage(int dmg, boolean hitFromRight, boolean fromArrow) {
         if (hitCooldown > 0) return;
         if (fromArrow) killedByArrow = true;
+
+        soundManager.playSound("bearHit", false);
 
         hp -= dmg;
         gettingHit = true;
@@ -434,6 +455,14 @@ public class Bear {
 
     public boolean isDead() {
         return hp <= 0;
+    }
+
+    private boolean isOnScreen() {
+        int offsetX = tileMap.getOffsetX();
+
+        int screenX = x + offsetX;
+
+        return (screenX + getWidth() > 0 && screenX < panel.getWidth());
     }
 
     public int getX() { return x; }

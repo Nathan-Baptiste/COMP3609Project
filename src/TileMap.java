@@ -13,6 +13,8 @@ import java.util.ArrayList;
 
 public class TileMap {
 
+    private SoundManager soundManager;
+
     private static final int TILE_SIZE = 64;
     private static final int TILE_SIZE_BITS = 6;
     protected static final double SCALE = 2;
@@ -59,6 +61,8 @@ public class TileMap {
 
 	this.panel = panel;
 	dimension = panel.getSize();
+
+    soundManager = SoundManager.getInstance();
 
 	screenWidth = dimension.width;
 	screenHeight = dimension.height;
@@ -706,6 +710,11 @@ public class TileMap {
             // PLAYER 1
             if (!player1.isDead() && s.getHitBox().intersects(player1.getHitBox())) {
 
+                if (s.attackSoundCooldown == 0) {
+                    soundManager.playSound("slimeAttack", false);
+                    s.attackSoundCooldown = 20; // delay before it can play again
+                }
+
                 boolean hitFromRight = s.getX() > player1.getX();
 
                 if (player1.isBlocking()) {
@@ -717,6 +726,11 @@ public class TileMap {
 
             // PLAYER 2
             if (!player2.isDead() && s.getHitBox().intersects(player2.getHitBox())) {
+
+                if (s.attackSoundCooldown == 0) {
+                    soundManager.playSound("slimeAttack", false);
+                    s.attackSoundCooldown = 20;
+                }
 
                 boolean hitFromRight = s.getX() > player2.getX();
 
@@ -743,10 +757,14 @@ public class TileMap {
         // check end flag collision
         for (EndFlag f : endFlags) {
             f.update();
-            if (!player1.isDead() && f.getHitBox().intersects(player1.getHitBox()))
+            if (!player1.isDead() && f.getHitBox().intersects(player1.getHitBox())) {
                 levelComplete = true;
-            if (!player2.isDead() && f.getHitBox().intersects(player2.getHitBox()))
+                soundManager.playSound("goal", false);
+            }
+            if (!player2.isDead() && f.getHitBox().intersects(player2.getHitBox())) {
                 levelComplete = true;
+                soundManager.playSound("goal", false);
+            }
         }
 
 
