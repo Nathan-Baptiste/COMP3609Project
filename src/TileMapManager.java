@@ -95,6 +95,24 @@ public class TileMapManager {
                     int spawnY = y * 64 + newMap.getOffsetY() - 50;
                     newMap.addMinitroll(new Minitroll(panel, newMap, spawnX, spawnY));
                 }
+                else if (ch == '*') {
+                    int spawnX = x * 64;
+                    int spawnY = y * 64 + newMap.getOffsetY();
+
+                    newMap.addCollectible(
+                            new Collectible(spawnX, spawnY, Collectible.COIN)
+                    );
+                }
+                else if (ch == 'o') {
+                    int spawnX = x * 64;
+                    int spawnY = y * 64 + newMap.getOffsetY();
+
+                    int foodType = Collectible.foodTypeFromTilePosition(x, y);
+
+                    newMap.addCollectible(
+                            new Collectible(spawnX, spawnY, foodType)
+                    );
+                }
 /*
                 // check if the char represents a sprite
                 else if (ch == 'o') {
