@@ -30,6 +30,20 @@ public class SoundManager {				// a Singleton class
 		clip = loadClip("src/sounds/ItemsandObjects/EndFlag.wav");
 		clips.put("goal", clip);
 
+		//Block
+		clip = loadClip("src/sounds/Players/Block/Block.wav");
+		clips.put("block", clip);
+
+		clip = loadClip("src/sounds/Players/Block/BlockRecharged.wav");
+		clips.put("recharge", clip);
+
+		//Game Over
+		clip = loadClip("src/sounds/ItemsandObjects/PlayerDead.wav");
+		clips.put("playerDead", clip);
+
+		clip = loadClip("src/sounds/ItemsandObjects/GameOver.wav");
+		clips.put("gameOver", clip);
+
 		//Bow
 		clip = loadClip("src/sounds/Players/Bow/ChargeBow.wav");
 		clips.put("chargeBow", clip);
@@ -86,6 +100,40 @@ public class SoundManager {				// a Singleton class
 		clip = loadClip("src/sounds/Enemies/Minitroll/MinitrollLaughing.wav");
 		clips.put("minitrolLaughing", clip);
 
+		//Player 1
+		clip = loadClip("src/sounds/Players/P1/P1Attack.wav");
+		clips.put("attackP1", clip);
+
+		clip = loadClip("src/sounds/Players/P1/P1Block.wav");
+		clips.put("p1Block", clip);
+
+		clip = loadClip("src/sounds/Players/P1/P1Death.wav");
+		clips.put("p1Death", clip);
+
+		clip = loadClip("src/sounds/Players/P1/P1Hit.wav");
+		clips.put("p1Hit", clip);
+
+		clip = loadClip("src/sounds/Players/P1/P1Jump.wav");
+		clips.put("p1Jump", clip);
+
+		clip = loadClip("src/sounds/Players/P1/P1Sword.wav");
+		clips.put("p1Sword", clip);
+
+		//Player 2
+		clip = loadClip("src/sounds/Players/P2/P2Block.wav");
+		clips.put("p2Block", clip);
+
+		clip = loadClip("src/sounds/Players/P2/P2Death.wav");
+		clips.put("p2Death", clip);
+
+		clip = loadClip("src/sounds/Players/P2/P2Hit.wav");
+		clips.put("p2Hit", clip);
+
+		clip = loadClip("src/sounds/Players/P2/P2Jump.wav");
+		clips.put("p2Jump", clip);
+
+		clip = loadClip("src/sounds/Players/P2/P2Respawn.wav");
+		clips.put("p2Respawn", clip);
 
 		clip = loadClip("src/sounds/lvl1.wav");
 		clips.put("lvl1", clip);
@@ -154,29 +202,11 @@ public class SoundManager {				// a Singleton class
 	}
 
 
-	public void stopSound(String title) {
+    	public void stopSound(String title) {
 		Clip clip = getClip(title);
-
 		if (clip != null) {
 			clip.stop();
-			clip.setFramePosition(0);
 		}
-	}
-
-	public void stopMusic() {
-		stopSound("lvl1");
-		stopSound("lvl2");
-	}
-
-	public void playLevelMusic(int level) {
-		stopMusic();
-
-		if (level == 1) {
-			playSound("lvl1", true);
-		}
-		else if (level == 2) {
-			playSound("lvl2", true);
-		}
-	}
+    	}
 
 }
