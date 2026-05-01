@@ -5,9 +5,13 @@ public class Player2 extends Player {
 
     private int shootCooldown = 0;
     private static final int SHOOT_COOLDOWN_MAX = 5; // adjust feel (25 = ~0.5 sec if 50ms loop)
+    private SoundManager soundManager;
+
 
     public Player2(JPanel panel, TileMap tileMap, BackgroundManager backgroundManager) {
         super(panel, tileMap, backgroundManager);
+
+        soundManager = SoundManager.getInstance();
 
         Image idleStrip = ImageManager.loadImage("src/images/Player2/Player2Idle.png");
         idleAnim = new StripAnimation(idleStrip, 4, 0, 0, panel, true);
@@ -124,6 +128,8 @@ public class Player2 extends Player {
     public void startCharge() {
         if (shootCooldown > 0) return;
 
+        soundManager.playSound("chargeBow", false);
+
         if (!charging) {
             charging = true;
             chargeTime = 0;
@@ -135,6 +141,8 @@ public class Player2 extends Player {
         if (!charging) return;
 
         if (shootCooldown > 0) return;
+
+        soundManager.playSound("shootBow", false);
 
         charging = false;
         shooting = true;

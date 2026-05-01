@@ -102,11 +102,11 @@ public class Slime {
         int width = getWidth();
         int height = getHeight();
 
-        if (moveSoundCooldown == 0) {
+        if (isOnScreen() && moveSoundCooldown == 0) {
 
             int chance = rand.nextInt(100); // 0 - 99
 
-            if (chance < 3) {
+            if (chance < 20) {
                 soundManager.playSound("slimeMove", false);
                 moveSoundCooldown = 60;
             }
@@ -302,6 +302,13 @@ public class Slime {
         }
 
         x = newX;
+    }
+
+    private boolean isOnScreen() {
+        int offsetX = tileMap.getOffsetX();
+        int screenX = x + offsetX;
+
+        return (screenX + getWidth() > 0 && screenX < panel.getWidth());
     }
 
     public int getWidth()  { return (int)(moveAnim.getImage().getWidth(null)  * SCALE) - 25; }

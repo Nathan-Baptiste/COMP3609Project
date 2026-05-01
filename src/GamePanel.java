@@ -38,9 +38,6 @@ public class GamePanel extends JPanel
 	private boolean gameOver = false;
 	private int fadeAlpha = 0;
 
-	private volatile boolean isAnimShown;
-	private volatile boolean isAnimPaused;
-
 	TileMapManager tileManager;
 	TileMap	tileMap;
 
@@ -49,8 +46,6 @@ public class GamePanel extends JPanel
 
 		isRunning = false;
 		isPaused = false;
-		isAnimShown = false;
-		isAnimPaused = false;
 
 		soundManager = SoundManager.getInstance();
 
@@ -104,12 +99,14 @@ public class GamePanel extends JPanel
 			gameOver = true;
 		}
 
+
 		// Handle fade
 		if (gameOver && fadeAlpha < 255) {
 			fadeAlpha += 3; // speed of fade
 		}
 
 		if (fadeAlpha >= 255) {
+			soundManager.playSound("gameOver", false);
 			endGame();
 		}
 
@@ -117,6 +114,7 @@ public class GamePanel extends JPanel
 			if (currentLevel == 1) {
 				startLevel2();
 			} else {
+				soundManager.playSound("gameOver", false);
 				endGame();
 			}
 			return;

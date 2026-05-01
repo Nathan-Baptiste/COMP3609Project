@@ -30,6 +30,20 @@ public class SoundManager {				// a Singleton class
 		clip = loadClip("src/sounds/ItemsandObjects/EndFlag.wav");
 		clips.put("goal", clip);
 
+		//Block
+		clip = loadClip("src/sounds/Players/Block/Block.wav");
+		clips.put("block", clip);
+
+		clip = loadClip("src/sounds/Players/Block/BlockRecharged.wav");
+		clips.put("recharge", clip);
+
+		//Game Over
+		clip = loadClip("src/sounds/ItemsandObjects/PlayerDead.wav");
+		clips.put("playerDead", clip);
+
+		clip = loadClip("src/sounds/ItemsandObjects/GameOver.wav");
+		clips.put("gameOver", clip);
+
 		//Bow
 		clip = loadClip("src/sounds/Players/Bow/ChargeBow.wav");
 		clips.put("chargeBow", clip);
@@ -85,6 +99,28 @@ public class SoundManager {				// a Singleton class
 
 		clip = loadClip("src/sounds/Enemies/Minitroll/MinitrollLaughing.wav");
 		clips.put("minitrolLaughing", clip);
+
+		//Player 1
+		clip = loadClip("src/sounds/Players/P1/P1Attack.wav");
+		clips.put("p1Attack", clip);
+
+		clip = loadClip("src/sounds/Players/P1/P1Block.wav");
+		clips.put("p1Block", clip);
+
+		clip = loadClip("src/sounds/Players/P1/P1Death.wav");
+		clips.put("p1Death", clip);
+
+		clip = loadClip("src/sounds/Players/P1/P1Hit.wav");
+		clips.put("p1Hit", clip);
+
+		clip = loadClip("src/sounds/Players/P1/P1Jump.wav");
+		clips.put("p1Jump", clip);
+
+		clip = loadClip("src/sounds/Players/P1/P1Sword.wav");
+		clips.put("p1Sword", clip);
+
+
+
 
 	}
 

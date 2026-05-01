@@ -5,8 +5,12 @@ public class Player1 extends Player {
 
     private int attackDamage = 15;
 
+    SoundManager soundManager;
+
     public Player1(JPanel panel, TileMap tileMap, BackgroundManager backgroundManager) {
         super(panel, tileMap, backgroundManager);
+
+        soundManager = SoundManager.getInstance();
 
         Image idleStrip = ImageManager.loadImage("src/images/Player1/Player1Idle.png");
         idleAnim = new StripAnimation(idleStrip, 4, 0, 0, panel, true);
@@ -45,6 +49,9 @@ public class Player1 extends Player {
     public void attack() {
         if (attacking || moveAttacking || jumpAttacking) return;
 
+        soundManager.playSound("p1Sword", false);
+        soundManager.playSound("p1Attack", false);
+
         if (inAir || jumping) {
             jumpAttacking = true;
             jumpAttackAnim.start();
@@ -61,5 +68,26 @@ public class Player1 extends Player {
 
     public int getAttackDamage() {
         return attackDamage;
+    }
+
+    protected void playAttackSound() {
+        soundManager.playSound("p1Sword", false);
+        soundManager.playSound("p1Attack", false);
+    }
+
+    protected void playBlockSound() {
+        soundManager.playSound("p1Block", false);
+    }
+
+    protected void playDeathSound() {
+        soundManager.playSound("p1Death", false);
+    }
+
+    protected void playHitSound() {
+        soundManager.playSound("p1Hit", false);
+    }
+
+    protected void playJumpSound() {
+        soundManager.playSound("p1Jump", false);
     }
 }

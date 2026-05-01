@@ -14,6 +14,8 @@ public class Player {
 
    private static final int TILE_SIZE = 64;
 
+	private SoundManager soundManager;
+
 	// HIT EFFECT
 	protected Image hitImage;
 	protected boolean gettingHit = false;
@@ -94,6 +96,8 @@ public class Player {
 
    public Player (JPanel panel, TileMap t, BackgroundManager b) {
       this.panel = panel;
+
+	   soundManager = SoundManager.getInstance();
 
       tileMap = t;			// tile map on which the player's sprite is displayed
       bgManager = b;			// instance of BackgroundManager
@@ -318,6 +322,8 @@ public class Player {
 	   if (dead) return;
 	   if (blocking) return;
 
+	   playJumpSound();
+
       if (!panel.isVisible () || jumping || inAir) return;
 	  if (attacking && !inAir) return;
 	  if (moveAttacking) return;
@@ -363,6 +369,7 @@ public class Player {
 		   blockCooldownTimer--;
 
 		   if (blockCooldownTimer <= 0) {
+			   soundManager.playSound("recharge", false);
 			   blockOnCooldown = false;
 			   blockCooldownTimer = 0;
 		   }
@@ -374,6 +381,7 @@ public class Player {
 		   attacking = false;
 		   moveAttacking = false;
 		   jumpAttacking = false;
+		   playHitSound();
 	   }
 
 	   if (dead) {
@@ -382,6 +390,7 @@ public class Player {
 		   attacking = false;
 		   charging = false;
 		   shooting = false;
+		   playDeathSound();
 		   fall();
 	   }
 
@@ -596,6 +605,8 @@ public class Player {
 		hitTimer = HIT_DURATION;
 
 		if (health <= 0) {
+			soundManager.playSound("playerDead", false);
+			playDeathSound();
 			health = 0;
 			dead = true;
 			visible = true;
@@ -610,6 +621,9 @@ public class Player {
 	public void startBlock() {
 		if (dead || gettingHit) return;
 		if (blockOnCooldown) return;
+
+		soundManager.playSound("block", false);
+		playBlockSound();
 
 		if (!blocking) {
 			blocking = true;
@@ -747,5 +761,11 @@ public class Player {
 	public boolean isDead() {
 		return dead;
 	}
+
+	protected void playAttackSound() {}
+	protected void playBlockSound() {}
+	protected void playDeathSound() {}
+	protected void playHitSound() {}
+	protected void playJumpSound() {}
 
 }
