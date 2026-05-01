@@ -49,8 +49,7 @@ public class Player1 extends Player {
     public void attack() {
         if (attacking || moveAttacking || jumpAttacking) return;
 
-        soundManager.playSound("p1Sword", false);
-        soundManager.playSound("p1Attack", false);
+        playAttackSound();
 
         if (inAir || jumping) {
             jumpAttacking = true;
@@ -72,7 +71,7 @@ public class Player1 extends Player {
 
     protected void playAttackSound() {
         soundManager.playSound("p1Sword", false);
-        soundManager.playSound("p1Attack", false);
+        soundManager.playSound("attackP1", false);
     }
 
     protected void playBlockSound() {

@@ -102,7 +102,7 @@ public class SoundManager {				// a Singleton class
 
 		//Player 1
 		clip = loadClip("src/sounds/Players/P1/P1Attack.wav");
-		clips.put("p1Attack", clip);
+		clips.put("attackP1", clip);
 
 		clip = loadClip("src/sounds/Players/P1/P1Block.wav");
 		clips.put("p1Block", clip);
@@ -119,9 +119,21 @@ public class SoundManager {				// a Singleton class
 		clip = loadClip("src/sounds/Players/P1/P1Sword.wav");
 		clips.put("p1Sword", clip);
 
+		//Player 2
+		clip = loadClip("src/sounds/Players/P2/P2Block.wav");
+		clips.put("p2Block", clip);
 
+		clip = loadClip("src/sounds/Players/P2/P2Death.wav");
+		clips.put("p2Death", clip);
 
+		clip = loadClip("src/sounds/Players/P2/P2Hit.wav");
+		clips.put("p2Hit", clip);
 
+		clip = loadClip("src/sounds/Players/P2/P2Jump.wav");
+		clips.put("p2Jump", clip);
+
+		clip = loadClip("src/sounds/Players/P2/P2Respawn.wav");
+		clips.put("p2Respawn", clip);
 	}
 
 

@@ -21,6 +21,8 @@ public class Player {
 	protected boolean gettingHit = false;
 	private int hitTimer = 0;
 	private static final int HIT_DURATION = 8; // ~0.4 sec
+	protected int hitSoundCooldown = 0;
+	protected int deathSoundCooldown = 0;
 
 	private static final int KNOCKBACK = 25;
 
@@ -321,12 +323,11 @@ public class Player {
 
 	   if (dead) return;
 	   if (blocking) return;
-
-	   playJumpSound();
-
       if (!panel.isVisible () || jumping || inAir) return;
 	  if (attacking && !inAir) return;
 	  if (moveAttacking) return;
+
+	  playJumpSound();
 
       jumping = true;
       timeElapsed = 0;
@@ -346,6 +347,12 @@ public class Player {
 	   idleAnim.update();
 	   runAnim.update();
 	   jumpAnim.update();
+
+	   if (hitSoundCooldown > 0)
+		   hitSoundCooldown--;
+
+	   if (deathSoundCooldown > 0)
+		   deathSoundCooldown--;
 
 	   if (blocking) {
 
@@ -381,7 +388,11 @@ public class Player {
 		   attacking = false;
 		   moveAttacking = false;
 		   jumpAttacking = false;
-		   playHitSound();
+
+		   if (hitSoundCooldown == 0) {
+			   playHitSound();
+			   hitSoundCooldown = 20;
+		   }
 	   }
 
 	   if (dead) {
@@ -390,7 +401,10 @@ public class Player {
 		   attacking = false;
 		   charging = false;
 		   shooting = false;
-		   playDeathSound();
+		   if (deathSoundCooldown == 0) {
+			   playDeathSound();
+			   deathSoundCooldown = 1000;
+		   }
 		   fall();
 	   }
 

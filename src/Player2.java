@@ -167,4 +167,20 @@ public class Player2 extends Player {
 
         tileMap.spawnArrow(arrowX, arrowY, facingRight);
     }
+
+    protected void playBlockSound() {
+        soundManager.playSound("p2Block", false);
+    }
+
+    protected void playDeathSound() {
+        soundManager.playSound("p2Death", false);
+    }
+
+    protected void playHitSound() {
+        soundManager.playSound("p2Hit", false);
+    }
+
+    protected void playJumpSound() {
+        soundManager.playSound("p2Jump", false);
+    }
 }
