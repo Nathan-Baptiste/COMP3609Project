@@ -86,6 +86,12 @@ public class SoundManager {				// a Singleton class
 		clip = loadClip("src/sounds/Enemies/Minitroll/MinitrollLaughing.wav");
 		clips.put("minitrolLaughing", clip);
 
+
+		clip = loadClip("src/sounds/lvl1.wav");
+		clips.put("lvl1", clip);
+
+		clip = loadClip("src/sounds/lvl2.wav");
+		clips.put("lvl2", clip);
 	}
 
 
@@ -148,11 +154,29 @@ public class SoundManager {				// a Singleton class
 	}
 
 
-    	public void stopSound(String title) {
+	public void stopSound(String title) {
 		Clip clip = getClip(title);
+
 		if (clip != null) {
 			clip.stop();
+			clip.setFramePosition(0);
 		}
-    	}
+	}
+
+	public void stopMusic() {
+		stopSound("lvl1");
+		stopSound("lvl2");
+	}
+
+	public void playLevelMusic(int level) {
+		stopMusic();
+
+		if (level == 1) {
+			playSound("lvl1", true);
+		}
+		else if (level == 2) {
+			playSound("lvl2", true);
+		}
+	}
 
 }
