@@ -209,4 +209,20 @@ public class SoundManager {				// a Singleton class
 		}
     	}
 
+	public void stopMusic() {
+		stopSound("lvl1");
+		stopSound("lvl2");
+	}
+
+	public void playLevelMusic(int level) {
+		stopMusic();
+
+		if (level == 1) {
+			playSound("lvl1", true);
+		}
+		else if (level == 2) {
+			playSound("lvl2", true);
+		}
+	}
+
 }
