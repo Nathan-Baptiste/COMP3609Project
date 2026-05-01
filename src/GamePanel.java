@@ -164,6 +164,7 @@ public class GamePanel extends JPanel
 
 		if (gameThread == null) {
 			//soundManager.playSound ("background", true);
+			soundManager.playLevelMusic(1);
 
 			tileManager = new TileMapManager (this);
 
@@ -187,7 +188,7 @@ public class GamePanel extends JPanel
 	}
 
 
-	public void startLevel2() {				// initialise and start the next level
+	public void startLevel2() {				// initialise and start a new game thread
 		currentLevel = 2;
 
 		tileManager = new TileMapManager(this);
@@ -197,6 +198,8 @@ public class GamePanel extends JPanel
 			System.out.println(e);
 			System.exit(0);
 		}
+
+		soundManager.playLevelMusic(2);
 
 		gameOver = false;
 		fadeAlpha = 0;
@@ -216,6 +219,8 @@ public class GamePanel extends JPanel
 
 	public void endGame() {					// end the game thread
 		isRunning = false;
+		//soundManager.stopClip ("background");
+		soundManager.stopMusic();
 	}
 
 

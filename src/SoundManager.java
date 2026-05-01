@@ -134,6 +134,12 @@ public class SoundManager {				// a Singleton class
 
 		clip = loadClip("src/sounds/Players/P2/P2Respawn.wav");
 		clips.put("p2Respawn", clip);
+
+		clip = loadClip("src/sounds/lvl1.wav");
+		clips.put("lvl1", clip);
+
+		clip = loadClip("src/sounds/lvl2.wav");
+		clips.put("lvl2", clip);
 	}
 
 
