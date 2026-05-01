@@ -4,59 +4,69 @@ import java.util.Random;
 
 public class Bear {
 
+    // Movement speeds and scaling
     private static final int SPEED = 4;
     private static final int CHASE_SPEED = 10;
     private static final int TILE_SIZE = 64;
     private static final double SCALE = 2;
 
+    // Detection and combat ranges
     private static final int DETECTION_RANGE = 350;
     private static final int ATTACK_RANGE = 65;
 
+    // Environment references
     private JPanel panel;
     private TileMap tileMap;
 
+    // Position and stats
     private int x, y;
     private int hp = 150;
     private int scoreValue = 4500;
+
+    // Sound control
+    private SoundManager soundManager;
     protected int attackSoundCooldown = 0;
 
+    // Movement state
     private boolean movingRight = true;
+    private boolean moving = false;
+    private boolean facingRight = true;
+
+    // AI states
     protected boolean chasing = false;
     protected boolean attacking = false;
     protected boolean gettingHit = false;
     protected boolean idling = false;
-    private int idleTimer = 0;
 
+    // Idle behavior
+    private int idleTimer = 0;
+    private Random rand = new Random();
+    private int moveTimer = 0;
+
+    // Chase cooldown
     private boolean chaseCooldown = false;
     private int chaseCooldownTimer = 0;
 
-    private SoundManager soundManager;
-
+    // Combat timers and flags
     private int attackTimer = 0;
     private int hitTimer = 0;
     private int hitCooldown = 0;
     private boolean killedByArrow = false;
 
+    // Animations and sprites
     private Image idleImage;
+    private Image hitImage;
     private StripAnimation moveAnim;
     private StripAnimation chaseAnim;
     private StripAnimation attackAnim;
 
-    private Image hitImage;
-
-    private Random rand = new Random();
-    private int moveTimer = 0;
-
-
-    // Gravity
+    // Gravity and jumping
     private boolean inAir = false;
-    private boolean moving = false;
     private boolean jumping = false;
+    private boolean goingDown = false;
     private int timeElapsed = 0;
     private int startY = 0;
     private int initialVelocity = 0;
-    private boolean goingDown = false;
-    private boolean facingRight = true; // add this field
 
     public Bear(JPanel panel, TileMap tileMap, int x, int y) {
         this.panel = panel;
@@ -154,7 +164,7 @@ public class Bear {
             idleTimer++;
 
             // stay idle for a bit
-            if (idleTimer > 40) { // adjust for longer/shorter pause
+            if (idleTimer > 40) {
                 idling = false;
                 idleTimer = 0;
 
@@ -177,7 +187,11 @@ public class Bear {
             return;
         }
 
-        move(movingRight ? SPEED : -SPEED);
+        if (movingRight) {
+            move(SPEED);
+        } else {
+            move(-SPEED);
+        }
     }
 
     private void chase(Player target) {
@@ -190,7 +204,14 @@ public class Bear {
 
 
         movingRight = target.getX() > x;
-        boolean moved = move(movingRight ? CHASE_SPEED : -CHASE_SPEED);
+        boolean moved;
+
+        if (movingRight) {
+            moved = move(CHASE_SPEED);
+        } else {
+            moved = move(-CHASE_SPEED);
+        }
+
         moving = moved;
 
         if (!moved) {
@@ -214,7 +235,7 @@ public class Bear {
                 return false;
             } else {
                 x = newX;
-                facingRight = true;  // ← add
+                facingRight = true;
                 return true;
             }
         } else {
@@ -224,7 +245,7 @@ public class Bear {
                 return false;
             } else {
                 x = newX;
-                facingRight = false;  // ← add
+                facingRight = false;
                 return true;
             }
         }
@@ -300,7 +321,14 @@ public class Bear {
         attackTimer = 0;
 
         int knockback = 30;
-        int dx = hitFromRight ? -knockback : knockback;
+        int dx;
+
+        if (hitFromRight) {
+            dx = -knockback;
+        } else {
+            dx = knockback;
+        }
+
         int newX = x + dx;
         int height = getHeight();
         int width = getWidth();
@@ -321,7 +349,6 @@ public class Bear {
         timeElapsed = 0;
     }
 
-    // ---------- GRAVITY ----------
     private void updateGravity() {
         if (!jumping && !inAir) {
             if (isInAir()) fall();
@@ -362,7 +389,7 @@ public class Bear {
 
         int verticalDistance = Math.abs(target.getY() - y);
 
-        int tolerance = 120; // tweak if needed
+        int tolerance = 120;
 
         return verticalDistance < tolerance;
     }
@@ -429,7 +456,11 @@ public class Bear {
         if (!p1.isDead() && p2.isDead()) return p1;
         if (p1.isDead()) return p2;
 
-        return (Math.abs(p1.getX() - x) < Math.abs(p2.getX() - x)) ? p1 : p2;
+        if (Math.abs(p1.getX() - x) < Math.abs(p2.getX() - x)) {
+            return p1;
+        } else {
+            return p2;
+        }
     }
 
     public Image getImage() {

@@ -13,7 +13,7 @@ public class EndFlag {
     private int height;
 
     public EndFlag(int x, int y, Image img) {
-        this(x, y, img, 3, 0, 0); // default: x2 scale
+        this(x, y, img, 3, 0, 0);
     }
 
     public EndFlag(int x, int y, Image img, int scale, int offsetX, int offsetY) {

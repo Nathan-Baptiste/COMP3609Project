@@ -187,7 +187,7 @@ public class GamePanel extends JPanel
 	}
 
 
-	public void startLevel2() {				// initialise and start a new game thread
+	public void startLevel2() {				// initialise and start the next level
 		currentLevel = 2;
 
 		tileManager = new TileMapManager(this);
@@ -216,7 +216,6 @@ public class GamePanel extends JPanel
 
 	public void endGame() {					// end the game thread
 		isRunning = false;
-		//soundManager.stopClip ("background");
 	}
 
 

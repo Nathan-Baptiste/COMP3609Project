@@ -199,10 +199,19 @@ public class Minitroll {
     }
 
     private void moveToward(Player target) {
-        int dx = (target.getX() > x) ? CHASE_SPEED : -CHASE_SPEED;
+        int dx;
+
+        if (target.getX() > x) {
+            dx = CHASE_SPEED;
+        } else {
+            dx = -CHASE_SPEED;
+        }
+
+
         int newX = x + dx;
         int width  = getWidth();
         int height = getHeight();
+
 
         if (dx > 0) {
             Point tile = collidesWithTileVertical(newX + width, y + 5, height - 10);
@@ -245,7 +254,14 @@ public class Minitroll {
         hitCooldown = 6;
 
         int knockback = 20;
-        int dx  = hitFromRight ? -knockback : knockback;
+        int dx;
+
+        if (hitFromRight) {
+            dx = -knockback;
+        } else {
+            dx = knockback;
+        }
+
         int newX = x + dx;
         int width  = getWidth();
         int height = getHeight();
@@ -307,7 +323,11 @@ public class Minitroll {
         int offsetY = tileMap.getOffsetY();
         int xTile = tileMap.pixelsToTiles(px);
         int yTile = tileMap.pixelsToTiles(py - offsetY);
-        return tileMap.getTile(xTile, yTile) != null ? new Point(xTile, yTile) : null;
+        if (tileMap.getTile(xTile, yTile) != null) {
+            return new Point(xTile, yTile);
+        } else {
+            return null;
+        }
     }
 
     private Point collidesWithTileVertical(int px, int topY, int height) {
@@ -343,7 +363,11 @@ public class Minitroll {
         if (p1.isDead() && p2.isDead()) return null;
         if (!p1.isDead() && p2.isDead()) return p1;
         if (p1.isDead()) return p2;
-        return Math.abs(p1.getX() - x) < Math.abs(p2.getX() - x) ? p1 : p2;
+        if (Math.abs(p1.getX() - x) < Math.abs(p2.getX() - x)) {
+            return p1;
+        } else {
+            return p2;
+        }
     }
 
     private boolean isPlayerOnSameLevel(Player target) {
@@ -362,12 +386,21 @@ public class Minitroll {
 
     public int getWidth()  {
         Image img = idleAnim.getImage();
-        return img == null ? 40 : (int)(img.getWidth(null)  * SCALE) - 10;
+        if (img == null) {
+            return 40;
+        } else {
+            return (int)(img.getWidth(null) * SCALE) - 10;
+        }
+
     }
 
     public int getHeight() {
         Image img = idleAnim.getImage();
-        return img == null ? 60 : (int)(img.getHeight(null) * SCALE);
+        if (img == null) {
+            return 60;
+        } else {
+            return (int)(img.getHeight(null) * SCALE);
+        }
     }
 
     public int  getX()       { return x; }

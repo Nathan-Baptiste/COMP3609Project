@@ -19,8 +19,6 @@ public class BackgroundManager {
 	private String bgImages[];
 
   	private int[] moveAmount;
-						// pixel amounts to move each background left or right
-     						// a move amount of 0 makes a background stationary
 
   	private Background[] backgrounds;
   	private int numBackgrounds;
@@ -28,10 +26,9 @@ public class BackgroundManager {
   	private JPanel panel;			// JPanel on which backgrounds are drawn
 
   	public BackgroundManager(JPanel panel, int moveSize, int level) {
-						// ignore moveSize
     		this.panel = panel;
 
-			if (level == 1) {
+			if (level == 1) {          //for forest themed level
 				bgImages = new String[] {
 						"src/images/Level1/Background/Sky.png",
 						"src/images/Level1/Background/Clouds.png",
@@ -43,7 +40,7 @@ public class BackgroundManager {
 				moveAmount = new int[]{1, 2, 4, 5, 10};
 			}
 
-			if (level == 2) {
+			if (level == 2) {            //For castle themed level
 				bgImages = new String[] {
 						"src/images/Level2/Background/Bg0Wall.png",
 						"src/images/Level2/Background/Bg1Pillar.png"

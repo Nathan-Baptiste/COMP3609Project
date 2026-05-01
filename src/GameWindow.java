@@ -116,7 +116,7 @@ public class GameWindow extends JFrame
 		infoPanel.add (statusBarTF);
 
 		infoPanel.add (keyL);
-		infoPanel.add (keyTF);		
+		infoPanel.add (keyTF);
 
 		infoPanel.add (mouseL);
 		infoPanel.add (mouseTF);
@@ -140,7 +140,7 @@ public class GameWindow extends JFrame
 		mainPanel.add(infoPanel);
 		mainPanel.add(gamePanel);
 		mainPanel.add(buttonPanel);
-		mainPanel.setBackground(Color.PINK);
+		mainPanel.setBackground(Color.GRAY);
 
 		// set up mainPanel to respond to keyboard and mouse
 

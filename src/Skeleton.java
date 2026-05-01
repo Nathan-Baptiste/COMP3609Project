@@ -142,18 +142,22 @@ public class Skeleton {
         boolean p1Alive = !p1.isDead();
         boolean p2Alive = !p2.isDead();
 
-        // If both dead → return null (no targeting)
+        // If both dead, return null (no targeting)
         if (!p1Alive && !p2Alive) return null;
 
-        // If only one is alive → always target them
+        // If only one is alive, always target them
         if (p1Alive && !p2Alive) return p1;
         if (!p1Alive && p2Alive) return p2;
 
-        // Both alive → choose closest
+        // Both alive, choose closest
         int p1Dist = Math.abs(p1.getX() - x);
         int p2Dist = Math.abs(p2.getX() - x);
 
-        return (p1Dist < p2Dist) ? p1 : p2;
+        if (p1Dist < p2Dist) {
+            return p1;
+        } else {
+            return p2;
+        }
     }
 
 
@@ -186,7 +190,13 @@ public class Skeleton {
         soundManager.playSound("skeletonHit", false);
 
         int knockback = 25;
-        int dx = hitFromRight ? -knockback : knockback;
+        int dx;
+
+        if (hitFromRight) {
+            dx = -knockback;
+        } else {
+            dx = knockback;
+        }
 
         int newX = x + dx;
 

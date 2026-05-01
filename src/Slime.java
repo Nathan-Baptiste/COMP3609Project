@@ -288,7 +288,13 @@ public class Slime {
         hitCooldown = HIT_COOLDOWN_TIME;
 
         int knockback = 20;
-        int dx = hitFromRight ? -knockback : knockback;
+        int dx;
+
+        if (hitFromRight) {
+            dx = -knockback;
+        } else {
+            dx = knockback;
+        }
         int newX = x + dx;
         int width = getWidth();
         int height = getHeight();
